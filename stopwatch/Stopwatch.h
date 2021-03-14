@@ -31,7 +31,7 @@ namespace utils {
             std::stringstream ss;
             int ns = ts % 1000;
             int us = ((ts % 1000000) - ns)/1000;
-            int ms = ((ts % 1000000000) - (us+ns))/1000000;
+            int ms = ((ts % 1000000000) - (us))/1000000;
             ss << "[" << std::put_time(std::localtime(&t_c), "%D %T") << "." << 
                 std::to_string(ms) << "." << std::to_string(us) << "." << std::to_string(ns) << "] ";
             return ss.str();
