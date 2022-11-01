@@ -15,3 +15,12 @@ target_include_directories(${STACKS_LIBRARY_NAME} INTERFACE stacks/src/cpp/)
 
 add_executable(${STACKS_TEST_NAME} stacks/tests/cpp/stack_test.cc)
 target_link_libraries(${STACKS_TEST_NAME} PRIVATE ${STACKS_LIBRARY_NAME} ${ARRAY_LIBRARY_NAME})
+
+#stack target definition
+set(QUEUES_LIBRARY_NAME queues)
+set(QUEUES_TEST_NAME queues_test)
+add_library(${QUEUES_LIBRARY_NAME} INTERFACE)
+target_include_directories(${QUEUES_LIBRARY_NAME} INTERFACE queues/src/cpp/)
+
+add_executable(${QUEUES_TEST_NAME} queues/tests/cpp/queue_test.cc)
+target_link_libraries(${QUEUES_TEST_NAME} PRIVATE ${QUEUES_LIBRARY_NAME} ${ARRAY_LIBRARY_NAME})

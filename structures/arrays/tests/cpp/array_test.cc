@@ -3,12 +3,12 @@
 
 #include "array.hh"
 
-void debugArray(pbrady::structures::array<int> &arr) {
+void debugArray(pbrady::utils::structures::array<int> &arr) {
     std::cout << arr.to_string() << std::endl;
 }
 
 void testArrayFind() {
-    pbrady::structures::array<int> my_array{};
+   pbrady::utils::structures::array<int> my_array{};
     my_array.add(3);
     my_array.add(6);
     my_array.add(9);
@@ -21,7 +21,7 @@ void testArrayFind() {
 }
 
 void testArrayClear() {
-    pbrady::structures::array<int> my_array{};
+   pbrady::utils::structures::array<int> my_array{};
     my_array.add(3);
     my_array.add(6);
     my_array.add(9);
@@ -36,7 +36,7 @@ void testArrayClear() {
 }
 
 void testArrayRemove() {
-    pbrady::structures::array<int> my_array{};
+   pbrady::utils::structures::array<int> my_array{};
     my_array.add(3);
     my_array.add(6);
     my_array.add(9);
@@ -50,7 +50,7 @@ void testArrayRemove() {
 }
 
 void testArrayInsert() {
-    pbrady::structures::array<int> my_array{};
+   pbrady::utils::structures::array<int> my_array{};
     my_array.add(3);
     my_array.add(6);
     my_array.add(9);
@@ -64,7 +64,7 @@ void testArrayInsert() {
 }
 
 void testArrayAdd() {
-    pbrady::structures::array<int> my_array{};
+   pbrady::utils::structures::array<int> my_array{};
     assert(my_array.get_size() == 0);
     assert(my_array.get_capacity() == 0);
 
@@ -84,8 +84,8 @@ void testArrayAdd() {
 void testFullArrayConstructor() {
     size_t size = 3;
     int data[] = {1, 2, 3};
-    pbrady::structures::array<int> my_array = 
-            pbrady::structures::array<int>(&data[0], size);
+   pbrady::utils::structures::array<int> my_array = 
+           pbrady::utils::structures::array<int>(&data[0], size);
     assert(my_array.get_size() == size);
     assert(my_array.get_capacity() == 2*size);
     
@@ -96,7 +96,7 @@ void testFullArrayConstructor() {
 
 void testSizeOnlyConstructor() {
     size_t size = 5;
-     pbrady::structures::array<int> my_array{size};
+    pbrady::utils::structures::array<int> my_array{size};
     assert(my_array.get_size() == size);
     assert(my_array.get_capacity() == 2*size);
 
@@ -112,7 +112,7 @@ void testSizeOnlyConstructor() {
 }
 
 void testDefaultConstructor() {
-    pbrady::structures::array<int> my_array{};
+   pbrady::utils::structures::array<int> my_array{};
     assert(my_array.get_size() == 0);
     assert(my_array.get_capacity() == 0);
 

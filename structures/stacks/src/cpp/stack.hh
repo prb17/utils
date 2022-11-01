@@ -1,43 +1,53 @@
 #pragma once
 #include "array.hh"
-#include <string>
 
 namespace pbrady {
-    namespace structures {
+    namespace utils {
+        namespace structures {
 
-        template<typename T>
-        class stack : public array<T> {
-            private:
-                T *tail;
+            template<typename T>
+            class stack : public array<T> {
+                private:
+                    T *tail;
 
-            public:
-                //constructors
-                stack() {
-                    tail = nullptr;
-                }
+                    //modifiers
+                    void update_tail() {
+                        tail = &(this->get_data()[this->get_size() - 1]);
+                    }
 
-                stack(T* in_data, size_t size) : array<T>(in_data, size) {
-                    tail = &(this->get_data()[this->get_size() - 1]);
-                }
+                public:
+                    //constructors
+                    stack() : stack(0) {}
 
-                ~stack() {
-                    tail = nullptr;
-                }
+                    stack(size_t size) : stack(nullptr, size) {}
 
-                //accessors
-                T peek() {
-                    return *tail;
-                }
+                    stack(T* in_data, size_t size) : array<T>(in_data, size) {
+                        if (size > 0 && in_data) {
+                            update_tail();
+                        }                        
+                    }
 
-                //modifiers
-                T pop() {
+                    ~stack() {
+                        tail = nullptr;
+                    }
 
-                }
+                    //accessors
+                    T peek() {
+                        return *tail;
+                    }
 
-                void push() {
-                    
-                }
-        };
+                    //modifiers
+                    void pop() {
+                        this->remove(this->get_size() - 1);
+                        update_tail();
+                    }
 
-    }    
+                    void push(T val) {
+                        this->add(val);
+                        update_tail();
+                    }
+            };
+
+        }    
+    }
 }
