@@ -18,9 +18,8 @@ namespace pbrady {
                     vertex() = delete;
                     vertex(std::string id, T value) : id{id}, value{value}, edges{} {}
 
-                    void add_node(vertex<T> *node) {
-                        auto e = edge<vertex<T>*>(node);
-                        edges.add(e);
+                    void add_edge(vertex<T> *node) {
+                        edges.add(node);
                     }
 
                     std::string get_id() { return id; }
@@ -28,8 +27,9 @@ namespace pbrady {
 
                     std::string to_string() const {
                         std::stringstream stream;
-                        stream << id << ":\n\tValue: '" << std::to_string(value) << "'\n\t";
-                        stream << "Edges: " << edges << "\n";
+                        stream << id;
+                        stream << "\n\tValue: " << value;
+                        stream << "\n\tEdges: " << edges << "\n";
                         return stream.str();
                     }
             };

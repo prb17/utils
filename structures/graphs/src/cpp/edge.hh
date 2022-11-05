@@ -10,26 +10,26 @@ namespace pbrady {
             template<typename T>
             class edge {
                 private:
-                    T pointer;
+                    T v;
 
                 public:
-                    T get_pointer() { return pointer; }
-                    void set_pointer(T *ptr) { pointer = ptr; }
+                    T get_vertex() { return v; }
+                    void set_vertex(T ptr) { v = ptr; }
 
                     edge() : edge(nullptr) {}
 
-                    edge(T ptr) : pointer{ptr} {}
+                    edge(T ptr) : v{ptr} {}
 
                     std::string to_string() const {
                         std::stringstream stream;
-                        stream << pointer->get_id();
+                        stream <<  "(" << v->get_id() << ")";
                         return stream.str();
                     }
             };
 
             template<typename T>
             inline std::ostream& operator<<(std::ostream &stream, const edge<T>& e) {
-                return stream << "(" << e.to_string() << ")";
+                return stream << e.to_string();
             }
 
             template<typename T>

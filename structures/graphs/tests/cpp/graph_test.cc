@@ -13,8 +13,8 @@ int main() {
     vertex<int> *node3 = new vertex<int>("node3", 25);
     // std::cout << node3->to_string() << std::endl;
 
-    node1->add_node( node2 );
-    node1->add_node( node3 );
+    node1->add_edge( node2 );
+    node1->add_edge( node3 );
     // std::cout << *node1 << std::endl;
 
     auto g = graph<int>( node1 );
