@@ -16,7 +16,7 @@ target_include_directories(${STACKS_LIBRARY_NAME} INTERFACE stacks/src/cpp/)
 add_executable(${STACKS_TEST_NAME} stacks/tests/cpp/stack_test.cc)
 target_link_libraries(${STACKS_TEST_NAME} PRIVATE ${STACKS_LIBRARY_NAME} ${ARRAY_LIBRARY_NAME})
 
-#stack target definition
+#queue target definition
 set(QUEUES_LIBRARY_NAME queues)
 set(QUEUES_TEST_NAME queues_test)
 add_library(${QUEUES_LIBRARY_NAME} INTERFACE)
@@ -24,3 +24,13 @@ target_include_directories(${QUEUES_LIBRARY_NAME} INTERFACE queues/src/cpp/)
 
 add_executable(${QUEUES_TEST_NAME} queues/tests/cpp/queue_test.cc)
 target_link_libraries(${QUEUES_TEST_NAME} PRIVATE ${QUEUES_LIBRARY_NAME} ${ARRAY_LIBRARY_NAME})
+
+#graph target definition
+set(GRAPHS_LIBRARY_NAME graphs)
+set(GRAPHS_TEST_NAME graphs_test)
+add_library(${GRAPHS_LIBRARY_NAME} INTERFACE)
+target_include_directories(${GRAPHS_LIBRARY_NAME} INTERFACE graphs/src/cpp/)
+target_link_libraries(${GRAPHS_LIBRARY_NAME} INTERFACE ${ARRAY_LIBRARY_NAME})
+
+add_executable(${GRAPHS_TEST_NAME} graphs/tests/cpp/graph_test.cc)
+target_link_libraries(${GRAPHS_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME}) #todo: make this the list library??

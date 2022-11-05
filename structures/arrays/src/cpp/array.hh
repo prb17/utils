@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <stdexcept>
+#include <sstream>
 
 namespace pbrady {
     namespace utils {
@@ -106,7 +108,7 @@ namespace pbrady {
                         }
 
                         while(index <= size) {
-                            int tmp = data[index];
+                            T tmp = data[index];
                             data[index++] = value;
                             value = tmp;
                         }
@@ -170,7 +172,7 @@ namespace pbrady {
                      * @return true  - when index is Less than the total size of array
                      * @return false - when index is greater than or equal to total size of array (out of range)
                      */
-                    bool is_valid_index(size_t idx) {
+                    bool is_valid_index(size_t idx) const {
                         return idx < size;
                     }
 
@@ -180,7 +182,7 @@ namespace pbrady {
                      * @return true - array is empty
                      * @return false - array is not empty
                      */
-                    bool is_empty() {
+                    bool is_empty() const {
                         return size == 0;
                     }
 
@@ -190,7 +192,7 @@ namespace pbrady {
                      * @param value - value to find
                      * @return int - index the value was found, -1 if not found
                      */
-                    int find(T value) {
+                    int find(T value) const {
                         int index = 0;
                         while (index < size && data[index] != value) {
                             index++;
@@ -205,7 +207,7 @@ namespace pbrady {
                      * @param idx - index to get value at
                      * @return T - the object at the index
                      */
-                    T get_value(size_t idx) {
+                    T get_value(size_t idx) const {
                         if (!is_valid_index(idx)) {
                             throw std::out_of_range{"index is out of range"};
                         }
@@ -218,7 +220,7 @@ namespace pbrady {
                      * 
                      * @return size_t - number of elems in array
                      */
-                    size_t get_size() {
+                    size_t get_size() const {
                         return size;
                     }
 
@@ -227,7 +229,7 @@ namespace pbrady {
                      * 
                      * @return size_t - The total space(memory) the array takes up, messured in sizeof(T) chunks
                      */
-                    size_t get_capacity() {
+                    size_t get_capacity() const {
                         return capacity;
                     }
 
@@ -236,15 +238,22 @@ namespace pbrady {
                      * 
                      * @return std::string - string representation of array
                      */
-                    std::string to_string() {
-                        std::string data_str = "[ ";
+                    std::string to_string() const{
+                        std::stringstream stream;
+                        stream << "[ ";
                         for(int i=0; i<size; i++) {
-                            data_str += std::to_string(data[i]) + " ";
+                            stream << data[i] << " ";
                         }
-                        data_str += "]";
-                        return data_str;
+                        stream << "]";
+                        return stream.str();
                     }
             };
+            
+
+            template<typename T>
+            inline std::ostream& operator<<(std::ostream &stream, const array<T>& arr) {
+                return stream << arr.to_string();
+            }
         }
     }    
 }
