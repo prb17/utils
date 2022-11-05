@@ -3,7 +3,7 @@
 
 using namespace pbrady::utils::structures;
 
-int main() {
+void basic_graph_print() {
     vertex<int> *node1 = new vertex<int>("node1", 5);
     // std::cout << *node1 << std::endl;
 
@@ -20,5 +20,29 @@ int main() {
     auto g = graph<int>( node1 );
 
     //Get a feel for printing out graph
-    std::cout << "calling graph's to_string operator: \n\n" << g << "" << std::endl;
+    std::cout << "calling basic graph's to_string operator: \n\n" << g << "" << std::endl;
+}
+
+void weighted_graph_print() {
+    
+    vertex<int> *node1 = new vertex<int>("node1", 3);
+    vertex<int> *node2 = new vertex<int>("node2", 9);
+    vertex<int> *node3 = new vertex<int>("node3", 12);
+
+    node1->add_edge(node3, 5);
+    node1->add_edge(node2, 10);
+
+    auto g = graph<int>( node1 );
+
+    //Get a feel for printing out graph
+    std::cout << "calling weighted graph's to_string operator: \n\n" << g << "" << std::endl;
+}
+
+int main() {
+    basic_graph_print();
+    weighted_graph_print();
+
+    //todo:
+    // look into any memory not being dealloced due to the new keywords
+    // should my api handle that or the user?
 }

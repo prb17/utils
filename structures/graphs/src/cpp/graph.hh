@@ -28,6 +28,11 @@ namespace pbrady {
             inline std::ostream& operator<<(std::ostream &stream, const graph<T>& graph) {
                 return stream << graph.to_string();
             }
+
+            template<typename T>
+            inline std::ostream& operator<<(std::ostream &stream, const graph<T>* graph) {
+                return stream << graph->to_string();
+            }
         }
     }
 }

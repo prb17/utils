@@ -10,18 +10,29 @@ namespace pbrady {
             template<typename T>
             class vertex {
                 private:
-                    std::string id;
                     T value;
-                    array<edge<vertex<T> *>> edges;                    
+                    std::string id;
+                    array<edge<vertex<T> >*> edges;                    
 
                 public:
                     vertex() = delete;
                     vertex(std::string id, T value) : id{id}, value{value}, edges{} {}
 
+                    //modifiers
+                    //todo: determine if I need to keep weighted and normal edges separate
+                    //  Does it not make sense to mix the two?
+                    //  Are there any benefits (other than simplicity) to having a graph of nodes with mixed edge types?
                     void add_edge(vertex<T> *node) {
-                        edges.add(node);
+                        auto e = new edge<vertex<T> >(node);
+                        edges.add(e);
                     }
 
+                    void add_edge(vertex<T> *node, int weight) {
+                        auto e = new weighted_edge<vertex<T> >(weight, node);
+                        edges.add(e);
+                    }
+
+                    //accessors
                     std::string get_id() { return id; }
                     T get_value() { return value; }
 
@@ -37,6 +48,11 @@ namespace pbrady {
             template<typename T>
             inline std::ostream& operator<<(std::ostream &stream, const vertex<T>& v) {
                 return stream << v.to_string();
+            }
+
+            template<typename T>
+            inline std::ostream& operator<<(std::ostream &stream, const vertex<T>* v) {
+                return stream << v->to_string();
             }
         }
     }
