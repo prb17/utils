@@ -9,46 +9,76 @@ namespace pbrady {
             class queue : public array<T> {
                 private:
                     T* head;
+                    int head_idx;
                     T* tail;
 
                     //modifiers
-                    void update_head() {
-                        head = &(this->get_data()[0]);
-                    }
-                    void update_tail() {
-                        tail = &(this->get_data()[this->get_size() - 1]);
-                    }
+                    void update_head();
+                    void update_tail();
 
                 public:
-                    queue() : queue(0) {}
-
-                    queue(size_t size) : array<T>(size) {
-                        head = tail = nullptr;
-                    }
+                    queue();
+                    queue(size_t);
+                    ~queue();
 
                     //accessors
-                    T front() {
-                        return *head;
-                    }
-
-                    T back() {
-                        return *tail;
-                    }
+                    T front();
+                    T back();
 
                     //modifiers
-                    void enqueue(T val) {
-                        this->add(val);
-                        update_head();
-                        update_tail();
-                    }
-
-                    void dequeue() {
-                        this->remove(0);
-                        update_head();
-                        update_tail();
-                    }
-
+                    void enqueue(T);
+                    void dequeue();
             };
+
+            //modifiers
+            template<typename T>
+            void queue<T>::update_head() {
+                head = &(this->get_data()[head_idx]);
+            }
+
+            template<typename T>
+            void queue<T>::update_tail() {
+                tail = &(this->get_data()[this->get_size() - 1]);
+            }
+
+            template<typename T>
+            queue<T>::queue() : queue(0) {}
+
+            template<typename T>
+            queue<T>::queue(size_t size) : array<T>(size) {
+                head = tail = nullptr;
+            }
+
+            template<typename T>
+            queue<T>::~queue() {
+                head = nullptr;
+                tail = nullptr;
+            }
+
+            template<typename T>
+            T queue<T>::front() {
+                return *head;
+            }
+
+            template<typename T>
+            T queue<T>::back() {
+                return *tail;
+            }
+
+            //modifiers
+            template<typename T>
+            void queue<T>::enqueue(T val) {
+                this->add(val);
+                update_head();
+                update_tail();
+            }
+
+            template<typename T>
+            void queue<T>::dequeue() {
+                head_idx--;
+                update_head();
+                update_tail();
+            }
         }
     }
 }

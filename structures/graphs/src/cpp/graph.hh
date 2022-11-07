@@ -13,16 +13,22 @@ namespace pbrady {
 
                 public:
                     graph() = delete;
-                    graph(vertex<T> *r) {
-                        root = r;
-                    }
+                    graph(vertex<T> *);
                     
-                    std::string to_string() const {
-                        std::stringstream stream;
-                        stream << *root;
-                        return stream.str();
-                    }
+                    std::string to_string() const;
             };
+            
+            template<typename T>
+            graph<T>::graph(vertex<T> *r) {
+                root = r;
+            }
+            
+            template<typename T>
+            std::string graph<T>::to_string() const {
+                std::stringstream stream;
+                stream << *root;
+                return stream.str();
+            }
 
             template<typename T>
             inline std::ostream& operator<<(std::ostream &stream, const graph<T>& graph) {
