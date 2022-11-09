@@ -8,10 +8,6 @@ namespace pbrady {
             template<typename T>
             class stack : public array<T> {
                 private:
-                    T *tail;
-
-                    //modifiers
-                    void update_tail();
 
                 public:
                     //constructors
@@ -28,12 +24,6 @@ namespace pbrady {
                     void push(T);
             };
 
-            //modifiers
-            template<typename T>
-            void stack<T>::update_tail() {
-                tail = &(this->get_data()[this->get_size() - 1]);
-            }
-
             //constructors
             template<typename T>
             stack<T>::stack() : stack(0) {}
@@ -42,34 +32,26 @@ namespace pbrady {
             stack<T>::stack(size_t size) : stack(nullptr, size) {}
 
             template<typename T>
-            stack<T>::stack(T* in_data, size_t size) : array<T>(in_data, size) {
-                if (size > 0 && in_data) {
-                    update_tail();
-                }                        
-            }
+            stack<T>::stack(T* in_data, size_t size) : array<T>(in_data, size) {}
 
             template<typename T>
-            stack<T>::~stack() {
-                tail = nullptr;
-            }
+            stack<T>::~stack() {}
 
             //accessors
             template<typename T>
             T stack<T>::peek() {
-                return *tail;
+                return this->data[this->size - 1].value();
             }
 
             //modifiers
             template<typename T>
             void stack<T>::pop() {
-                this->remove(this->get_size() - 1);
-                update_tail();
+                this->remove(this->size - 1);
             }
 
             template<typename T>
             void stack<T>::push(T val) {
                 this->add(val);
-                update_tail();
             }
         }    
     }

@@ -4,7 +4,7 @@
 #include "array.hh"
 
 void debugArray(pbrady::utils::structures::array<int> &arr) {
-    std::cout << arr.to_string() << std::endl;
+    std::cout << arr << std::endl;
 }
 
 void testArrayFind() {
@@ -18,6 +18,7 @@ void testArrayFind() {
     assert(my_array.find(12) == 3);
     assert(my_array.find(20) == -1);
 
+    debugArray(my_array);
 }
 
 void testArrayClear() {
