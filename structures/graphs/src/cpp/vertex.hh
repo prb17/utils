@@ -25,7 +25,7 @@ namespace pbrady {
 
                     //accessors
                     std::string get_id();
-                    T get_value();
+                    T get();
 
                     std::string to_string() const;
             };
@@ -36,7 +36,7 @@ namespace pbrady {
             template<typename T>
             vertex<T>::~vertex() {
                 for(int i=0; i<edges.size(); i++) {
-                    delete edges.get_value(i);
+                    delete edges.get(i);
                 }
             }
 
@@ -61,7 +61,7 @@ namespace pbrady {
             std::string vertex<T>::get_id() { return id; }
             
             template<typename T>
-            T vertex<T>::get_value() { return value; }
+            T vertex<T>::get() { return value; }
 
             template<typename T>
             std::string vertex<T>::to_string() const {

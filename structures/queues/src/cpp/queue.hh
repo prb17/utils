@@ -8,6 +8,8 @@ namespace pbrady {
             template<typename T>
             class queue : public stack<T> {
                 private:
+                    //modifier
+                    virtual T pop() override;
 
                 public:
                     //constructors
@@ -20,7 +22,6 @@ namespace pbrady {
                     T back();
 
                     //modifiers
-                    virtual T pop() override;
                     void enqueue(T);
                     T dequeue();
             };

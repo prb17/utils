@@ -36,4 +36,4 @@ target_include_directories(${GRAPHS_LIBRARY_NAME} INTERFACE graphs/src/cpp/)
 target_link_libraries(${GRAPHS_LIBRARY_NAME} INTERFACE ${ARRAY_LIBRARY_NAME})
 
 add_executable(${GRAPHS_TEST_NAME} graphs/tests/cpp/graph_test.cc)
-target_link_libraries(${GRAPHS_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME}) #todo: make this the list library??
+target_link_libraries(${GRAPHS_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME})

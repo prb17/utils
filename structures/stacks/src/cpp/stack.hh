@@ -46,7 +46,7 @@ namespace pbrady {
             //modifiers
             template<typename T>
             T stack<T>::pop() {
-                T retval = this->get_value(this->size() - 1);
+                T retval = this->get(this->size() - 1);
                 this->remove(this->size() - 1);
                 return retval;
             }

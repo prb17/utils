@@ -46,7 +46,7 @@ void testArrayRemove() {
     assert(my_array.size() == 5);
 
     my_array.remove(2);
-    assert(my_array.get_value(2) == 12);
+    assert(my_array.get(2) == 12);
     assert(my_array.size() == 4);
 }
 
@@ -60,7 +60,7 @@ void testArrayInsert() {
     assert(my_array.size() == 5);
 
     my_array.insert(2, 200);
-    assert(my_array.get_value(2) == 200);
+    assert(my_array.get(2) == 200);
     assert(my_array.size() == 6);
 }
 
@@ -90,9 +90,9 @@ void testFullArrayConstructor() {
     assert(my_array.size() == size);
     assert(my_array.capacity() == 2*size);
     
-    assert(my_array.get_value(0) == data[0]);
-    assert(my_array.get_value(1) == data[1]);
-    assert(my_array.get_value(2) == data[2]);
+    assert(my_array.get(0) == data[0]);
+    assert(my_array.get(1) == data[1]);
+    assert(my_array.get(2) == data[2]);
 }
 
 void testSizeOnlyConstructor() {
@@ -104,7 +104,7 @@ void testSizeOnlyConstructor() {
     bool exception_happened = false;
     int val = -1;
     try {
-        val = my_array.get_value(1);
+        val = my_array.get(1);
     } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
         exception_happened = true;
@@ -120,7 +120,7 @@ void testDefaultConstructor() {
 
     bool exception_happened = false;
     try {
-        int val = my_array.get_value(1);
+        int val = my_array.get(1);
     } catch (const pbrady::utils::exception& e) {
         std::cout << e.what() << std::endl;
         exception_happened = true;

@@ -39,7 +39,7 @@ namespace pbrady {
                     virtual bool empty() const;
                     virtual int find(T value) const;
 
-                    virtual T get_value(size_t idx) const;
+                    virtual T get(size_t idx) const;
                     virtual size_t size() const;
                     virtual size_t capacity() const;
                     virtual std::string to_string() const;
@@ -246,7 +246,7 @@ namespace pbrady {
              * @return T - the object at the index
              */
             template<typename T>
-            T array<T>::get_value(size_t idx) const {
+            T array<T>::get(size_t idx) const {
                 if (!valid(idx)) {
                     throw utils::exception("Index out of range");
                 }
