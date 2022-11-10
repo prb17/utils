@@ -35,7 +35,7 @@ namespace pbrady {
 
             template<typename T>
             vertex<T>::~vertex() {
-                for(int i=0; i<edges.get_size(); i++) {
+                for(int i=0; i<edges.size(); i++) {
                     delete edges.get_value(i);
                 }
             }

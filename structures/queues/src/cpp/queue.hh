@@ -1,12 +1,12 @@
 #pragma once
-#include "array.hh"
+#include "stack.hh"
 
 namespace pbrady {
     namespace utils {
         namespace structures {
 
             template<typename T>
-            class queue : public array<T> {
+            class queue : public stack<T> {
                 private:
 
                 public:
@@ -20,8 +20,9 @@ namespace pbrady {
                     T back();
 
                     //modifiers
+                    virtual T pop() override;
                     void enqueue(T);
-                    void dequeue();
+                    T dequeue();
             };
 
             //constructors
@@ -29,7 +30,7 @@ namespace pbrady {
             queue<T>::queue() : queue(0) {}
 
             template<typename T>
-            queue<T>::queue(size_t size) : array<T>(size) {}
+            queue<T>::queue(size_t size) : stack<T>(size) {}
 
             template<typename T>
             queue<T>::~queue() {}
@@ -37,23 +38,38 @@ namespace pbrady {
             //accessors
             template<typename T>
             T queue<T>::front() {
-                return (this->get_data()[0]).value();
+                return (this->data[0]).value();
             }
 
             template<typename T>
             T queue<T>::back() {
-                return (this->get_data()[array<T>::get_size() - 1]).value();
+                return this->peek();
+            }
+
+            template<typename T>
+            T queue<T>::pop() {
+              stack<T> tmp_stack{};
+              while(!this->empty()) {
+                tmp_stack.push(this->stack<T>::pop());
+              }
+
+              T retval = tmp_stack.pop();
+
+              while(!tmp_stack.empty()) {
+                this->enqueue(tmp_stack.pop());
+              }
+              return retval;
             }
 
             //modifiers
             template<typename T>
             void queue<T>::enqueue(T val) {
-                this->add(val);
+                this->push(val);
             }
 
             template<typename T>
-            void queue<T>::dequeue() {
-                this->remove(0);
+            T queue<T>::dequeue() {
+                return pop();
             }
         }
     }

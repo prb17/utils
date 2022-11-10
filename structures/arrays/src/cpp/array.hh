@@ -1,8 +1,11 @@
 #pragma once
+
 #include <string>
 #include <stdexcept>
 #include <sstream>
+
 #include "container.hh"
+#include "exception.hh"
 
 namespace pbrady {
     namespace utils {
@@ -11,12 +14,12 @@ namespace pbrady {
             template<typename T>
             class array {
                 private:
-                    size_t capacity;
+                    size_t cap;
                     void resize();
 
                 protected:
                     container<T> *data;
-                    size_t size;
+                    size_t sz;
 
                 public:
                     //constructors
@@ -26,20 +29,19 @@ namespace pbrady {
                     ~array();
 
                     ////modifiers
-                    virtual void insert(size_t, T);
-                    virtual void remove(size_t);
-                    virtual void add(T);
+                    virtual bool insert(size_t, T);
+                    virtual bool remove(size_t);
+                    virtual bool add(T);
                     virtual void clear();
                     
                     //accessors
-                    virtual bool is_valid_index(size_t idx) const;
-                    virtual bool is_empty() const;
+                    virtual bool valid(size_t idx) const;
+                    virtual bool empty() const;
                     virtual int find(T value) const;
 
                     virtual T get_value(size_t idx) const;
-                    virtual container<T>* get_data();
-                    virtual size_t get_size() const;
-                    virtual size_t get_capacity() const;
+                    virtual size_t size() const;
+                    virtual size_t capacity() const;
                     virtual std::string to_string() const;
             };
 
@@ -67,9 +69,9 @@ namespace pbrady {
              * @param size  - size to start array with
              */
             template<typename T>
-            array<T>::array(T* in_data, size_t size) : size{size}, capacity{2*size} {
+            array<T>::array(T* in_data, size_t size) : sz{size}, cap{2*size} {
                 if (size) {
-                    this->data = (container<T> *)malloc(sizeof(container<T>) * capacity);
+                    this->data = (container<T> *)malloc(sizeof(container<T>) * cap);
                     for(int i=0; i<size; i++) {
                         this->data[i] = in_data ? container<T>{in_data[i]} : container<T>{};
                     }
@@ -102,25 +104,15 @@ namespace pbrady {
              */
             template<typename T>
             void array<T>::resize() {
-                capacity = 2*(size + 1);
-                container<T>* tmp = (container<T> *)malloc(sizeof(container<T>) * capacity);
+                cap = 2*(size() + 1);
+                container<T>* tmp = (container<T> *)malloc(sizeof(container<T>) * cap);
                 if (data) {
-                    for(int i=0; i<size; i++) {
+                    for(int i=0; i<size(); i++) {
                         tmp[i] = data[i];
                     }
                     free(data);
                 }
                 data = tmp;
-            }
-
-            /**
-             * @brief Get the data pointer which points to this array
-             * 
-             * @return T* - pointer to this object
-             */
-            template<typename T>
-            container<T>* array<T>::get_data() {
-                return data;
             }
 
             /**
@@ -138,17 +130,20 @@ namespace pbrady {
              * @param value - the value to insert
              */
             template<typename T>
-            void array<T>::insert(size_t index, T value) {
-                if (size == capacity) {
+            bool array<T>::insert(size_t index, T value) {
+                if (size() == capacity()) {
                     resize();
                 }
 
-                while(index <= size) {
+                while(index <= size()) {
                     container<T> tmp = data[index];
                     data[index++] = container<T>{value};
                     value = tmp.value();
                 }
-                size++;
+                sz++;
+
+                //todo: could there be a reason this wouldn't be true??
+                return true;
             }
 
             /**
@@ -165,19 +160,17 @@ namespace pbrady {
              * @param index - where value will be removed from
              */
             template<typename T>
-            void array<T>::remove(size_t index) {
-                //todo: implement removal
-                size_t iterator = index;
-                if (is_valid_index(index)) {
-                    while(iterator < size - 1) {
+            bool array<T>::remove(size_t index) {
+                if (valid(index)) {
+                    size_t iterator = index;
+                    while(iterator < size() - 1) {
                         data[iterator++] = data[iterator + 1];
                     }
-                    size--;
-                } //todo: what should I do if index is not valid?
-
-                if (size < capacity/4) {
-                    resize();
+                    sz--;
+                } else {
+                    return false;
                 }
+                return true;
             }
 
             /**
@@ -192,8 +185,8 @@ namespace pbrady {
              * @param value - the value to add
              */
             template<typename T>
-            void array<T>::add(T value) {
-                insert(size, value);
+            bool array<T>::add(T value) {
+                return insert(size(), value);
             }
 
             
@@ -203,7 +196,7 @@ namespace pbrady {
              */
             template<typename T>
             void array<T>::clear() {
-                size = 0;
+                sz = 0;
             }
 
             //accessors
@@ -215,8 +208,8 @@ namespace pbrady {
              * @return false - when index is greater than or equal to total size of array (out of range)
              */
             template<typename T>
-            bool array<T>::is_valid_index(size_t idx) const {
-                return idx < size;
+            bool array<T>::valid(size_t idx) const {
+                return idx < size();
             }
                     
             /**
@@ -226,8 +219,8 @@ namespace pbrady {
              * @return false - array is not empty
              */
             template<typename T>
-            bool array<T>::is_empty() const {
-                return size == 0;
+            bool array<T>::empty() const {
+                return size() == 0;
             }            
 
             /**
@@ -239,10 +232,10 @@ namespace pbrady {
             template<typename T>
             int array<T>::find(T value) const {
                 int index = 0;
-                while (index < size && data[index].value() != value) {
+                while (index < size() && data[index].value() != value) {
                     index++;
                 }
-                return index == size ? -1 : index;
+                return index == size() ? -1 : index;
             }
             
             /**
@@ -254,8 +247,8 @@ namespace pbrady {
              */
             template<typename T>
             T array<T>::get_value(size_t idx) const {
-                if (!is_valid_index(idx)) {
-                    throw std::out_of_range{"index is out of range"};
+                if (!valid(idx)) {
+                    throw utils::exception("Index out of range");
                 }
 
                 return data[idx].value();
@@ -267,8 +260,8 @@ namespace pbrady {
              * @return size_t - number of elems in array
              */
             template<typename T>
-            size_t array<T>::get_size() const {
-                return size;
+            size_t array<T>::size() const {
+                return sz;
             }
 
             /**
@@ -277,8 +270,8 @@ namespace pbrady {
              * @return size_t - The total space(memory) the array takes up, messured in sizeof(T) chunks
              */
             template<typename T>
-            size_t array<T>::get_capacity() const {
-                return capacity;
+            size_t array<T>::capacity() const {
+                return cap;
             }            
 
             /**
@@ -290,7 +283,7 @@ namespace pbrady {
             std::string array<T>::to_string() const {
                 std::stringstream stream;
                 stream << "[ ";
-                for(int i=0; i<size; i++) {
+                for(int i=0; i<size(); i++) {
                     stream << data[i] << " ";
                 }
                 stream << "]";

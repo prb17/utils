@@ -20,7 +20,7 @@ namespace pbrady {
                     T peek();
 
                     //modifiers
-                    void pop();
+                    virtual T pop();
                     void push(T);
             };
 
@@ -40,13 +40,15 @@ namespace pbrady {
             //accessors
             template<typename T>
             T stack<T>::peek() {
-                return this->data[this->size - 1].value();
+                return this->data[this->size() - 1].value();
             }
 
             //modifiers
             template<typename T>
-            void stack<T>::pop() {
-                this->remove(this->size - 1);
+            T stack<T>::pop() {
+                T retval = this->get_value(this->size() - 1);
+                this->remove(this->size() - 1);
+                return retval;
             }
 
             template<typename T>

@@ -54,7 +54,7 @@ void testPop() {
    debugStack(my_stack);
    my_stack.push(UINT32_MAX);
    debugStack(my_stack);
-   assert(my_stack.get_size() == 6);
+   assert(my_stack.size() == 6);
    debugStack(my_stack);
 
    
@@ -70,12 +70,11 @@ void testPop() {
    assert(my_stack.peek() == 12345);
    my_stack.pop();
    debugStack(my_stack);
-   assert(my_stack.peek() == 10);
-   my_stack.pop();
+   assert(my_stack.pop() == 10);
    debugStack(my_stack);
-   assert(my_stack.peek() == 1);
-   my_stack.pop();
-   assert(my_stack.get_size() == 0);
+   
+   assert(my_stack.pop() == 1);
+   assert(my_stack.size() == 0);
    debugStack(my_stack);
 
    std::cout << "Finished testing stack pop method" << std::endl;
@@ -86,15 +85,15 @@ void testFullArrayConstructor() {
     int data[] = {1, 2, 3};
    pbrady::utils::structures::stack<int> my_stack = 
            pbrady::utils::structures::stack<int>(&data[0], size);
-    assert(my_stack.get_size() == size);
-    assert(my_stack.get_capacity() == 2*size);
+    assert(my_stack.size() == size);
+    assert(my_stack.capacity() == 2*size);
 }
 
 void testSizeOnlyConstructor() {
     size_t size = 5;
     pbrady::utils::structures::stack<int> my_stack{size};
-    assert(my_stack.get_size() == size);
-    assert(my_stack.get_capacity() == 2*size);
+    assert(my_stack.size() == size);
+    assert(my_stack.capacity() == 2*size);
 
     bool exception_happened = false;
     int val = -1;
@@ -109,12 +108,12 @@ void testSizeOnlyConstructor() {
 
 void testDefaultConstructor() {
    pbrady::utils::structures::stack<int> my_stack{};
-    assert(my_stack.get_size() == 0);
-    assert(my_stack.get_capacity() == 0);
+    assert(my_stack.size() == 0);
+    assert(my_stack.capacity() == 0);
 
     bool exception_happened = false;
     try {
-        if (my_stack.get_size()) {
+        if (my_stack.size()) {
             int val = my_stack.peek();
         }
         

@@ -17,8 +17,8 @@ void test_enqueue() {
     debug_queue(my_queue);
     my_queue.enqueue(4);
     debug_queue(my_queue);
-    assert(my_queue.get_size() == 1);
-    assert(my_queue.get_capacity() == 2);
+    assert(my_queue.size() == 1);
+    assert(my_queue.capacity() == 2);
     assert(my_queue.front() == 4);
     assert(my_queue.back() == 4);
     
@@ -42,7 +42,7 @@ void test_dequeue() {
     my_queue.enqueue(1);
     my_queue.enqueue(-1);
     debug_queue(my_queue);
-    assert(my_queue.get_size() == 7);
+    assert(my_queue.size() == 7);
 
     assert(my_queue.back() == -1);
     assert(my_queue.front() == 4);
@@ -82,7 +82,7 @@ void test_dequeue() {
     my_queue.dequeue();
     debug_queue(my_queue);
 
-    assert(my_queue.get_size() == 0);
+    assert(my_queue.size() == 0);
 
     std::cout << "finished dequeue test" << std::endl;
 }
@@ -99,7 +99,7 @@ void test_alternate_enq_deq() {
     my_queue.enqueue(1);
     my_queue.enqueue(-1);
     debug_queue(my_queue);
-    assert(my_queue.get_size() == 7);
+    assert(my_queue.size() == 7);
 
     assert(my_queue.back() == -1);
     assert(my_queue.front() == 4);
@@ -148,7 +148,7 @@ void test_alternate_enq_deq() {
     my_queue.dequeue();
     debug_queue(my_queue);
 
-    assert(my_queue.get_size() == 6);
+    assert(my_queue.size() == 6);
 
     std::cout << "finished alternating test" << std::endl;
 }
