@@ -3,12 +3,12 @@
 
 #include "stack.hh"
 
-void debugStack(pbrady::utils::structures::stack<int>& stack) {
+void debugStack(prb17::utils::structures::stack<int>& stack) {
     std::cout << stack << std::endl;
 }
 
 void testOperators() {
-   pbrady::utils::structures::stack<int> stack1{};
+   prb17::utils::structures::stack<int> stack1{};
     stack1.push(3);
     stack1.push(6);
     stack1.push(9);
@@ -17,7 +17,7 @@ void testOperators() {
     std::cout << "stack1: ";
     debugStack(stack1);
 
-    pbrady::utils::structures::stack<int> stack2{};
+    prb17::utils::structures::stack<int> stack2{};
     assert(stack2 != stack1);
 
     stack2 = stack1;
@@ -39,7 +39,7 @@ void testOperators() {
 
 void testPush() {
     std::cout << "Testing stack push method" << std::endl;
-   pbrady::utils::structures::stack<int> my_stack{};
+   prb17::utils::structures::stack<int> my_stack{};
 
    my_stack.push(1);
    assert(my_stack.peek() == 1);
@@ -70,7 +70,7 @@ void testPush() {
 
 void testPop() {
     std::cout << "Testing stack pop method" << std::endl;
-   pbrady::utils::structures::stack<int> my_stack{};
+   prb17::utils::structures::stack<int> my_stack{};
 
    my_stack.push(1);
    debugStack(my_stack);
@@ -113,14 +113,14 @@ void testPop() {
 void testFullArrayConstructor() {
     size_t size = 3;
     int data[] = {1, 2, 3};
-   pbrady::utils::structures::stack<int> my_stack{data, size};
+   prb17::utils::structures::stack<int> my_stack{data, size};
     assert(my_stack.size() == size);
     assert(my_stack.capacity() == 2*size);
 }
 
 void testSizeOnlyConstructor() {
     size_t size = 5;
-    pbrady::utils::structures::stack<int> my_stack{size};
+    prb17::utils::structures::stack<int> my_stack{size};
     assert(my_stack.size() == size);
     assert(my_stack.capacity() == 2*size);
 
@@ -136,7 +136,7 @@ void testSizeOnlyConstructor() {
 }
 
 void testDefaultConstructor() {
-   pbrady::utils::structures::stack<int> my_stack{};
+   prb17::utils::structures::stack<int> my_stack{};
     assert(my_stack.size() == 0);
     assert(my_stack.capacity() == 0);
 

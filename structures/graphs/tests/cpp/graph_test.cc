@@ -2,7 +2,7 @@
 #include <iostream>
 #include <memory>
 
-using namespace pbrady::utils::structures;
+using namespace prb17::utils::structures;
 
 void unique_ptr_graph_print() {
     std::unique_ptr<vertex<int>> node1{new vertex<int>("node1", 6)};

@@ -3,7 +3,7 @@
 #include "array.hh"
 #include "edge.hh"
 
-namespace pbrady {
+namespace prb17 {
     namespace utils {
         namespace structures {
 

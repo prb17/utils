@@ -3,12 +3,12 @@
 
 #include "array.hh"
 
-void debugArray(pbrady::utils::structures::array<int> &arr) {
+void debugArray(prb17::utils::structures::array<int> &arr) {
     std::cout << arr << std::endl;
 }
 
 void testOperators() {
-   pbrady::utils::structures::array<int> arr1{};
+   prb17::utils::structures::array<int> arr1{};
     arr1.add(3);
     arr1.add(6);
     arr1.add(9);
@@ -17,7 +17,7 @@ void testOperators() {
     std::cout << "arr1: ";
     debugArray(arr1);
 
-    pbrady::utils::structures::array<int> arr2{};
+    prb17::utils::structures::array<int> arr2{};
     assert(arr2 != arr1);
 
     arr2 = arr1;
@@ -36,10 +36,10 @@ void testOperators() {
     arr2[3] = arr1[3];
     assert(arr1 == arr2);
 
-    pbrady::utils::structures::array<int> arr3{arr2};
+    prb17::utils::structures::array<int> arr3{arr2};
     assert(arr2 == arr3);
     
-    pbrady::utils::structures::array<int> arr4 = arr3;
+    prb17::utils::structures::array<int> arr4 = arr3;
     assert(arr3 == arr4);
     
     // pbrady::utils::structures::array<int> arr5 = {1, 2, 4}; //todo: implement creating array from <brace-enclosed initializer list>
@@ -47,7 +47,7 @@ void testOperators() {
 }
 
 void testArrayFind() {
-   pbrady::utils::structures::array<int> my_array{};
+   prb17::utils::structures::array<int> my_array{};
     my_array.add(3);
     my_array.add(6);
     my_array.add(9);
@@ -64,7 +64,7 @@ void testArrayFind() {
 }
 
 void testArrayClear() {
-   pbrady::utils::structures::array<int> my_array{};
+   prb17::utils::structures::array<int> my_array{};
     my_array.add(3);
     my_array.add(6);
     my_array.add(9);
@@ -79,7 +79,7 @@ void testArrayClear() {
 }
 
 void testArrayRemove() {
-   pbrady::utils::structures::array<int> my_array{};
+   prb17::utils::structures::array<int> my_array{};
     my_array.add(3);
     my_array.add(6);
     my_array.add(9);
@@ -93,7 +93,7 @@ void testArrayRemove() {
 }
 
 void testArrayInsert() {
-   pbrady::utils::structures::array<int> my_array{};
+   prb17::utils::structures::array<int> my_array{};
     my_array.add(3);
     my_array.add(6);
     my_array.add(9);
@@ -107,7 +107,7 @@ void testArrayInsert() {
 }
 
 void testArrayAdd() {
-   pbrady::utils::structures::array<int> my_array{};
+   prb17::utils::structures::array<int> my_array{};
     assert(my_array.size() == 0);
     assert(my_array.capacity() == 0);
 
@@ -127,7 +127,7 @@ void testArrayAdd() {
 void testFullArrayConstructor() {
     size_t size = 3;
     int data[] = {1, 2, 3};
-   pbrady::utils::structures::array<int> my_array(data, size);
+   prb17::utils::structures::array<int> my_array(data, size);
     assert(my_array.size() == size);
     assert(my_array.capacity() == 2*size);
     
@@ -138,12 +138,12 @@ void testFullArrayConstructor() {
 
 void testSizeOnlyConstructor() {
     size_t size = 5;
-    pbrady::utils::structures::array<int> my_array{size};
+    prb17::utils::structures::array<int> my_array{size};
     assert(my_array.size() == size);
     assert(my_array.capacity() == 2*size);
 
     bool exception_happened = false;
-    pbrady::utils::structures::container<int> val;
+    prb17::utils::structures::container<int> val;
     try {
         val = my_array.get(1);
     } catch (const std::exception& e) {
@@ -155,14 +155,14 @@ void testSizeOnlyConstructor() {
 }
 
 void testDefaultConstructor() {
-   pbrady::utils::structures::array<int> my_array{};
+   prb17::utils::structures::array<int> my_array{};
     assert(my_array.size() == 0);
     assert(my_array.capacity() == 0);
 
     bool exception_happened = false;
     try {
         my_array.get(1);
-    } catch (const pbrady::utils::exception& e) {
+    } catch (const prb17::utils::exception& e) {
         std::cout << e.what() << std::endl;
         exception_happened = true;
     } catch(...) {}

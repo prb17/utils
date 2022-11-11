@@ -2,7 +2,7 @@
 
 #include "vertex.hh"
 
-namespace pbrady {
+namespace prb17 {
     namespace utils {
         namespace structures {
 

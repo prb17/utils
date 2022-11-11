@@ -6,12 +6,12 @@
 
 #include<vector>
 
-void debug_queue(pbrady::utils::structures::queue<int> &queue) {
+void debug_queue(prb17::utils::structures::queue<int> &queue) {
     std::cout << queue.to_string() << std::endl;
 }
 
 void test_operators() {
-   pbrady::utils::structures::queue<int> q1{};
+   prb17::utils::structures::queue<int> q1{};
     q1.enqueue(3);
     q1.enqueue(6);
     q1.enqueue(9);
@@ -20,7 +20,7 @@ void test_operators() {
     std::cout << "q1: ";
     debug_queue(q1);
 
-    pbrady::utils::structures::queue<int> q2{};
+    prb17::utils::structures::queue<int> q2{};
     assert(q2 != q1);
 
     q2 = q1;
@@ -43,7 +43,7 @@ void test_operators() {
 void test_enqueue() {
     std::cout << "starting enqueue test" << std::endl; 
 
-    pbrady::utils::structures::queue<int> my_queue{};
+    prb17::utils::structures::queue<int> my_queue{};
     debug_queue(my_queue);
     my_queue.enqueue(4);
     debug_queue(my_queue);
@@ -63,7 +63,7 @@ void test_enqueue() {
 void test_dequeue() {    
     std::cout << "starting dequeue test" << std::endl;
 
-    pbrady::utils::structures::queue<int> my_queue{};
+    prb17::utils::structures::queue<int> my_queue{};
     my_queue.enqueue(4);
     my_queue.enqueue(12);
     my_queue.enqueue(345);
@@ -120,7 +120,7 @@ void test_dequeue() {
 void test_alternate_enq_deq() {
     std::cout << "starting alternating test" << std::endl;
 
-    pbrady::utils::structures::queue<int> my_queue{};
+    prb17::utils::structures::queue<int> my_queue{};
     my_queue.enqueue(4);
     my_queue.enqueue(12);
     my_queue.enqueue(345);

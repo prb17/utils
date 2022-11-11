@@ -1,7 +1,7 @@
 #include "container.hh"
 #include <cassert>
 
-using namespace pbrady::utils::structures;
+using namespace prb17::utils::structures;
 
 void testGreaterThan() {
     container<int> c1 = 10;

@@ -1,7 +1,7 @@
 #pragma once
 #include "stack.hh"
 
-namespace pbrady {
+namespace prb17 {
     namespace utils {
         namespace structures {
 
