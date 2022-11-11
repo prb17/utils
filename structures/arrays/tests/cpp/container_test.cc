@@ -4,8 +4,8 @@
 using namespace pbrady::utils::structures;
 
 void testGreaterThan() {
-    container<int> c1;
-    container<int> c2;
+    container<int> c1 = 10;
+    container<int> c2 = c1;
     c1 = 5;
     c2 = 3;
     assert(c1 > c2);

@@ -7,6 +7,36 @@ void debugStack(pbrady::utils::structures::stack<int>& stack) {
     std::cout << stack << std::endl;
 }
 
+void testOperators() {
+   pbrady::utils::structures::stack<int> stack1{};
+    stack1.push(3);
+    stack1.push(6);
+    stack1.push(9);
+    stack1.push(12);
+    stack1.push(15);
+    std::cout << "stack1: ";
+    debugStack(stack1);
+
+    pbrady::utils::structures::stack<int> stack2{};
+    assert(stack2 != stack1);
+
+    stack2 = stack1;
+    std::cout << "stack2: ";
+    debugStack(stack2);
+    assert(stack1 == stack2);
+
+    assert(stack1[3] == stack2[3]);
+
+    stack1[3] = 4;
+    std::cout << "stack1: ";
+    debugStack(stack1);
+    assert(stack1[3] != stack2[3]);
+    assert(stack1 != stack2);
+
+    stack2[3] = stack1[3];
+    assert(stack1 == stack2); 
+}
+
 void testPush() {
     std::cout << "Testing stack push method" << std::endl;
    pbrady::utils::structures::stack<int> my_stack{};
@@ -83,8 +113,7 @@ void testPop() {
 void testFullArrayConstructor() {
     size_t size = 3;
     int data[] = {1, 2, 3};
-   pbrady::utils::structures::stack<int> my_stack = 
-           pbrady::utils::structures::stack<int>(&data[0], size);
+   pbrady::utils::structures::stack<int> my_stack{data, size};
     assert(my_stack.size() == size);
     assert(my_stack.capacity() == 2*size);
 }
@@ -130,4 +159,6 @@ int main() {
 
     testPush();
     testPop();
+
+    testOperators();
 }

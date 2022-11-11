@@ -14,14 +14,14 @@ namespace pbrady {
                 public:
                     container();
                     container (T);
-                    container(container &);
+                    container(const container &);
 
                     T value();
                     std::string to_string() const;
 
                     //overloaded operators
-                    container& operator=(container &);
-                    container& operator=(T);
+                    container& operator=(const container &);
+                    container& operator=(const T);
                     
                     bool operator==(const container<T>&);
                     bool operator==(T);
@@ -46,7 +46,7 @@ namespace pbrady {
             container<T>::container(T d): v{d} {}
 
             template<typename T>
-            container<T>::container(container &c) {
+            container<T>::container(const container &c) {
                 v = c.v;
             }
 
@@ -74,14 +74,14 @@ namespace pbrady {
 
             //operator =
             template<typename T>
-            container<T>& container<T>::operator=(container &c) {
+            container<T>& container<T>::operator=(const container &c) {
                 if (&c != this) {
                     v = c.v;
                 }
                 return *this;
             }
             template<typename T>
-            container<T>& container<T>::operator=(T val) {
+            container<T>& container<T>::operator=(const T val) {
                 v = val;
                 return *this;
             }

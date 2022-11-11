@@ -35,6 +35,15 @@ void testOperators() {
 
     arr2[3] = arr1[3];
     assert(arr1 == arr2);
+
+    pbrady::utils::structures::array<int> arr3{arr2};
+    assert(arr2 == arr3);
+    
+    pbrady::utils::structures::array<int> arr4 = arr3;
+    assert(arr3 == arr4);
+    
+    // pbrady::utils::structures::array<int> arr5 = {1, 2, 4}; //todo: implement creating array from <brace-enclosed initializer list>
+    // assert(arr5 == {1, 2, 4});
 }
 
 void testArrayFind() {
@@ -118,8 +127,7 @@ void testArrayAdd() {
 void testFullArrayConstructor() {
     size_t size = 3;
     int data[] = {1, 2, 3};
-   pbrady::utils::structures::array<int> my_array = 
-           pbrady::utils::structures::array<int>(&data[0], size);
+   pbrady::utils::structures::array<int> my_array(data, size);
     assert(my_array.size() == size);
     assert(my_array.capacity() == 2*size);
     
@@ -135,7 +143,7 @@ void testSizeOnlyConstructor() {
     assert(my_array.capacity() == 2*size);
 
     bool exception_happened = false;
-    int val = -1;
+    pbrady::utils::structures::container<int> val;
     try {
         val = my_array.get(1);
     } catch (const std::exception& e) {
@@ -153,7 +161,7 @@ void testDefaultConstructor() {
 
     bool exception_happened = false;
     try {
-        int val = my_array.get(1);
+        my_array.get(1);
     } catch (const pbrady::utils::exception& e) {
         std::cout << e.what() << std::endl;
         exception_happened = true;

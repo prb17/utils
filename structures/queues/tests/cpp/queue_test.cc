@@ -10,6 +10,36 @@ void debug_queue(pbrady::utils::structures::queue<int> &queue) {
     std::cout << queue.to_string() << std::endl;
 }
 
+void test_operators() {
+   pbrady::utils::structures::queue<int> q1{};
+    q1.enqueue(3);
+    q1.enqueue(6);
+    q1.enqueue(9);
+    q1.enqueue(12);
+    q1.enqueue(15);
+    std::cout << "q1: ";
+    debug_queue(q1);
+
+    pbrady::utils::structures::queue<int> q2{};
+    assert(q2 != q1);
+
+    q2 = q1;
+    std::cout << "q2: ";
+    debug_queue(q2);
+    assert(q1 == q2);
+
+    assert(q1[3] == q2[3]);
+
+    q1[3] = 4;
+    std::cout << "q1: ";
+    debug_queue(q1);
+    assert(q1[3] != q2[3]);
+    assert(q1 != q2);
+
+    q2[3] = q1[3];
+    assert(q1 == q2); 
+}
+
 void test_enqueue() {
     std::cout << "starting enqueue test" << std::endl; 
 
@@ -157,4 +187,6 @@ int main() {
     test_enqueue();
     test_dequeue();
     test_alternate_enq_deq();
+
+    test_operators();
 }

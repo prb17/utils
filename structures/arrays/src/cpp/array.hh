@@ -24,29 +24,30 @@ namespace pbrady {
                     //constructors
                     array();
                     array(size_t);
+                    array(const T (&)[], size_t);
                     array(T*, size_t);
-                    // array(array &);
+                    array(array &);
                     ~array();
 
                     ////modifiers
-                    bool insert(size_t, T);
-                    bool remove(size_t);
-                    bool add(T);
+                    virtual bool insert(size_t, T);
+                    virtual bool remove(size_t);
+                    virtual bool add(T);
                     void clear();
                     
                     //accessors
-                    bool valid(size_t idx) const;
+                    virtual bool valid(size_t idx) const;
                     bool empty() const;
-                    int find(T value) const;
-                    T get(size_t idx) const;
-                    size_t size() const;
-                    size_t capacity() const;
+                    virtual int find(T value) const;
+                    virtual container<T>& get(size_t idx) const;
+                    virtual size_t size() const;
+                    virtual size_t capacity() const;
                     virtual std::string to_string() const;
 
                     //overloaded operators
                     array& operator=(array &);                    
-                    bool operator==(const array&);
-                    bool operator!=(const array&);
+                    bool operator==(const array&) const;
+                    bool operator!=(const array&) const;
                     container<T>& operator[](size_t);
                     const T operator[](size_t) const;
             };
@@ -68,6 +69,16 @@ namespace pbrady {
             template<typename T>
             array<T>::array(size_t size) : array(nullptr, size) {}
 
+
+            /**
+             * @brief Construct a new array object with certain size
+             * 
+             * @param size - size to start array off with
+             */
+            template<typename T>
+            array<T>::array(const T (&in_arr)[], size_t size) : array(&in_arr[0], size) {}
+
+
             /**
              * @brief Construct a new array object starting with certain size and elements
              * 
@@ -86,18 +97,21 @@ namespace pbrady {
                 }
             }
 
-            // /**
-            //  * @brief Construct a new array<T>::array object
-            //  * 
-            //  * @tparam T 
-            //  * @param a - array to copy from
-            //  */
-            // template<typename T>
-            // array<T>::array(array &a) {
-            //     cap = a.cap;
-            //     sz = a.sz;
-            //     data = a.data;
-            // }
+            /**
+             * @brief Construct a new array<T>::array object
+             * 
+             * @tparam T 
+             * @param a - array to copy from
+             */
+            template<typename T>
+            array<T>::array(array &a) {
+                cap = a.cap;
+                sz = a.sz;
+                data = (container<T> *)malloc(sizeof(container<T>) * cap);
+                for(int i=0; i<sz; i++) {
+                    data[i] = a.data ? a[i].value() : 0;
+                }
+            }
 
             /**
              * @brief Destroy the array object
@@ -265,12 +279,12 @@ namespace pbrady {
              * @return T - the object at the index
              */
             template<typename T>
-            T array<T>::get(size_t idx) const {
+            container<T>& array<T>::get(size_t idx) const {
                 if (!valid(idx)) {
                     throw utils::exception("Index out of range");
                 }
 
-                return data[idx].value();
+                return data[idx];
             }
 
             /**
@@ -332,33 +346,24 @@ namespace pbrady {
             //operator []
             template<typename T>
             container<T>& array<T>::operator[] (size_t idx) {
-                if (!valid(idx)) {
-                    //can I commonize this with get()??
-                    throw utils::exception("Index out of range");
-                }
-                return *&data[idx];
+                return get(idx);
             }
-            //should I make this get containr<T>& as well?
-            //since I've made container comparable against T, and printable
-            // it may be the way to go for consistancy
             template<typename T>
             const T array<T>::operator[] (size_t idx) const {
-                return get(idx); 
+                return get(idx).value(); 
             }
 
             //operator ==
             template<typename T>
-            bool array<T>::operator==(const array<T> &a) {
+            bool array<T>::operator==(const array<T> &a) const {
                 if (this->size() != a.size()) {
                     return false;
                 }
-                //should I check capacity too?
 
                 int idx = 0;
                 bool equal = true;
                 while(idx < this->size() && equal) {
-                    //why can't I use this[idx] or a[idx] here?
-                    equal = this->get(idx) == a.get(idx);
+                    equal = (*this)[idx] == a[idx];
                     idx++;
                 }
                 return equal;
@@ -366,7 +371,7 @@ namespace pbrady {
 
             //operator !=
             template<typename T>
-            bool array<T>::operator!=(const array<T> &a) {
+            bool array<T>::operator!=(const array<T> &a) const {
                 return !(*this == a);
             }
         }

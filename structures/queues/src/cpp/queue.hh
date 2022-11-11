@@ -8,8 +8,11 @@ namespace pbrady {
             template<typename T>
             class queue : public stack<T> {
                 private:
+                    //constructors
+                    //accessors
                     //modifier
                     virtual T pop() override;
+                    //overloaded operators   
 
                 public:
                     //constructors
@@ -24,6 +27,8 @@ namespace pbrady {
                     //modifiers
                     void enqueue(T);
                     T dequeue();
+                    
+                    //overloaded operators   
             };
 
             //constructors
@@ -72,6 +77,8 @@ namespace pbrady {
             T queue<T>::dequeue() {
                 return pop();
             }
+            
+            //overloaded operators   
         }
     }
 }

@@ -36,7 +36,7 @@ namespace pbrady {
             template<typename T>
             vertex<T>::~vertex() {
                 for(int i=0; i<edges.size(); i++) {
-                    delete edges.get(i);
+                    delete edges[i].value();
                 }
             }
 
@@ -44,6 +44,8 @@ namespace pbrady {
             //todo: determine if I need to keep weighted and normal edges separate
             //  Does it not make sense to mix the two?
             //  Are there any benefits (other than simplicity) to having a graph of nodes with mixed edge types?
+            // Looks like you can't, at least it seems safer not to mix the two types of edges, 
+            //      So how do I ensure that they don't mix?
             template<typename T>
             void vertex<T>::add_edge(vertex<T>* node) {
                 auto *e = new edge<vertex<T> >(node);

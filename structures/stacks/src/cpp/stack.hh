@@ -8,11 +8,16 @@ namespace pbrady {
             template<typename T>
             class stack : public array<T> {
                 private:
+                    //constructors
+                    //accessors
+                    //modifiers
+                    //overloaded operators                    
 
                 public:
                     //constructors
                     stack();
                     stack(size_t);
+                    stack(const T (&)[], size_t);
                     stack(T*, size_t);
                     ~stack();
 
@@ -22,6 +27,8 @@ namespace pbrady {
                     //modifiers
                     virtual T pop();
                     void push(T);
+
+                    //overloaded operators
             };
 
             //constructors
@@ -32,6 +39,9 @@ namespace pbrady {
             stack<T>::stack(size_t size) : stack(nullptr, size) {}
 
             template<typename T>
+            stack<T>::stack(const T (&in_arr)[], size_t size) : stack(&in_arr[0], size) {}
+
+            template<typename T>
             stack<T>::stack(T* in_data, size_t size) : array<T>(in_data, size) {}
 
             template<typename T>
@@ -40,13 +50,13 @@ namespace pbrady {
             //accessors
             template<typename T>
             T stack<T>::peek() {
-                return this->data[this->size() - 1].value();
+                return (*this)[this->size() - 1].value();
             }
 
             //modifiers
             template<typename T>
             T stack<T>::pop() {
-                T retval = this->get(this->size() - 1);
+                T retval = peek();
                 this->remove(this->size() - 1);
                 return retval;
             }
@@ -55,6 +65,8 @@ namespace pbrady {
             void stack<T>::push(T val) {
                 this->add(val);
             }
+            
+            //overloaded operators
         }    
     }
 }
