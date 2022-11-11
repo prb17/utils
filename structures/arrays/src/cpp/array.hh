@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <stdexcept>
 #include <sstream>
 
 #include "container.hh"
@@ -26,23 +25,30 @@ namespace pbrady {
                     array();
                     array(size_t);
                     array(T*, size_t);
+                    // array(array &);
                     ~array();
 
                     ////modifiers
-                    virtual bool insert(size_t, T);
-                    virtual bool remove(size_t);
-                    virtual bool add(T);
-                    virtual void clear();
+                    bool insert(size_t, T);
+                    bool remove(size_t);
+                    bool add(T);
+                    void clear();
                     
                     //accessors
-                    virtual bool valid(size_t idx) const;
-                    virtual bool empty() const;
-                    virtual int find(T value) const;
-
-                    virtual T get(size_t idx) const;
-                    virtual size_t size() const;
-                    virtual size_t capacity() const;
+                    bool valid(size_t idx) const;
+                    bool empty() const;
+                    int find(T value) const;
+                    T get(size_t idx) const;
+                    size_t size() const;
+                    size_t capacity() const;
                     virtual std::string to_string() const;
+
+                    //overloaded operators
+                    array& operator=(array &);                    
+                    bool operator==(const array&);
+                    bool operator!=(const array&);
+                    container<T>& operator[](size_t);
+                    const T operator[](size_t) const;
             };
 
             //constructors
@@ -73,12 +79,25 @@ namespace pbrady {
                 if (size) {
                     this->data = (container<T> *)malloc(sizeof(container<T>) * cap);
                     for(int i=0; i<size; i++) {
-                        this->data[i] = in_data ? container<T>{in_data[i]} : container<T>{};
+                        this->data[i] = in_data ? in_data[i] : 0;
                     }
                 } else {
                     this->data = nullptr;
                 }
             }
+
+            // /**
+            //  * @brief Construct a new array<T>::array object
+            //  * 
+            //  * @tparam T 
+            //  * @param a - array to copy from
+            //  */
+            // template<typename T>
+            // array<T>::array(array &a) {
+            //     cap = a.cap;
+            //     sz = a.sz;
+            //     data = a.data;
+            // }
 
             /**
              * @brief Destroy the array object
@@ -137,7 +156,7 @@ namespace pbrady {
 
                 while(index <= size()) {
                     container<T> tmp = data[index];
-                    data[index++] = container<T>{value};
+                    data[index++] = value;
                     value = tmp.value();
                 }
                 sz++;
@@ -289,11 +308,66 @@ namespace pbrady {
                 stream << "]";
                 return stream.str();
             }
-            
 
+            //operator<< (ostream)
             template<typename T>
             inline std::ostream& operator<<(std::ostream &stream, const array<T>& arr) {
                 return stream << arr.to_string();
+            }
+            
+            //operator =
+            template<typename T>
+            array<T>& array<T>::operator=(array &a) {
+                if (&a != this) {
+                    cap = a.cap;
+                    sz = a.sz;
+                    data = (container<T> *)malloc(sizeof(container<T>) * cap);
+                    for(int i=0; i<sz; i++) {
+                        data[i] = a.data ? a[i].value() : 0;
+                    }
+                }
+                return *this;
+            }
+
+            //operator []
+            template<typename T>
+            container<T>& array<T>::operator[] (size_t idx) {
+                if (!valid(idx)) {
+                    //can I commonize this with get()??
+                    throw utils::exception("Index out of range");
+                }
+                return *&data[idx];
+            }
+            //should I make this get containr<T>& as well?
+            //since I've made container comparable against T, and printable
+            // it may be the way to go for consistancy
+            template<typename T>
+            const T array<T>::operator[] (size_t idx) const {
+                return get(idx); 
+            }
+
+            //operator ==
+            template<typename T>
+            bool array<T>::operator==(const array<T> &a) {
+                if (this->size() != a.size()) {
+                    return false;
+                }
+                //should I check capacity too?
+
+                int idx = 0;
+                bool equal = true;
+                while(idx < this->size() && equal) {
+                    //why can't I use this[idx] or a[idx] here?
+                    equal = this->get(idx) == a.get(idx);
+                    idx++;
+                }
+                return equal;
+            }
+
+            //operator !=
+            template<typename T>
+            bool array<T>::operator!=(const array<T> &a) {
+                return !(*this == a);
             }
         }
     }    

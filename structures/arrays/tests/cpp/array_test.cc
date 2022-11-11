@@ -7,6 +7,36 @@ void debugArray(pbrady::utils::structures::array<int> &arr) {
     std::cout << arr << std::endl;
 }
 
+void testOperators() {
+   pbrady::utils::structures::array<int> arr1{};
+    arr1.add(3);
+    arr1.add(6);
+    arr1.add(9);
+    arr1.add(12);
+    arr1.add(15);
+    std::cout << "arr1: ";
+    debugArray(arr1);
+
+    pbrady::utils::structures::array<int> arr2{};
+    assert(arr2 != arr1);
+
+    arr2 = arr1;
+    std::cout << "arr2: ";
+    debugArray(arr2);
+    assert(arr1 == arr2);
+
+    assert(arr1[3] == arr2[3]);
+
+    arr1[3] = 4;
+    std::cout << "arr1: ";
+    debugArray(arr1);
+    assert(arr1[3] != arr2[3]);
+    assert(arr1 != arr2);
+
+    arr2[3] = arr1[3];
+    assert(arr1 == arr2);
+}
+
 void testArrayFind() {
    pbrady::utils::structures::array<int> my_array{};
     my_array.add(3);
@@ -17,6 +47,9 @@ void testArrayFind() {
 
     assert(my_array.find(12) == 3);
     assert(my_array.find(20) == -1);
+
+    int i = my_array.find(6);
+    std::cout << my_array[i] << std::endl;
 
     debugArray(my_array);
 }
@@ -145,4 +178,5 @@ int main() {
     //accessor tests
     //accessors are used to test the modifiers, making the
     //decision not to test them for now
+    testOperators();
 }

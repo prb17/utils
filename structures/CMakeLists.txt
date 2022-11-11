@@ -1,12 +1,15 @@
 #array target definition
 set(ARRAY_LIBRARY_NAME arrays)
 set(ARRAY_TEST_NAME array_test)
+set(CONTAINER_TEST_NAME container_test)
 add_library(${ARRAY_LIBRARY_NAME} INTERFACE)
 target_include_directories(${ARRAY_LIBRARY_NAME} INTERFACE arrays/src/cpp/)
 target_link_libraries(${ARRAY_LIBRARY_NAME} INTERFACE ${UTILS_EXCEPTION_LIBRARY_NAME})
 
 add_executable(${ARRAY_TEST_NAME} arrays/tests/cpp/array_test.cc)
+add_executable(${CONTAINER_TEST_NAME} arrays/tests/cpp/container_test.cc)
 target_link_libraries(${ARRAY_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME})
+target_link_libraries(${CONTAINER_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME})
 
 #stack target definition
 set(STACKS_LIBRARY_NAME stacks)

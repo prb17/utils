@@ -1,5 +1,6 @@
 #pragma once
-#include<string>
+#include <string>
+#include <sstream>
 
 namespace pbrady {
     namespace utils {
@@ -13,9 +14,29 @@ namespace pbrady {
                 public:
                     container();
                     container (T);
+                    container(container &);
 
                     T value();
                     std::string to_string() const;
+
+                    //overloaded operators
+                    container& operator=(container &);
+                    container& operator=(T);
+                    
+                    bool operator==(const container<T>&);
+                    bool operator==(T);
+                    bool operator!=(const container<T>&);
+                    bool operator!=(T);
+
+                    bool operator<(const container<T>&);
+                    bool operator<(T);
+                    bool operator>(const container<T>&);
+                    bool operator>(T);
+                    bool operator<=(const container<T>&);
+                    bool operator<=(T);
+                    bool operator>=(const container<T>&);
+                    bool operator>=(T);
+                    
             };
 
             template<typename T>
@@ -23,6 +44,11 @@ namespace pbrady {
 
             template<typename T>
             container<T>::container(T d): v{d} {}
+
+            template<typename T>
+            container<T>::container(container &c) {
+                v = c.v;
+            }
 
             template<typename T>
             T container<T>::value() {
@@ -39,13 +65,87 @@ namespace pbrady {
                 std::stringstream stream;
                 stream << v;
                 return stream.str();
-            }
-            
+            }            
 
             template<typename T>
             inline std::ostream& operator<<(std::ostream &stream, const container<T>& c) {
                 return stream << c.to_string();
             }
+
+            //operator =
+            template<typename T>
+            container<T>& container<T>::operator=(container &c) {
+                if (&c != this) {
+                    v = c.v;
+                }
+                return *this;
+            }
+            template<typename T>
+            container<T>& container<T>::operator=(T val) {
+                v = val;
+                return *this;
+            }
+
+            //operator ==
+            template<typename T>
+            bool container<T>::operator==(const container<T> &c) {
+                return this->v == c.v;
+            }
+            template<typename T>
+            bool container<T>::operator==(T v) {
+                return this->v == v;
+            }
+
+            //operator !=
+            template<typename T>
+            bool container<T>::operator!=(const container<T> &c) {
+                return !(*this == c);
+            }
+            template<typename T>
+            bool container<T>::operator!=(T v) {
+                return !(this->v == v);
+            }
+
+            //operator <
+            template<typename T>
+            bool container<T>::operator<(const container<T> &c) {
+                return this->v < c.v;
+            }
+            template<typename T>
+            bool container<T>::operator<(T v) {
+                return this->v < v;
+            }
+
+            //operator >
+            template<typename T>
+            bool container<T>::operator>(const container<T> &c) {
+                return const_cast<container<T>&>(c) < *this;
+            }
+            template<typename T>
+            bool container<T>::operator>(T v) {
+                return v < this->v;
+            }            
+            
+            //operator <=
+            template<typename T>
+            bool container<T>::operator<=(const container<T> &c) {
+                return !(*this > c);
+            }
+            template<typename T>
+            bool container<T>::operator<=(T v) {
+                return !(this->v > v);
+            }      
+            
+            //operator >=
+            template<typename T>
+            bool container<T>::operator>=(const container<T> &c) {
+                return !(*this < c);
+            }
+            template<typename T>
+            bool container<T>::operator>=(T v) {
+                return !(this->v < v);
+            }
+            
         }
     }
 }
