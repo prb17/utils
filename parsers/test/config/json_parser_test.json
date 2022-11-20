@@ -3,16 +3,16 @@
     "jsonValue2" : "property2",
     "jsonValue3" : "property3",
     "jsonObject1" : {
-        "jsonValue1" : "property1",
-        "jsonValue2" : "property2",
-        "jsonValue3" : "property3"
+        "jsonValue1" : "property4",
+        "jsonValue2" : "property5",
+        "jsonValue3" : "property6"
     },
     "jsonObject2" : {
         "jsonObject3" : {
-            "jsonValue1" : "property1",
-            "jsonValue2" : "property2",
-            "jsonValue3" : "property3"
+            "jsonValue1" : "property7",
+            "jsonValue2" : "property8",
+            "jsonValue3" : "property9"
         }
     },
-    "jsonIntObject" : "5"
+    "jsonIntObject" : -5
 }
