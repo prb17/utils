@@ -27,7 +27,6 @@ add_subdirectory(exceptions)
 
 #TODO: figure out good options for include or not including certain utilities
 add_subdirectory(parsers)
-message(DEBUG "parsers library name: ${PARSERS_LIBRARY_NAME}")
 add_subdirectory(validate)
 add_subdirectory(structures)
 

@@ -11,7 +11,6 @@ if(BUILD_UTILS_TESTS)
     add_executable(${CONTAINER_TEST_NAME} arrays/tests/cpp/container_test.cc)
     message(DEBUG "validate include dir: ${VALIDATE_INCLUDE_DIRS}")
     message(DEBUG "validate library: ${VALIDATE_LIBRARY_NAME}")
-    message(DEBUG "parsers library name: ${PARSERS_LIBRARY_NAME}")
     
     target_include_directories(${ARRAY_TEST_NAME} INTERFACE ${VALIDATE_INCLUDE_DIRS})
     target_include_directories(${CONTAINER_TEST_NAME} INTERFACE ${VALIDATE_INCLUDE_DIRS})
