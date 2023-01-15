@@ -15,8 +15,9 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
 set(UTILS_DEPS_BUILD_DIR "${CMAKE_BINARY_DIR}/third_party")
 set(UTILS_DEPS_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/third_party")
 
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #Fetch and make available external projects
-find_package(JsonCpp 1.9.5 COMPONENTS jsoncpp)
+find_package(JsonCpp 1.9.5 COMPONENTS jsoncpp_lib)
 message(DEBUG "json incs: ${JsonCpp_INCLUDE_DIRS}")
 message(DEBUG "json libs: ${JsonCpp_LIBRARIES}")
 message(DEBUG "json libs dir: ${JsonCpp_LIBRARIES_DIR}")
@@ -26,7 +27,7 @@ add_subdirectory(exceptions)
 
 #TODO: figure out good options for include or not including certain utilities
 add_subdirectory(parsers)
+message(DEBUG "parsers library name: ${PARSERS_LIBRARY_NAME}")
 add_subdirectory(validate)
 add_subdirectory(structures)
 
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)

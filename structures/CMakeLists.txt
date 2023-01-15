@@ -9,8 +9,14 @@ if(BUILD_UTILS_TESTS)
     set(CONTAINER_TEST_NAME container_test)
     add_executable(${ARRAY_TEST_NAME} arrays/tests/cpp/array_test.cc)
     add_executable(${CONTAINER_TEST_NAME} arrays/tests/cpp/container_test.cc)
-    target_link_libraries(${ARRAY_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME})
-    target_link_libraries(${CONTAINER_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME})
+    message(DEBUG "validate include dir: ${VALIDATE_INCLUDE_DIRS}")
+    message(DEBUG "validate library: ${VALIDATE_LIBRARY_NAME}")
+    message(DEBUG "parsers library name: ${PARSERS_LIBRARY_NAME}")
+    
+    target_include_directories(${ARRAY_TEST_NAME} INTERFACE ${VALIDATE_INCLUDE_DIRS})
+    target_include_directories(${CONTAINER_TEST_NAME} INTERFACE ${VALIDATE_INCLUDE_DIRS})
+    target_link_libraries(${ARRAY_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME} ${VALIDATE_LIBRARY_NAME} ${PARSERS_LIBRARY_NAME})
+    target_link_libraries(${CONTAINER_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME} ${VALIDATE_LIBRARY_NAME} ${PARSERS_LIBRARY_NAME})
 endif(BUILD_UTILS_TESTS)
 
 #stack target definition

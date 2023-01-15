@@ -1,4 +1,5 @@
 #include "container.hh"
+#include "validate.hh"
 #include <cassert>
 
 using namespace prb17::utils::structures;
