@@ -14,5 +14,11 @@
             "jsonValue3" : "property9"
         }
     },
-    "jsonIntObject" : -5
+    "jsonIntObject" : -5,
+    "jsonStringArray" : ["one", "two", "three", "four", "five"],
+    "jsonIntArray" : [1, 2, 3, 4, 5, -6],
+    "jsonUIntArray" : [1, 2, 3, 4, 5, 6],
+    "jsonBoolArray" : [1, 0, 1, 0, 1],
+    "jsonFloatArray" : [1.0, 2.0, 3.0, 4.0, 5.0],
+    "jsonDoubleArray" : [1.0, 2.0, 3.0, 4.0, 5.0]
 }

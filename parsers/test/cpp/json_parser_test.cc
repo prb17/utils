@@ -1,5 +1,5 @@
 #include "json_parser.hh"
-
+#include "array.hh"
 #include <iostream>
 
 using namespace prb17::utils::parsers;
@@ -37,4 +37,18 @@ int main() {
         .json_value("jsonObject3")
         .as_string("jsonValue3")
     << std::endl;
+
+    // std::cout << parser.as_string_array("jsonStringArray") << std::endl;
+    std::cout << parser.as_int_array("jsonIntArray") << std::endl;
+    std::cout << parser.as_uint_array("jsonUIntArray") << std::endl;
+    std::cout << parser.as_bool_array("jsonBoolArray") << std::endl;
+    std::cout << parser.as_float_array("jsonFloatArray") << std::endl;
+    std::cout << parser.as_double_array("jsonDoubleArray") << std::endl;
+
+    // std::cout << parser.as_array<std::string>("jsonStringArray") << std::endl;
+    // std::cout << parser.as_array<int>("jsonIntArray") << std::endl;
+    // std::cout << parser.as_array<uint>("jsonUIntArray") << std::endl;
+    // std::cout << parser.as_array<bool>("jsonBoolArray") << std::endl;
+    // std::cout << parser.as_array<float>("jsonFloatArray") << std::endl;
+    // std::cout << parser.as_array<double>("jsonDoubleArray") << std::endl;
 }

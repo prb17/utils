@@ -1,5 +1,9 @@
 #include<fstream>
 #include<sstream>
+#include<algorithm>
+#include<iterator>
+#include<type_traits>
+#include<iostream>
 
 #include "json_parser.hh"
 #include "exception.hh"
@@ -7,6 +11,8 @@
 using namespace prb17::utils::parsers;
 
 json_parser::json_parser() {}
+
+json_parser::json_parser(Json::Value &val) : root{val} {}
 
 Json::Value json_parser::get_json_value() {
     return root;
@@ -112,4 +118,60 @@ double json_parser::as_double(std::string property) {
     }    
     
     return retval;
+}
+
+//TODO: Could these array functions be consolodated?
+prb17::utils::structures::array<std::string> json_parser::as_string_array(std::string property) {
+    prb17::utils::structures::array<std::string> arr{};
+
+    for(Json::Value::ArrayIndex i=0; i < root[property].size(); i++) {
+            std::string tmp = root[property][i].asString();
+            arr.add(tmp);        
+    }
+    return arr;
+}
+
+prb17::utils::structures::array<int> json_parser::as_int_array(std::string property) {
+    prb17::utils::structures::array<int> arr{};
+
+    for(Json::Value::ArrayIndex i=0; i < root[property].size(); i++) {
+            arr.add(root[property][i].asInt());        
+    }
+    return arr;
+}
+
+prb17::utils::structures::array<uint> json_parser::as_uint_array(std::string property) {
+    prb17::utils::structures::array<uint> arr{};
+
+    for(Json::Value::ArrayIndex i=0; i < root[property].size(); i++) {
+            arr.add(root[property][i].asUInt());        
+    }
+    return arr;
+}
+
+prb17::utils::structures::array<bool> json_parser::as_bool_array(std::string property) {
+    prb17::utils::structures::array<bool> arr{};
+
+    for(Json::Value::ArrayIndex i=0; i < root[property].size(); i++) {
+            arr.add(root[property][i].asBool());        
+    }
+    return arr;
+}
+
+prb17::utils::structures::array<float> json_parser::as_float_array(std::string property) {
+    prb17::utils::structures::array<float> arr{};
+
+    for(Json::Value::ArrayIndex i=0; i < root[property].size(); i++) {
+            arr.add(root[property][i].asFloat());        
+    }
+    return arr;
+}
+
+prb17::utils::structures::array<double> json_parser::as_double_array(std::string property) {
+    prb17::utils::structures::array<double> arr{};
+
+    for(Json::Value::ArrayIndex i=0; i < root[property].size(); i++) {
+            arr.add(root[property][i].asDouble());        
+    }
+    return arr;
 }

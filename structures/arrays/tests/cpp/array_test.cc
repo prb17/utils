@@ -1,14 +1,19 @@
 #include <iostream>
 #include <cassert>
+#include <map>
 
 #include "array.hh"
+#include "validator.hh"
 
-void debugArray(prb17::utils::structures::array<int> &arr) {
+using namespace prb17::utils;
+using namespace prb17::utils::structures;
+
+void debugArray(array<int> &arr) {
     std::cout << arr << std::endl;
 }
 
 void testOperators() {
-   prb17::utils::structures::array<int> arr1{};
+   array<int> arr1{};
     arr1.add(3);
     arr1.add(6);
     arr1.add(9);
@@ -17,13 +22,13 @@ void testOperators() {
     std::cout << "arr1: ";
     debugArray(arr1);
 
-    prb17::utils::structures::array<int> arr2{};
+    array<int> arr2{};
     assert(arr2 != arr1);
 
     arr2 = arr1;
     std::cout << "arr2: ";
     debugArray(arr2);
-    assert(arr1 == arr2);
+    assert(arr2 == arr1);
 
     assert(arr1[3] == arr2[3]);
 
@@ -36,31 +41,51 @@ void testOperators() {
     arr2[3] = arr1[3];
     assert(arr1 == arr2);
 
-    prb17::utils::structures::array<int> arr3{arr2};
+    array<int> arr3{arr2};
     assert(arr2 == arr3);
     
-    prb17::utils::structures::array<int> arr4 = arr3;
+    array<int> arr4 = arr3;
     assert(arr3 == arr4);
     
-    // pbrady::utils::structures::array<int> arr5 = {1, 2, 4}; //todo: implement creating array from <brace-enclosed initializer list>
+    // prb17::utils::structures::array<int> arr5 = {1, 2, 4}; //todo: implement creating array from <brace-enclosed initializer list>
     // assert(arr5 == {1, 2, 4});
 }
 
-void testArrayFind() {
-   prb17::utils::structures::array<int> my_array{};
-    my_array.add(3);
-    my_array.add(6);
-    my_array.add(9);
-    my_array.add(12);
-    my_array.add(15);
+// TODO: Is there a way to templatize this? Or have it common amongst the different data types?
+// eventually have a test for strings, uints, bools, floats, and doubles
+// Is it necessary to have tests for all data types?
+// Maybe put that info in the config file? At least for now? Then use switch statements in each test
+bool testArrayFind(parsers::json_parser jp) {
+    std::string datatype = jp.as_string("datatype");
+    if (datatype == "int") {
+        prb17::utils::structures::array<int> arr{jp.as_int_array("array")};
+        std::cout << "input array (int): " << arr << std::endl;
+        int expected = jp.as_int("expected");
+        std::cout << "expected index: " << expected << std::endl;
 
-    assert(my_array.find(12) == 3);
-    assert(my_array.find(20) == -1);
+        int find_value = jp.as_int("find");
+        std::cout << "finding value: " << find_value << std::endl;
 
-    int i = my_array.find(6);
-    std::cout << my_array[i] << std::endl;
+        int result = arr.find(find_value);
+        std::cout << "result index was: " << result << std::endl;
 
-    debugArray(my_array);
+        return expected == result;
+    } else if (datatype == "string") {
+        prb17::utils::structures::array<std::string> arr{jp.as_string_array("array")};
+        std::cout << "input array (string): " << arr << std::endl;
+        int expected = jp.as_int("expected");
+        std::cout << "expected index: " << expected << std::endl;
+
+        std::string find_value = jp.as_string("find");
+        std::cout << "finding value: " << find_value << std::endl;
+
+        int result = arr.find(find_value);
+        std::cout << "result index was: " << result << std::endl;
+
+        return expected == result;
+    } else {
+        throw exception("Unsupported datatype for testArrayFind");
+    }    
 }
 
 void testArrayClear() {
@@ -169,22 +194,44 @@ void testDefaultConstructor() {
     assert(exception_happened);
 }
 
-int main() {
-    
+void testStringArray(prb17::utils::parsers::json_parser jp) {
+   prb17::utils::structures::array<std::string> arr{};
+    arr.add("one");
+    arr.add("two");
+
+}
+
+//Map that relates the json file test config file to each test function defined in this file
+static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > test_map = {
+    {"testArrayFind", &testArrayFind}
+};
+
+#define NUM_ARGS 2
+int main(int argc, char** argv) {
+    if (argc != NUM_ARGS) {
+        throw prb17::utils::exception("This test requires a config file to be provided");
+    }
+
+    std::string test_file(&argv[1][0]);
+    prb17::utils::validator validator{test_file, &test_map};
+    validator.validate();
+
+    // testStringArray();
+
     //constructor tests
-    testDefaultConstructor();
-    testSizeOnlyConstructor();
-    testFullArrayConstructor();
+    // testDefaultConstructor();
+    // testSizeOnlyConstructor();
+    // testFullArrayConstructor();
 
-    //modifier tests
-    testArrayAdd();
-    testArrayInsert();
-    testArrayRemove();
-    testArrayClear();
-    testArrayFind();
+    // //modifier tests
+    // testArrayAdd();
+    // testArrayInsert();
+    // testArrayRemove();
+    // testArrayClear();
+    // testArrayFind();
 
-    //accessor tests
-    //accessors are used to test the modifiers, making the
-    //decision not to test them for now
-    testOperators();
+    // //accessor tests
+    // //accessors are used to test the modifiers, making the
+    // //decision not to test them for now
+    // testOperators();
 }

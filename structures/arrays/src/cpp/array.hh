@@ -26,7 +26,7 @@ namespace prb17 {
                     array(size_t);
                     array(const T (&)[], size_t);
                     array(T*, size_t);
-                    array(array &);
+                    array(const array &);
                     ~array();
 
                     ////modifiers
@@ -104,12 +104,12 @@ namespace prb17 {
              * @param a - array to copy from
              */
             template<typename T>
-            array<T>::array(array &a) {
+            array<T>::array(const array &a) {
                 cap = a.cap;
                 sz = a.sz;
                 data = (container<T> *)malloc(sizeof(container<T>) * cap);
                 for(int i=0; i<sz; i++) {
-                    data[i] = a.data ? a[i].value() : 0;
+                    data[i] = a.data ? a.get(i).value() : 0;
                 }
             }
 

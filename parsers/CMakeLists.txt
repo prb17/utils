@@ -9,7 +9,7 @@ set(PARSERS_INCLUDE_DIRS ${PARSERS_INCLUDE_DIRS} PARENT_SCOPE)
 
 target_include_directories(${PARSERS_LIBRARY_NAME} PRIVATE ${PARSERS_INCLUDE_DIRS})
 target_link_directories(${PARSERS_LIBRARY_NAME} PRIVATE ${JsonCpp_LIBRARIES_DIR})
-target_link_libraries(${PARSERS_LIBRARY_NAME} PRIVATE ${UTILS_EXCEPTION_LIBRARY_NAME} ${JsonCpp_LIBRARIES})
+target_link_libraries(${PARSERS_LIBRARY_NAME} PRIVATE ${UTILS_EXCEPTION_LIBRARY_NAME} ${JsonCpp_LIBRARIES} ${ARRAY_LIBRARY_NAME})
 
 if(BUILD_UTILS_TESTS)
     #parser test target definition
@@ -17,10 +17,10 @@ if(BUILD_UTILS_TESTS)
     add_executable(${PARSERS_TEST_NAME} test/cpp/json_parser_test.cc)
     add_dependencies(${PARSERS_LIBRARY_NAME} ${JsonCpp_EXTERNAL_LIB_NAME})
 
-    target_include_directories(${PARSERS_TEST_NAME} PRIVATE ${PARSERS_INCLUDE_DIRS})
+    target_include_directories(${PARSERS_TEST_NAME} PRIVATE ${PARSERS_INCLUDE_DIRS} ${ARRAY_INCLUDE_DIRS} ${UTILS_EXCEPTION_INCLUDE_DIRS} )
 
     target_link_directories(${PARSERS_TEST_NAME} PRIVATE  ${JsonCpp_LIBRARIES_DIR})
-    target_link_libraries(${PARSERS_TEST_NAME} PRIVATE ${PARSERS_LIBRARY_NAME} ${JsonCpp_LIBRARIES})
+    target_link_libraries(${PARSERS_TEST_NAME} PRIVATE ${PARSERS_LIBRARY_NAME} ${JsonCpp_LIBRARIES} ${ARRAY_LIBRARY_NAME})
 
     install(TARGETS ${PARSERS_TEST_NAME} DESTINATION parsers/bin)
     file(GLOB PARSERS_TEST_CONFIG_FILES test/config/*.json)

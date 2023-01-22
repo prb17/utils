@@ -1,0 +1,36 @@
+{
+    "MetaData": { 
+        "test_name" : "meta data",
+        "test_type" : "unit"
+    },
+    "Tests" : [
+        {
+            "name" : "testArrayFind",
+            "datatype" : "int",
+            "array" : [ 3, 6, 9, 12, 15],
+            "find" : 6,
+            "expected" : 1
+        },
+        {
+            "name" : "testArrayFind",
+            "datatype" : "int",
+            "array" : [ 3, 6, 9, 12, 15],
+            "find" : 7,
+            "expected" : 1
+        },
+        {
+            "name" : "testArrayFind",
+            "datatype" : "string",
+            "array" : [ "one", "two", "three", "four", "five" ],
+            "find" : "four",
+            "expected" : 3
+        },
+        {
+            "name" : "testArrayFind",
+            "datatype" : "string",
+            "array" : [ "one", "two", "three", "four", "five" ],
+            "find" : "seven",
+            "expected" : 3
+        }
+    ]
+}
