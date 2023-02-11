@@ -12,7 +12,7 @@ using namespace prb17::utils::parsers;
 
 json_parser::json_parser() {}
 
-json_parser::json_parser(Json::Value &val) : root{val} {}
+json_parser::json_parser(const Json::Value &val) : root{val} {}
 
 Json::Value json_parser::get_json_value() {
     return root;
@@ -120,7 +120,6 @@ double json_parser::as_double(std::string property) {
     return retval;
 }
 
-//TODO: Could these array functions be consolodated?
 prb17::utils::structures::array<std::string> json_parser::as_string_array(std::string property) {
     prb17::utils::structures::array<std::string> arr{};
 

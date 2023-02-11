@@ -1,6 +1,7 @@
 #pragma once
 #include<string>
 #include<iostream>
+#include<memory>
 
 #include "json/json.h"
 #include "array.hh"
@@ -15,7 +16,7 @@ namespace prb17 {
                 public:
                     //constructors
                     json_parser();
-                    json_parser(Json::Value&);
+                    json_parser(const Json::Value&);
 
                     //modifiers
                     void parse(std::string);
@@ -26,12 +27,19 @@ namespace prb17 {
                     std::string to_string() const;
 
                     json_parser json_value(std::string);
+
+                    template<typename T>
+                    void* as_value(std::string);
+
                     std::string as_string(std::string);
                     int as_int(std::string);
                     uint as_uint(std::string);
                     bool as_bool(std::string);
                     float as_float(std::string);
                     double as_double(std::string);
+                    
+                    template<typename T>
+                    void* as_array(std::string);
 
                     prb17::utils::structures::array<std::string> as_string_array(std::string);
                     prb17::utils::structures::array<int> as_int_array(std::string);
@@ -39,9 +47,6 @@ namespace prb17 {
                     prb17::utils::structures::array<bool> as_bool_array(std::string);
                     prb17::utils::structures::array<float> as_float_array(std::string);
                     prb17::utils::structures::array<double> as_double_array(std::string);
-
-                    template<typename T>
-                    prb17::utils::structures::array<T> as_array(std::string);
             };
             
             inline std::ostream& operator<<(std::ostream &stream, const json_parser &jp) {
@@ -49,28 +54,57 @@ namespace prb17 {
             }
 
             template<typename T>
-            prb17::utils::structures::array<T> json_parser::as_array(std::string property) {
+            void* json_parser::as_value(std::string property) {
+                void *val;
                 if (std::is_same<T, std::string>::value) {
-                    return as_string_array(property);
+                    val = new std::string{as_string(property)};
                 }
                 else if (std::is_same<T, int>::value) {
-                    return as_int_array(property);
+                    val = new int{as_int(property)};
                 }
                 else if (std::is_same<T, uint>::value) {
-                    return as_uint_array(property);
+                    val = new uint{as_uint(property)};
                 }
                 else if (std::is_same<T, bool>::value) {
-                    return as_bool_array(property);
+                    val = new bool{as_bool(property)};
                 }
                 else if (std::is_same<T, float>::value) {
-                    return as_float_array(property);
+                    val = new float{as_float(property)};
                 }
                 else if (std::is_same<T, double>::value) {
-                    return as_double_array(property);
+                    val = new double{as_double(property)};
                 } 
                 else {
                     throw exception("unsupported requested data type");
                 }
+                return val;
+            }
+
+            template<typename T>
+            void* json_parser::as_array(std::string property) {
+                void *arr;
+                if (std::is_same<T, std::string>::value) {
+                    arr = new prb17::utils::structures::array<std::string>{as_string_array(property)};
+                }
+                else if (std::is_same<T, int>::value) {
+                    arr = new prb17::utils::structures::array<int>{as_int_array(property)};
+                }
+                else if (std::is_same<T, uint>::value) {
+                    arr = new prb17::utils::structures::array<uint>{as_uint_array(property)};
+                }
+                else if (std::is_same<T, bool>::value) {
+                    arr = new prb17::utils::structures::array<bool>{as_bool_array(property)};
+                }
+                else if (std::is_same<T, float>::value) {
+                    arr = new prb17::utils::structures::array<float>{as_float_array(property)};
+                }
+                else if (std::is_same<T, double>::value) {
+                    arr = new prb17::utils::structures::array<double>{as_double_array(property)};
+                } 
+                else {
+                    throw exception("unsupported requested data type");
+                }
+                return arr;
             }
         }
     }

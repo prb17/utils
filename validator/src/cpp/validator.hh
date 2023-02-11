@@ -9,14 +9,15 @@ namespace prb17 {
     namespace utils {
         class validator {
             private:
-                parsers::json_parser jp;
+                // parsers::json_parser jp;
                 std::string test_file;
                 std::map<std::string, std::function<bool(parsers::json_parser)> > *tests_to_validate;
                 void print_test_info();
 
             public:
                 validator(std::string, std::map<std::string, std::function<bool(parsers::json_parser)> >*);
-                void validate();                
+                void validate();     
+                parsers::json_parser jp;
         };
 
         validator::validator(std::string file, std::map<std::string, std::function<bool(parsers::json_parser)> > *test_list) : test_file{file}, tests_to_validate{test_list}, jp{} {
@@ -44,8 +45,6 @@ namespace prb17 {
                 } else {
                     throw exception("config test file provided used unrecognized test name, please fix now");
                 }
-
-
             }
         }
 

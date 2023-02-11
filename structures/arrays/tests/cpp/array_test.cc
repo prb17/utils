@@ -51,43 +51,6 @@ void testOperators() {
     // assert(arr5 == {1, 2, 4});
 }
 
-// TODO: Is there a way to templatize this? Or have it common amongst the different data types?
-// eventually have a test for strings, uints, bools, floats, and doubles
-// Is it necessary to have tests for all data types?
-// Maybe put that info in the config file? At least for now? Then use switch statements in each test
-bool testArrayFind(parsers::json_parser jp) {
-    std::string datatype = jp.as_string("datatype");
-    if (datatype == "int") {
-        prb17::utils::structures::array<int> arr{jp.as_int_array("array")};
-        std::cout << "input array (int): " << arr << std::endl;
-        int expected = jp.as_int("expected");
-        std::cout << "expected index: " << expected << std::endl;
-
-        int find_value = jp.as_int("find");
-        std::cout << "finding value: " << find_value << std::endl;
-
-        int result = arr.find(find_value);
-        std::cout << "result index was: " << result << std::endl;
-
-        return expected == result;
-    } else if (datatype == "string") {
-        prb17::utils::structures::array<std::string> arr{jp.as_string_array("array")};
-        std::cout << "input array (string): " << arr << std::endl;
-        int expected = jp.as_int("expected");
-        std::cout << "expected index: " << expected << std::endl;
-
-        std::string find_value = jp.as_string("find");
-        std::cout << "finding value: " << find_value << std::endl;
-
-        int result = arr.find(find_value);
-        std::cout << "result index was: " << result << std::endl;
-
-        return expected == result;
-    } else {
-        throw exception("Unsupported datatype for testArrayFind");
-    }    
-}
-
 void testArrayClear() {
    prb17::utils::structures::array<int> my_array{};
     my_array.add(3);
@@ -201,6 +164,48 @@ void testStringArray(prb17::utils::parsers::json_parser jp) {
 
 }
 
+//TODO: This is the target I want to reach, but I'm not sure how to get here or if it is even possible
+template<typename T>
+bool testGenericArrayFind(parsers::json_parser jp) {
+    std::unique_ptr<prb17::utils::structures::array<T>> 
+        arr((prb17::utils::structures::array<T>*)jp.as_array<T>("array"));
+
+    std::cout << "input array : " << *arr << std::endl;
+    int expected = jp.as_int("expected");
+    std::cout << "expected index: " << expected << std::endl;
+
+    std::unique_ptr<T> find_value((T*)jp.as_value<T>("find"));
+    std::cout << "finding value: " << *find_value << std::endl;
+
+    int result = arr->find(*find_value);
+    std::cout << "result index was: " << result << std::endl;
+
+    return expected == result;   
+}
+
+// TODO: Is there a way to templatize this? Or have it common amongst the different data types?
+// eventually have a test for strings, uints, bools, floats, and doubles
+// Is it necessary to have tests for all data types?
+// Maybe put that info in the config file? At least for now? Then use switch statements in each test
+bool testArrayFind(parsers::json_parser jp) {
+    std::string datatype = jp.as_string("datatype");
+    if (datatype == "string") {
+        return testGenericArrayFind<std::string>(jp);
+    } else if (datatype == "int") {
+        return testGenericArrayFind<int>(jp);
+    } else if (datatype == "uint") {
+        return testGenericArrayFind<uint>(jp);
+    } else if (datatype == "bool") {
+        return testGenericArrayFind<bool>(jp);
+    } else if (datatype == "float") {
+        return testGenericArrayFind<float>(jp);
+    } else if (datatype == "double") {
+        return testGenericArrayFind<double>(jp);
+    } else {
+        throw exception("Unsupported datatype for testArrayFind");
+    }    
+}
+
 //Map that relates the json file test config file to each test function defined in this file
 static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > test_map = {
     {"testArrayFind", &testArrayFind}
@@ -211,27 +216,8 @@ int main(int argc, char** argv) {
     if (argc != NUM_ARGS) {
         throw prb17::utils::exception("This test requires a config file to be provided");
     }
-
     std::string test_file(&argv[1][0]);
+
     prb17::utils::validator validator{test_file, &test_map};
     validator.validate();
-
-    // testStringArray();
-
-    //constructor tests
-    // testDefaultConstructor();
-    // testSizeOnlyConstructor();
-    // testFullArrayConstructor();
-
-    // //modifier tests
-    // testArrayAdd();
-    // testArrayInsert();
-    // testArrayRemove();
-    // testArrayClear();
-    // testArrayFind();
-
-    // //accessor tests
-    // //accessors are used to test the modifiers, making the
-    // //decision not to test them for now
-    // testOperators();
 }
