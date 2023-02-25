@@ -92,7 +92,7 @@ namespace prb17 {
                 if (size) {
                     this->data = (container<T> **)malloc(sizeof(container<T>*) * cap);
                     for(int i=0; i<size; i++) {
-                        this->data[i] = in_data != nullptr ? new container<T>{in_data[i]} : new container<T>;
+                        this->data[i] = in_data ? new container<T>{in_data[i]} : new container<T>;
                     }
                 } else {
                     this->data = nullptr;
@@ -111,11 +111,8 @@ namespace prb17 {
                 sz = a.sz;
                 data = nullptr;
                 data = (container<T> **)malloc(sizeof(container<T>*) * cap);
-                for(size_t i=0; i<sz; i++) {
-                    data[i] = a.data ? new container<T>{a.get(i)} :  new container<T>;
-                }
-                for(size_t i=sz; i<cap; i++) {
-                    data[i] = new container<T>;
+                for(size_t i=0; i<cap; i++) {
+                    data[i] = a.data[i] ? new container<T>{a.get(i)} :  new container<T>;
                 }
             }
 
