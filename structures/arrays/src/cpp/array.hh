@@ -19,7 +19,7 @@ namespace prb17 {
                     void resize();
 
                 protected:
-                    container<T> *data;
+                    container<T> **data;
                     size_t sz;
 
                 public:
@@ -90,9 +90,9 @@ namespace prb17 {
             template<typename T>
             array<T>::array(T* in_data, size_t size) : sz{size}, cap{2*size} {
                 if (size) {
-                    this->data = (container<T> *)malloc(sizeof(container<T>) * cap);
+                    this->data = (container<T> **)malloc(sizeof(container<T>*) * cap);
                     for(int i=0; i<size; i++) {
-                        this->data[i] = in_data != nullptr ? in_data[i] : container<T>();
+                        this->data[i] = in_data != nullptr ? new container<T>{in_data[i]} : new container<T>;
                     }
                 } else {
                     this->data = nullptr;
@@ -110,13 +110,12 @@ namespace prb17 {
                 cap = a.cap;
                 sz = a.sz;
                 data = nullptr;
-                data = (container<T> *)malloc(sizeof(container<T>) * cap);
-                memset(data, 0, sizeof(container<T>) * cap);
+                data = (container<T> **)malloc(sizeof(container<T>*) * cap);
                 for(size_t i=0; i<sz; i++) {
-                    data[i] = a.data ? a.get(i) : T{};
+                    data[i] = a.data ? new container<T>{a.get(i)} :  new container<T>;
                 }
                 for(size_t i=sz; i<cap; i++) {
-                    data[i] = container<T>();
+                    data[i] = new container<T>;
                 }
             }
 
@@ -127,6 +126,11 @@ namespace prb17 {
              */
             template<typename T>
             array<T>::~array() {
+                for (int i=0; i<capacity(); i++) {
+                    if (data[i] != nullptr) {
+                        delete data[i];
+                    }
+                }
                 free(data);
                 data = nullptr;
             }
@@ -145,16 +149,12 @@ namespace prb17 {
             template<typename T>
             void array<T>::resize() {
                 cap = 2*(size() + 1);
-                container<T>* tmp = (container<T> *)malloc(sizeof(container<T>) * cap);
-                memset(tmp, 0, sizeof(container<T>) * cap);
-                
+                container<T>** tmp = (container<T> **)malloc(sizeof(container<T>*) * cap);
+                memset(tmp, 0, sizeof(container<T>*) * cap);
                 
                 for(int i=0; i<size(); i++) {
                     tmp[i] = data[i];
                 }
-                // for(int i=size(); i<capacity(); i++) {
-                //     tmp[i] = container<T>();
-                // }
                 if (data) {
                     free(data);
                 } 
@@ -182,9 +182,9 @@ namespace prb17 {
                 }
 
                 while(index <= size()) {
-                    container<T> tmp = data[index];
-                    data[index++] = value;
-                    value = tmp.value();
+                    T tmp = data[index] != nullptr ? data[index]->value() : T{};
+                    data[index++] = new container<T>{value};
+                    value = tmp;
                 }
                 sz++;
 
@@ -278,7 +278,7 @@ namespace prb17 {
             template<typename T>
             int array<T>::find(T value) const {
                 int index = 0;
-                while (index < size() && data[index].value() != value) {
+                while (index < size() && data[index]->value() != value) {
                     index++;
                 }
                 return index == size() ? -1 : index;
@@ -297,7 +297,7 @@ namespace prb17 {
                     throw utils::exception("Index out of range");
                 }
 
-                return data[idx];
+                return *(data[idx]);
             }
 
             /**
@@ -330,7 +330,7 @@ namespace prb17 {
                 std::stringstream stream;
                 stream << "[ ";
                 for(int i=0; i<size(); i++) {
-                    stream << data[i] << " ";
+                    stream << data[i]->value() << " ";
                 }
                 stream << "]";
                 return stream.str();
@@ -348,10 +348,11 @@ namespace prb17 {
                 if (&a != this) {
                     cap = a.cap;
                     sz = a.sz;
-                    data = (container<T> *)malloc(sizeof(container<T>) * cap);                    
+                    data = (container<T> **)malloc(sizeof(container<T>*) * cap);                    
                     memset(data, 0, sizeof(container<T>) * cap);
+                    
                     for(int i=0; i<sz; i++) {
-                        data[i] = a.data ? a[i].value() : container<T>();
+                        data[i] = a.data != nullptr ? new container<T>{a[i].value()} : new container<T>;
                     }
                 }
                 return *this;
@@ -364,7 +365,7 @@ namespace prb17 {
             }
             template<typename T>
             const T array<T>::operator[] (size_t idx) const {
-                return get(idx).value(); 
+                return get(idx)->value(); 
             }
 
             //operator ==
@@ -377,7 +378,7 @@ namespace prb17 {
                 int idx = 0;
                 bool equal = true;
                 while(idx < this->size() && equal) {
-                    equal = (*this)[idx] == a[idx];
+                    equal = this->get(idx) == a.get(idx);
                     idx++;
                 }
                 return equal;

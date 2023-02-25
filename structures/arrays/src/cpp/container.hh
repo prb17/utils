@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <sstream>
+#include <iostream>
 
 namespace prb17 {
     namespace utils {
@@ -54,11 +55,7 @@ namespace prb17 {
             }
 
             template<typename T>
-            container<T>::~container() {
-                // if (v != nullptr) {
-                //     delete v;
-                // }                
-            }
+            container<T>::~container() {}
 
             template<typename T>
             T container<T>::value() {

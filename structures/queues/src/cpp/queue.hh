@@ -44,7 +44,7 @@ namespace prb17 {
             //accessors
             template<typename T>
             T queue<T>::front() {
-                return (this->data[0]).value();
+                return (this->data[0])->value();
             }
 
             template<typename T>
