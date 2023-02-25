@@ -15,6 +15,7 @@ namespace prb17 {
                     container();
                     container (T);
                     container(const container &);
+                    ~container();
 
                     T value();
                     std::string to_string() const;
@@ -40,14 +41,23 @@ namespace prb17 {
             };
 
             template<typename T>
-            container<T>::container() : container(0) {}
+            container<T>::container() : container(T{}) {}
 
             template<typename T>
-            container<T>::container(T d): v{d} {}
+            container<T>::container(T d) {
+                v = d;
+            }
 
             template<typename T>
             container<T>::container(const container &c) {
-                v = c.v;
+                v = const_cast<container<T>&>(c).value();
+            }
+
+            template<typename T>
+            container<T>::~container() {
+                // if (v != nullptr) {
+                //     delete v;
+                // }                
             }
 
             template<typename T>
@@ -63,7 +73,7 @@ namespace prb17 {
             template<typename T>
             std::string container<T>::to_string() const {
                 std::stringstream stream;
-                stream << v;
+                stream << const_cast<container<T>*>(this)->value();
                 return stream.str();
             }            
 
@@ -76,7 +86,7 @@ namespace prb17 {
             template<typename T>
             container<T>& container<T>::operator=(const container &c) {
                 if (&c != this) {
-                    v = c.v;
+                    v = (c.v);
                 }
                 return *this;
             }
@@ -89,11 +99,11 @@ namespace prb17 {
             //operator ==
             template<typename T>
             bool container<T>::operator==(const container<T> &c) {
-                return this->v == c.v;
+                return this->value() == const_cast<container<T>&>(c).value();
             }
             template<typename T>
             bool container<T>::operator==(T v) {
-                return this->v == v;
+                return this->value() == v;
             }
 
             //operator !=
@@ -103,17 +113,17 @@ namespace prb17 {
             }
             template<typename T>
             bool container<T>::operator!=(T v) {
-                return !(this->v == v);
+                return !(this->value() == v);
             }
 
             //operator <
             template<typename T>
             bool container<T>::operator<(const container<T> &c) {
-                return this->v < c.v;
+                return this->value() < const_cast<container<T>&>(c).value();
             }
             template<typename T>
             bool container<T>::operator<(T v) {
-                return this->v < v;
+                return this->value() < v;
             }
 
             //operator >
@@ -123,8 +133,8 @@ namespace prb17 {
             }
             template<typename T>
             bool container<T>::operator>(T v) {
-                return v < this->v;
-            }            
+                return v < this->value();
+            }
             
             //operator <=
             template<typename T>
@@ -133,7 +143,7 @@ namespace prb17 {
             }
             template<typename T>
             bool container<T>::operator<=(T v) {
-                return !(this->v > v);
+                return !(this->value() > v);
             }      
             
             //operator >=
@@ -143,7 +153,7 @@ namespace prb17 {
             }
             template<typename T>
             bool container<T>::operator>=(T v) {
-                return !(this->v < v);
+                return !(this->value() < v);
             }
             
         }

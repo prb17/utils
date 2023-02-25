@@ -87,6 +87,17 @@ uint json_parser::as_uint(std::string property) {
     return retval;
 }
 
+char json_parser::as_char(std::string property) {
+    char retval;
+    try {
+        retval = root[property].asString().data()[0];
+    } catch (Json::Exception &e) {
+        throw utils::exception(e.what());
+    }
+    
+    return retval;
+}
+
 bool json_parser::as_bool(std::string property) {
     bool retval;
     try {
@@ -144,6 +155,15 @@ prb17::utils::structures::array<uint> json_parser::as_uint_array(std::string pro
 
     for(Json::Value::ArrayIndex i=0; i < root[property].size(); i++) {
             arr.add(root[property][i].asUInt());        
+    }
+    return arr;
+}
+
+prb17::utils::structures::array<char> json_parser::as_char_array(std::string property) {
+    prb17::utils::structures::array<char> arr{};
+
+    for(Json::Value::ArrayIndex i=0; i < root[property].size(); i++) {
+            arr.add(root[property][i].asString().data()[0]); 
     }
     return arr;
 }

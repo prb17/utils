@@ -2,6 +2,8 @@
 
 #include <string>
 #include <sstream>
+#include <memory>
+#include<cstring>
 
 #include "container.hh"
 #include "exception.hh"
@@ -90,7 +92,7 @@ namespace prb17 {
                 if (size) {
                     this->data = (container<T> *)malloc(sizeof(container<T>) * cap);
                     for(int i=0; i<size; i++) {
-                        this->data[i] = in_data ? in_data[i] : 0;
+                        this->data[i] = in_data != nullptr ? in_data[i] : container<T>();
                     }
                 } else {
                     this->data = nullptr;
@@ -107,9 +109,14 @@ namespace prb17 {
             array<T>::array(const array &a) {
                 cap = a.cap;
                 sz = a.sz;
+                data = nullptr;
                 data = (container<T> *)malloc(sizeof(container<T>) * cap);
-                for(int i=0; i<sz; i++) {
-                    data[i] = a.data ? a.get(i).value() : 0;
+                memset(data, 0, sizeof(container<T>) * cap);
+                for(size_t i=0; i<sz; i++) {
+                    data[i] = a.data ? a.get(i) : T{};
+                }
+                for(size_t i=sz; i<cap; i++) {
+                    data[i] = container<T>();
                 }
             }
 
@@ -139,12 +146,18 @@ namespace prb17 {
             void array<T>::resize() {
                 cap = 2*(size() + 1);
                 container<T>* tmp = (container<T> *)malloc(sizeof(container<T>) * cap);
-                if (data) {
-                    for(int i=0; i<size(); i++) {
-                        tmp[i] = data[i];
-                    }
-                    free(data);
+                memset(tmp, 0, sizeof(container<T>) * cap);
+                
+                
+                for(int i=0; i<size(); i++) {
+                    tmp[i] = data[i];
                 }
+                // for(int i=size(); i<capacity(); i++) {
+                //     tmp[i] = container<T>();
+                // }
+                if (data) {
+                    free(data);
+                } 
                 data = tmp;
             }
 
@@ -335,9 +348,10 @@ namespace prb17 {
                 if (&a != this) {
                     cap = a.cap;
                     sz = a.sz;
-                    data = (container<T> *)malloc(sizeof(container<T>) * cap);
+                    data = (container<T> *)malloc(sizeof(container<T>) * cap);                    
+                    memset(data, 0, sizeof(container<T>) * cap);
                     for(int i=0; i<sz; i++) {
-                        data[i] = a.data ? a[i].value() : 0;
+                        data[i] = a.data ? a[i].value() : container<T>();
                     }
                 }
                 return *this;

@@ -46,9 +46,9 @@ int main() {
     std::cout << parser.as_double_array("jsonDoubleArray") << std::endl;
 
     // std::cout << *(prb17::utils::structures::array<std::string>*)parser.as_array<std::string>("jsonStringArray") << std::endl;
-    std::cout << *(prb17::utils::structures::array<int>*)parser.as_array<int>("jsonIntArray") << std::endl;
-    std::cout << *(prb17::utils::structures::array<uint>*)parser.as_array<uint>("jsonUIntArray") << std::endl;
-    std::cout << *(prb17::utils::structures::array<bool>*)parser.as_array<bool>("jsonBoolArray") << std::endl;
-    std::cout << *(prb17::utils::structures::array<float>*)parser.as_array<float>("jsonFloatArray") << std::endl;
-    std::cout << *(prb17::utils::structures::array<double>*)parser.as_array<double>("jsonDoubleArray") << std::endl;
+    // std::cout << *(prb17::utils::structures::array<int>*)parser.as_array<int>("jsonIntArray") << std::endl;
+    // std::cout << *(prb17::utils::structures::array<uint>*)parser.as_array<uint>("jsonUIntArray") << std::endl;
+    // std::cout << *(prb17::utils::structures::array<bool>*)parser.as_array<bool>("jsonBoolArray") << std::endl;
+    // std::cout << *(prb17::utils::structures::array<float>*)parser.as_array<float>("jsonFloatArray") << std::endl;
+    // std::cout << *(prb17::utils::structures::array<double>*)parser.as_array<double>("jsonDoubleArray") << std::endl;
 }

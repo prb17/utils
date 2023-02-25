@@ -157,37 +157,48 @@ void testDefaultConstructor() {
     assert(exception_happened);
 }
 
-void testStringArray(prb17::utils::parsers::json_parser jp) {
-   prb17::utils::structures::array<std::string> arr{};
-    arr.add("one");
-    arr.add("two");
+// void testStringArray() {
+//    prb17::utils::structures::array<std::string> arr{};
+//     arr.add("one");
+//     arr.add("two");
+//     arr.add("two");
+//     arr.add("two");
+//     arr.add("two");
+//     arr.add("dafdafdafdas");
+//     arr.add("two");
+//     arr.add("two");
+//     arr.add("two");
+//     arr.add("dasfdsafdsafdsa");
+//     arr.add("two");
+//     arr.add("two");
+//     arr.add("twdewfefeo");
+//     arr.add("two");
 
-}
+// }
 
 //TODO: This is the target I want to reach, but I'm not sure how to get here or if it is even possible
 template<typename T>
 bool testGenericArrayFind(parsers::json_parser jp) {
-    std::unique_ptr<prb17::utils::structures::array<T>> 
-        arr((prb17::utils::structures::array<T>*)jp.as_array<T>("array"));
+    auto arr = jp.as_array<T>("array");
 
-    std::cout << "input array : " << *arr << std::endl;
+    std::cout << "input array : " << arr << std::endl;
     int expected = jp.as_int("expected");
     std::cout << "expected index: " << expected << std::endl;
 
-    std::unique_ptr<T> find_value((T*)jp.as_value<T>("find"));
-    std::cout << "finding value: " << *find_value << std::endl;
+    auto find_value = jp.as_value<T>("find");
+    std::cout << "finding value: " << find_value << std::endl;
 
-    int result = arr->find(*find_value);
+    int result = arr.find(find_value);
     std::cout << "result index was: " << result << std::endl;
 
     return expected == result;   
 }
 
-// TODO: Is there a way to templatize this? Or have it common amongst the different data types?
-// eventually have a test for strings, uints, bools, floats, and doubles
-// Is it necessary to have tests for all data types?
-// Maybe put that info in the config file? At least for now? Then use switch statements in each test
-bool testArrayFind(parsers::json_parser jp) {
+// TODO: Can this be better than a wrapper? Can the two be combined into 1 functions?
+// It's still way better like this, but maybe I can somehow get the validate class to 
+//  work with templatized functions itself... But then if a test wants to work with a
+//  particular datatype, how would it handle that? 
+bool testArrayFindWrapper(parsers::json_parser jp) {
     std::string datatype = jp.as_string("datatype");
     if (datatype == "string") {
         return testGenericArrayFind<std::string>(jp);
@@ -195,7 +206,9 @@ bool testArrayFind(parsers::json_parser jp) {
         return testGenericArrayFind<int>(jp);
     } else if (datatype == "uint") {
         return testGenericArrayFind<uint>(jp);
-    } else if (datatype == "bool") {
+    } else if (datatype == "char") {
+        return testGenericArrayFind<char>(jp);
+    }  else if (datatype == "bool") {
         return testGenericArrayFind<bool>(jp);
     } else if (datatype == "float") {
         return testGenericArrayFind<float>(jp);
@@ -208,7 +221,7 @@ bool testArrayFind(parsers::json_parser jp) {
 
 //Map that relates the json file test config file to each test function defined in this file
 static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > test_map = {
-    {"testArrayFind", &testArrayFind}
+    {"testArrayFind", &testArrayFindWrapper}
 };
 
 #define NUM_ARGS 2
@@ -220,4 +233,6 @@ int main(int argc, char** argv) {
 
     prb17::utils::validator validator{test_file, &test_map};
     validator.validate();
+
+    // testStringArray();
 }
