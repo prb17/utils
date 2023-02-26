@@ -115,7 +115,7 @@ void testArrayAdd() {
 void testFullArrayConstructor() {
     size_t size = 3;
     int data[] = {1, 2, 3};
-   prb17::utils::structures::array<int> my_array(data, size);
+    prb17::utils::structures::array<int> my_array(&data[0], size);
     assert(my_array.size() == size);
     assert(my_array.capacity() == 2*size);
     
