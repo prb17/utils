@@ -27,6 +27,6 @@ jobs:
     - name: Array Tests
       run: |
         export LD_LIBRARY_PATH=./install/parsers/lib:./install/third_party/jsoncpp/lib
-        cd install/structures/bin
+        cd structures/bin
         ./array_test ../config/array_test_conf.json
         cd -
