@@ -1,6 +1,11 @@
 name: utils build
 
 on: push
+  # push:
+  #   tags:
+  #     - '*'
+  #   branches:
+  #     - 'main'
 
 jobs:
   build-utils:
@@ -22,6 +27,7 @@ jobs:
     - name: Array Tests
       run: |
         export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
         chmod +x array_test
         ./array_test ../config/array_test_conf.json
         chmod -x array_test
