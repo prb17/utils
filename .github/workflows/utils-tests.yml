@@ -27,6 +27,12 @@ jobs:
     - name: Array Tests
       run: |
         export LD_LIBRARY_PATH=./parsers/lib:./third_party/jsoncpp/lib
+        ls -l -R
+        whoami
+        which valgrind
+        which gdb
+        python3 --version
+        java -version
         cd structures/bin
         ./array_test ../config/array_test_conf.json
         cd -
