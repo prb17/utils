@@ -1,0 +1,32 @@
+name: utils build
+
+on: push
+  # push:
+  #   tags:
+  #     - '*'
+  #   branches:
+  #     - 'main'
+
+jobs:
+  build-utils:
+    uses: ./.github/workflows/utils-build.yml
+  test-utils:
+    runs-on: ubuntu-latest
+    needs: [build-utils]
+    container:
+      image: ghcr.io/prb17/ubuntu-dev:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - name: Download utils installed binaries
+      uses: actions/download-artifact@v3
+      with:
+        name: utils_install
+        
+    - name: Array Tests
+      run: |
+        export LD_LIBRARY_PATH=./install/parsers/lib:./install/third_party/jsoncpp/lib
+        pushd install/structures/bin
+        ./array_test ../config/array_test_conf.json
+        popd
