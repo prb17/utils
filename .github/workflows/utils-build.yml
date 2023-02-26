@@ -18,10 +18,10 @@ jobs:
     
     - name: build utils
       run: |
-        - mkdir build
-        - cd build
-        - cmake -DBUILD_UTILS_TESTS=ON --log-level debug ..
-        - make -j4 install
+        mkdir build
+        cd build
+        cmake -DBUILD_UTILS_TESTS=ON --log-level debug ..
+        make -j4 install
 
     - name: Upload utils install
       uses: actions/upload-artifact@v3
