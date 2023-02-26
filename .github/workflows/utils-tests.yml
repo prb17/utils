@@ -34,5 +34,7 @@ jobs:
         python3 --version
         java -version
         cd structures/bin
+        chmod +x array_test
         ./array_test ../config/array_test_conf.json
+        chmod -x array_test
         cd -
