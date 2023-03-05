@@ -142,6 +142,7 @@ void testSizeOnlyConstructor() {
     assert(val == 0);
 }
 
+template<typename T>
 void testDefaultConstructor() {
    prb17::utils::structures::array<int> my_array{};
     assert(my_array.size() == 0);
@@ -157,28 +158,8 @@ void testDefaultConstructor() {
     assert(exception_happened);
 }
 
-// void testStringArray() {
-//    prb17::utils::structures::array<std::string> arr{};
-//     arr.add("one");
-//     arr.add("two");
-//     arr.add("two");
-//     arr.add("two");
-//     arr.add("two");
-//     arr.add("dafdafdafdas");
-//     arr.add("two");
-//     arr.add("two");
-//     arr.add("two");
-//     arr.add("dasfdsafdsafdsa");
-//     arr.add("two");
-//     arr.add("two");
-//     arr.add("twdewfefeo");
-//     arr.add("two");
-
-// }
-
-//TODO: This is the target I want to reach, but I'm not sure how to get here or if it is even possible
 template<typename T>
-bool testGenericArrayFind(parsers::json_parser jp) {
+bool testArrayFind(parsers::json_parser jp) {
     auto arr = jp.as_array<T>("array");
 
     std::cout << "input array : " << arr << std::endl;
@@ -194,34 +175,10 @@ bool testGenericArrayFind(parsers::json_parser jp) {
     return expected == result;   
 }
 
-// TODO: Can this be better than a wrapper? Can the two be combined into 1 functions?
-// It's still way better like this, but maybe I can somehow get the validate class to 
-//  work with templatized functions itself... But then if a test wants to work with a
-//  particular datatype, how would it handle that? 
-bool testArrayFindWrapper(parsers::json_parser jp) {
-    std::string datatype = jp.as_string("datatype");
-    if (datatype == "string") {
-        return testGenericArrayFind<std::string>(jp);
-    } else if (datatype == "int") {
-        return testGenericArrayFind<int>(jp);
-    } else if (datatype == "uint") {
-        return testGenericArrayFind<uint>(jp);
-    } else if (datatype == "char") {
-        return testGenericArrayFind<char>(jp);
-    }  else if (datatype == "bool") {
-        return testGenericArrayFind<bool>(jp);
-    } else if (datatype == "float") {
-        return testGenericArrayFind<float>(jp);
-    } else if (datatype == "double") {
-        return testGenericArrayFind<double>(jp);
-    } else {
-        throw exception("Unsupported datatype for testArrayFind");
-    }    
-}
-
 //Map that relates the json file test config file to each test function defined in this file
-static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > test_map = {
-    {"testArrayFind", &testArrayFindWrapper}
+template<typename T>
+std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > test_map = {
+    {"testArrayFind", &testArrayFind<T>}
 };
 
 #define NUM_ARGS 2
@@ -231,8 +188,15 @@ int main(int argc, char** argv) {
     }
     std::string test_file(&argv[1][0]);
 
-    prb17::utils::validator validator{test_file, &test_map};
-    validator.validate();
+    prb17::utils::validator validator{test_file};
+    
+    validator.add_tests(&test_map<std::string>);
+    validator.add_tests(&test_map<int>);
+    validator.add_tests(&test_map<uint>);
+    validator.add_tests(&test_map<char>);
+    validator.add_tests(&test_map<bool>);
+    validator.add_tests(&test_map<float>);
+    validator.add_tests(&test_map<double>);
 
-    // testStringArray();
+    validator.validate();
 }
