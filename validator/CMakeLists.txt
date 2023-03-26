@@ -12,5 +12,4 @@ target_link_libraries(${VALIDATOR_LIBRARY_NAME} INTERFACE ${UTILS_EXCEPTION_LIBR
 message(DEBUG "Finished creating VALIDATOR target")
 
 file(GLOB VALIDATOR_HEADERS ${VALIDATOR_INCLUDE_DIRS}/*.hh)
-message(DEBUG "List of validator include dir headers: ${VALIDATOR_HEADERS}")
 install(FILES ${VALIDATOR_HEADERS} DESTINATION validator/include)
