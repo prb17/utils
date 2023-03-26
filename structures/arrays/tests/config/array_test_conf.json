@@ -52,6 +52,66 @@
             "array" : [ "one", "two", "three", "four", "five" ],
             "find" : "three",
             "expected" : 2
+        },
+
+
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        },
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        },
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        },
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        },
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        }, 
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        }, 
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        },
+
+
+        {
+            "name" : "testSizeOnlyConstructor",
+            "size" : 5
+        },
+        {
+            "name" : "testSizeOnlyConstructor",
+            "size" : 5
+        },
+        {
+            "name" : "testSizeOnlyConstructor",
+            "size" : 5
+        },
+        {
+            "name" : "testSizeOnlyConstructor",
+            "size" : 5
+        },
+        {
+            "name" : "testSizeOnlyConstructor",
+            "size" : 5
+        }, 
+        {
+            "name" : "testSizeOnlyConstructor",
+            "size" : 5
+        }, 
+        {
+            "name" : "testSizeOnlyConstructor",
+            "size" : 5
         }
     ]
 }

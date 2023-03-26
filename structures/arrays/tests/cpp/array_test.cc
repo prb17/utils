@@ -124,29 +124,33 @@ void testFullArrayConstructor() {
     assert(my_array.get(2) == data[2]);
 }
 
-void testSizeOnlyConstructor() {
-    size_t size = 5;
-    prb17::utils::structures::array<int> my_array{size};
-    assert(my_array.size() == size);
-    assert(my_array.capacity() == 2*size);
+template<typename T>
+bool testSizeOnlyConstructor(parsers::json_parser jp) {
+    size_t size = jp.as_value<int>("size");
+    prb17::utils::structures::array<T> my_array(size);
+    bool retval = true;
+    retval &= my_array.size() == size;
+    retval &= my_array.capacity() == 2*size;
 
     bool exception_happened = false;
-    prb17::utils::structures::container<int> val;
+    prb17::utils::structures::container<T> val;
     try {
         val = my_array.get(1);
     } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
         exception_happened = true;
     }
-    assert(!exception_happened);
-    assert(val == 0);
+    retval &= !exception_happened;
+    retval &= val == 0;
+    return retval;
 }
 
 template<typename T>
-void testDefaultConstructor() {
-   prb17::utils::structures::array<int> my_array{};
-    assert(my_array.size() == 0);
-    assert(my_array.capacity() == 0);
+bool testDefaultConstructor(parsers::json_parser jp) {
+    auto my_array = jp.as_array<T>("array");
+    bool retval= true;
+    retval &= my_array.size() == 0;
+    retval &= my_array.capacity() == 0;
 
     bool exception_happened = false;
     try {
@@ -155,7 +159,9 @@ void testDefaultConstructor() {
         std::cout << e.what() << std::endl;
         exception_happened = true;
     } catch(...) {}
-    assert(exception_happened);
+    retval &= exception_happened;
+
+    return retval;
 }
 
 template<typename T>
@@ -178,7 +184,9 @@ bool testArrayFind(parsers::json_parser jp) {
 //Map that relates the json file test config file to each test function defined in this file
 template<typename T>
 std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > test_map = {
-    {"testArrayFind", &testArrayFind<T>}
+    {"testArrayFind", &testArrayFind<T>},
+    {"testDefaultConstructor", &testDefaultConstructor<T>},
+    {"testSizeOnlyConstructor", &testSizeOnlyConstructor<T>}
 };
 
 #define NUM_ARGS 2
