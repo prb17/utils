@@ -110,14 +110,6 @@ void testPop() {
    std::cout << "Finished testing stack pop method" << std::endl;
 }
 
-void testFullArrayConstructor() {
-    size_t size = 3;
-    int data[] = {1, 2, 3};
-    prb17::utils::structures::stack<int> my_stack{&data[0], size};
-    assert(my_stack.size() == size);
-    assert(my_stack.capacity() == 2*size);
-}
-
 void testSizeOnlyConstructor() {
     size_t size = 5;
     prb17::utils::structures::stack<int> my_stack{size};

@@ -17,8 +17,6 @@ namespace prb17 {
                     //constructors
                     stack();
                     stack(size_t);
-                    stack(const T (&)[], size_t);
-                    stack(T*, size_t);
                     ~stack();
 
                     //accessors
@@ -36,13 +34,7 @@ namespace prb17 {
             stack<T>::stack() : stack(0) {}
 
             template<typename T>
-            stack<T>::stack(size_t size) : stack(nullptr, size) {}
-
-            template<typename T>
-            stack<T>::stack(const T (&in_arr)[], size_t size) : stack(&in_arr[0], size) {}
-
-            template<typename T>
-            stack<T>::stack(T* in_data, size_t size) : array<T>(in_data, size) {}
+            stack<T>::stack(size_t size) : array<T>(size) {}
 
             template<typename T>
             stack<T>::~stack() {}

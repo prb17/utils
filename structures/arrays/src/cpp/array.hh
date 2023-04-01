@@ -26,8 +26,6 @@ namespace prb17 {
                     //constructors
                     array();
                     array(size_t);
-                    array(const T (&)[], size_t);
-                    array(T*, size_t);
                     array(const array &);
                     ~array();
 
@@ -62,41 +60,15 @@ namespace prb17 {
             template<typename T>
             array<T>::array() : array(0) {}
 
-
-            /**
-             * @brief Construct a new array object with certain size
-             * 
-             * @param size - size to start array off with
-             */
-            template<typename T>
-            array<T>::array(size_t size) : array(nullptr, size) {}
-
-
-            /**
-             * @brief Construct a new array object with certain size
-             * 
-             * @param size - size to start array off with
-             */
-            template<typename T>
-            array<T>::array(const T (&in_arr)[], size_t size) : array(&in_arr[0], size) {}
-
-
             /**
              * @brief Construct a new array object starting with certain size and elements
              * 
-             * @param in_data - data elements to start with
-             * @param size  - size to start array with
+             * @param cap  - capacity to start array with
              */
             template<typename T>
-            array<T>::array(T* in_data, size_t size) : sz{size}, cap{2*size} {
-                if (size) {
-                    this->data = (container<T> **)malloc(sizeof(container<T>*) * cap);
-                    for(int i=0; i<size; i++) {
-                        this->data[i] = in_data ? new container<T>{in_data[i]} : new container<T>;
-                    }
-                } else {
-                    this->data = nullptr;
-                }
+            array<T>::array(size_t cap) : sz{0}, cap{cap} {                
+                this->data = (container<T> **)malloc(sizeof(container<T>**) * cap);                
+                memset(this->data, 0, sizeof(container<T>**) * cap);
             }
 
             /**
@@ -110,9 +82,10 @@ namespace prb17 {
                 cap = a.cap;
                 sz = a.sz;
                 data = nullptr;
-                data = (container<T> **)malloc(sizeof(container<T>*) * cap);
+                data = (container<T> **)malloc(sizeof(container<T>**) * cap);
+                memset(data, 0, sizeof(container<T>**) * cap);
                 for(size_t i=0; i<cap; i++) {
-                    data[i] = a.data[i] ? new container<T>{a.get(i)} :  new container<T>;
+                    data[i] = a.data[i] ? new container<T>{a.get(i)} :  new container<T>{};
                 }
             }
 
@@ -129,7 +102,7 @@ namespace prb17 {
                     }
                 }
                 free(data);
-                data = nullptr;
+                data = nullptr;           
             }
 
 
@@ -146,7 +119,7 @@ namespace prb17 {
             template<typename T>
             void array<T>::resize() {
                 cap = 2*(size() + 1);
-                container<T>** tmp = (container<T> **)malloc(sizeof(container<T>*) * cap);
+                container<T>** tmp = (container<T> **)malloc(sizeof(container<T>**) * cap);
                 memset(tmp, 0, sizeof(container<T>*) * cap);
                 
                 for(int i=0; i<size(); i++) {
@@ -179,7 +152,7 @@ namespace prb17 {
                 }
 
                 while(index <= size()) {
-                    T tmp = data[index] != nullptr ? data[index]->value() : T{};
+                    T tmp = data[index] ? data[index]->value() : T{};
                     data[index++] = new container<T>{value};
                     value = tmp;
                 }

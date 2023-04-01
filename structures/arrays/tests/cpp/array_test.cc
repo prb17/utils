@@ -46,9 +46,6 @@ void testOperators() {
     
     array<int> arr4 = arr3;
     assert(arr3 == arr4);
-    
-    // prb17::utils::structures::array<int> arr5 = {1, 2, 4}; //todo: implement creating array from <brace-enclosed initializer list>
-    // assert(arr5 == {1, 2, 4});
 }
 
 void testArrayClear() {
@@ -112,36 +109,25 @@ void testArrayAdd() {
     assert(my_array.capacity() == 6);
 }
 
-void testFullArrayConstructor() {
-    size_t size = 3;
-    int data[] = {1, 2, 3};
-    prb17::utils::structures::array<int> my_array(&data[0], size);
-    assert(my_array.size() == size);
-    assert(my_array.capacity() == 2*size);
-    
-    assert(my_array.get(0) == data[0]);
-    assert(my_array.get(1) == data[1]);
-    assert(my_array.get(2) == data[2]);
-}
-
 template<typename T>
-bool testSizeOnlyConstructor(parsers::json_parser jp) {
+bool testCapacityOnlyConstructor(parsers::json_parser jp) {
     size_t size = jp.as_value<int>("size");
-    prb17::utils::structures::array<T> my_array(size);
+    prb17::utils::structures::array<T> my_array{size};
     bool retval = true;
     retval &= my_array.size() == size;
     retval &= my_array.capacity() == 2*size;
+    retval &= my_array.empty();
 
     bool exception_happened = false;
     prb17::utils::structures::container<T> val;
     try {
         val = my_array.get(1);
-    } catch (const std::exception& e) {
+    } catch (const prb17::utils::exception& e) {
         std::cout << e.what() << std::endl;
         exception_happened = true;
-    }
+    } catch(...) {}
     retval &= !exception_happened;
-    retval &= val == 0;
+    retval &= val == T{};
     return retval;
 }
 
@@ -186,7 +172,7 @@ template<typename T>
 std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > test_map = {
     {"testArrayFind", &testArrayFind<T>},
     {"testDefaultConstructor", &testDefaultConstructor<T>},
-    {"testSizeOnlyConstructor", &testSizeOnlyConstructor<T>}
+    {"testCapacityOnlyConstructor", &testCapacityOnlyConstructor<T>}
 };
 
 #define NUM_ARGS 2
