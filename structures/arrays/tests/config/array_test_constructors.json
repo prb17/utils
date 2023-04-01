@@ -1,0 +1,66 @@
+{
+    "MetaData": { 
+        "test_name" : "Array Constructors Test",
+        "test_type" : "unit"
+    },
+    "Tests" : [
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        },
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        },
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        },
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        },
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        }, 
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        }, 
+        {
+            "name" : "testDefaultConstructor",
+            "array" : []
+        },
+
+
+        {
+            "name" : "testCapacityOnlyConstructor",
+            "capacity" : 5
+        },
+        {
+            "name" : "testCapacityOnlyConstructor",
+            "capacity" : 5
+        },
+        {
+            "name" : "testCapacityOnlyConstructor",
+            "capacity" : 5
+        },
+        {
+            "name" : "testCapacityOnlyConstructor",
+            "capacity" : 5
+        },
+        {
+            "name" : "testCapacityOnlyConstructor",
+            "capacity" : 5
+        }, 
+        {
+            "name" : "testCapacityOnlyConstructor",
+            "capacity" : 5
+        }, 
+        {
+            "name" : "testCapacityOnlyConstructor",
+            "capacity" : 5
+        }
+    ]
+}

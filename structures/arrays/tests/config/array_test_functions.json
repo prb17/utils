@@ -1,6 +1,6 @@
 {
     "MetaData": { 
-        "test_name" : "meta data",
+        "test_name" : "Array Functions Test",
         "test_type" : "unit"
     },
     "Tests" : [
@@ -52,66 +52,6 @@
             "array" : [ "one", "two", "three", "four", "five" ],
             "find" : "three",
             "expected" : 2
-        },
-
-
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        },
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        },
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        },
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        },
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        }, 
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        }, 
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        },
-
-
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        },
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        },
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        },
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        },
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        }, 
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        }, 
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
         }
     ]
 }

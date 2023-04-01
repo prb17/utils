@@ -110,47 +110,6 @@ void testArrayAdd() {
 }
 
 template<typename T>
-bool testCapacityOnlyConstructor(parsers::json_parser jp) {
-    size_t size = jp.as_value<int>("size");
-    prb17::utils::structures::array<T> my_array{size};
-    bool retval = true;
-    retval &= my_array.size() == size;
-    retval &= my_array.capacity() == 2*size;
-    retval &= my_array.empty();
-
-    bool exception_happened = false;
-    prb17::utils::structures::container<T> val;
-    try {
-        val = my_array.get(1);
-    } catch (const prb17::utils::exception& e) {
-        std::cout << e.what() << std::endl;
-        exception_happened = true;
-    } catch(...) {}
-    retval &= !exception_happened;
-    retval &= val == T{};
-    return retval;
-}
-
-template<typename T>
-bool testDefaultConstructor(parsers::json_parser jp) {
-    auto my_array = jp.as_array<T>("array");
-    bool retval= true;
-    retval &= my_array.size() == 0;
-    retval &= my_array.capacity() == 0;
-
-    bool exception_happened = false;
-    try {
-        my_array.get(1);
-    } catch (const prb17::utils::exception& e) {
-        std::cout << e.what() << std::endl;
-        exception_happened = true;
-    } catch(...) {}
-    retval &= exception_happened;
-
-    return retval;
-}
-
-template<typename T>
 bool testArrayFind(parsers::json_parser jp) {
     auto arr = jp.as_array<T>("array");
 
@@ -167,22 +126,48 @@ bool testArrayFind(parsers::json_parser jp) {
     return expected == result;   
 }
 
+template<typename T>
+bool testCapacityOnlyConstructor(parsers::json_parser jp) {
+    size_t cap = jp.as_value<int>("capacity");
+    prb17::utils::structures::array<T> my_array{cap};
+    bool retval = true;
+    retval &= my_array.size() == 0;
+    retval &= my_array.capacity() == cap;
+    retval &= my_array.empty();
+
+    return retval;
+}
+
+template<typename T>
+bool testDefaultConstructor(parsers::json_parser jp) {
+    auto my_array = jp.as_array<T>("array");
+    bool retval= true;
+    retval &= my_array.size() == 0;
+    retval &= my_array.capacity() == 0;
+
+    return retval;
+}
+
 //Map that relates the json file test config file to each test function defined in this file
 template<typename T>
 std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > test_map = {
-    {"testArrayFind", &testArrayFind<T>},
     {"testDefaultConstructor", &testDefaultConstructor<T>},
-    {"testCapacityOnlyConstructor", &testCapacityOnlyConstructor<T>}
+    {"testCapacityOnlyConstructor", &testCapacityOnlyConstructor<T>},
+    {"testArrayFind", &testArrayFind<T>}
 };
 
-#define NUM_ARGS 2
+#define MIN_NUM_ARGS 2
 int main(int argc, char** argv) {
-    if (argc != NUM_ARGS) {
+    if (argc < MIN_NUM_ARGS) {
         throw prb17::utils::exception("This test requires a config file to be provided");
     }
-    std::string test_file(&argv[1][0]);
+    prb17::utils::structures::array<std::string> test_files{};
+    for (int i=1; i<argc; i++) {
+        std::cout << "adding test file to validator: " << &argv[i][0] << std::endl;
+        test_files.add(&argv[i][0]);
+    }
 
-    prb17::utils::validator validator{test_file};
+    prb17::utils::validator validator{test_files};
     
     validator.add_tests(&test_map<std::string>);
     validator.add_tests(&test_map<int>);
