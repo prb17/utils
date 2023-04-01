@@ -7,8 +7,14 @@ add_library(${VALIDATOR_LIBRARY_NAME} INTERFACE)
 set(VALIDATOR_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/)
 set(VALIDATOR_INCLUDE_DIRS ${VALIDATOR_INCLUDE_DIRS} PARENT_SCOPE)
 target_include_directories(${VALIDATOR_LIBRARY_NAME} INTERFACE ${VALIDATOR_INCLUDE_DIRS} ${PARSERS_INCLUDE_DIRS})
-target_link_libraries(${VALIDATOR_LIBRARY_NAME} INTERFACE ${UTILS_EXCEPTION_LIBRARY_NAME} ${PARSERS_LIBRARY_NAME} ${JsonCpp_LIBRARIES})
-target_link_libraries(${VALIDATOR_LIBRARY_NAME} INTERFACE ${ARRAY_LIBRARY_NAME})
+target_link_libraries(${VALIDATOR_LIBRARY_NAME} 
+                        INTERFACE 
+                        ${UTILS_EXCEPTION_LIBRARY_NAME} 
+                        ${PARSERS_LIBRARY_NAME} 
+                        ${JsonCpp_LIBRARIES}
+                        ${ARRAY_LIBRARY_NAME}
+                        ${LOGGER_LIBRARY_NAME}
+                        )
 
 message(DEBUG "Finished creating VALIDATOR target")
 
