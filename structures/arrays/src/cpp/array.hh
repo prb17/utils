@@ -101,7 +101,7 @@ namespace prb17 {
                         delete data[i];
                     }
                 }
-                // free(data);
+                free(data);
                 data = nullptr;           
             }
 
