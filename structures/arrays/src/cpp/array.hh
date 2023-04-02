@@ -225,7 +225,7 @@ namespace prb17 {
              */
             template<typename T>
             bool array<T>::valid(size_t idx) const {
-                return idx < size();
+                return idx <= size();
             }
                     
             /**

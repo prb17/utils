@@ -11,7 +11,7 @@ namespace prb17 {
     namespace utils {
         class validator {
             private:
-                prb17::utils::SimpleLogger logger;
+                prb17::utils::logger logger;
                 prb17::utils::structures::array<std::string> test_files;
                 std::map<std::string, std::function<bool(parsers::json_parser)> > tests_to_validate;
 
@@ -21,13 +21,15 @@ namespace prb17 {
                 void add_tests(std::map<std::string, std::function<bool(parsers::json_parser)> > *);
         };
 
-        validator::validator(prb17::utils::structures::array<std::string> files) : logger{}, test_files{files}, tests_to_validate{} {}
+        validator::validator(prb17::utils::structures::array<std::string> files) : logger{"validator"}, test_files{files}, tests_to_validate{} {}
 
         void validator::add_tests(std::map<std::string, std::function<bool(parsers::json_parser)> > *tests) {
             tests_to_validate.insert(tests->begin(), tests->end());
         }
 
         void validator::validate() {
+            size_t total_passed = 0;
+            size_t total_failed = 0;
             for (int i=0; i<test_files.size(); i++) {
                 std::string test_file = test_files[i].value();
                 parsers::json_parser jp{};
@@ -42,7 +44,8 @@ namespace prb17 {
                         logger.info("Running test: " + test_to_run);
                         parsers::json_parser tmp{value};
                         bool passed = it->second(tmp);
-                        logger.info("Test: " + test_to_run + " result: " + (passed ? "PASSED" : "FAILED"));
+                        logger.info("Test: " + test_to_run + " result: " + (passed ? std::string(GRE) + "PASSED" + std::string(NC) : std::string(RED) + "FAILED" + std::string(NC)));
+                        passed ? total_passed++ : total_failed++;
                         logger.info("###############################");
 
                     } else {
@@ -50,7 +53,10 @@ namespace prb17 {
                     }
                 }
             }
-            
+            logger.info("Test results: {} and {}", 
+            std::string(GRE) + std::to_string(total_passed) + " passed" + std::string(NC), 
+            std::string(RED) + std::to_string(total_failed) + " failed" + std::string(NC)
+            );
         }
 
     }

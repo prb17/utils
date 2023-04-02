@@ -1,87 +1,222 @@
 #pragma once
 #include <string>
+#include <sstream>
+#include <ostream>
 #include <mutex>
 
+enum class LOG_LEVELS {
+	ALL,
+	TRACE,
+	DEBUG,
+	INFO,
+	WARN,
+	ERROR
+};
 #define GRY "\033[0;37m"
 #define GRE "\033[0;32m"
 #define YEL "\033[0;33m"
 #define RED "\033[0;31m"
 #define NC "\033[0m"
+#define PLACEHOLDER std::string("{}")
 
-#define debug(msg) log(LOG_LEVELS::DEBUG, std::string("[\033[0;37mDEBUG\033[0m] ") + std::string(msg)) 
-#define info(msg) log(LOG_LEVELS::INFO, std::string("[\033[0;32mINFO\033[0m] ") + std::string(msg))
-#define warn(msg) log(LOG_LEVELS::WARN, std::string("[\033[0;33mWARN\033[0m] ") + std::string(msg))
-#define error(msg) log(LOG_LEVELS::ERROR, std::string("[\033[0;31mERROR\033[0m] ") + std::string(msg))
+#define TRACE(msg) trace(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg)) 
+#define DEBUG(msg) debug(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg)) 
+#define INFO(msg) info(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg))
+#define WARN(msg) warn(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg))
+#define ERROR(msg) error(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg))
 
 namespace prb17 {
     namespace utils {		
-		enum class LOG_LEVELS {
-			ALL,
-			INFO,
-			DEBUG,
-			WARN,
-			ERROR
-		};
-
-		class SimpleLogger {
+		class logger {
 			public:	
-				SimpleLogger();
-				SimpleLogger(std::string);
+				logger(std::string);
+				logger(std::string, LOG_LEVELS);
+				logger(std::string, LOG_LEVELS, std::string);
 
-				SimpleLogger(SimpleLogger const&);
-				SimpleLogger& operator=(SimpleLogger const&);
-				~SimpleLogger();
+				logger(logger const&);
+				logger& operator=(logger const&);
+				~logger();
 
-				void log(LOG_LEVELS, std::string);
-				void set_ignore_level(LOG_LEVELS);
+				template<typename... Args>
+				void trace(std::string, Args...);
+				void trace(std::string);
+
+				template<typename... Args>
+				void debug(std::string, Args...);
+				void debug(std::string);
+				
+				template<typename... Args>
+				void info(std::string, Args...);
+				void info(std::string);
+				
+				template<typename... Args>
+				void warn(std::string, Args...);
+				void warn(std::string);
+				
+				template<typename... Args>
+				void error(std::string, Args...);
+				void error(std::string);
 			private:
+				std::string name;
 				FILE* logger_file;
 				LOG_LEVELS ignore_level;
 				std::mutex logMutex;
+
+				template<typename T>
+				std::string argsHelper(std::string, T);
+				template<typename T, typename... Args>
+				std::string argsHelper(std::string, T, Args...);
+				void log(LOG_LEVELS, std::string);
 		};
 
-		SimpleLogger::SimpleLogger()
-		{
-			logger_file = stdout;
-			ignore_level = LOG_LEVELS::ALL;
-		}
+		logger::logger(std::string name) : logger(name, LOG_LEVELS::ALL) {}
+		logger::logger(std::string name, LOG_LEVELS level) : logger(name, level, "") {}
+		logger::logger(std::string name,  LOG_LEVELS level, std::string file_name) : name{name}, ignore_level{level}, logger_file{file_name.empty() ? stdout : fopen(file_name.c_str(), "a")} {}
 
-		SimpleLogger::SimpleLogger(std::string file_name)
-		{
-			logger_file = fopen(file_name.c_str(), "a");
-			ignore_level = LOG_LEVELS::ALL;
-		}
-
-		SimpleLogger::SimpleLogger(SimpleLogger const &other) {
+		logger::logger(logger const &other) {
+			name = other.name;
 			logger_file = other.logger_file;
 			ignore_level = other.ignore_level;
 		}
 
-		SimpleLogger& SimpleLogger::operator=(SimpleLogger const& other)
-		{
+		logger& logger::operator=(logger const& other) {
 			if (&other != this) {
-
+				name = other.name;
 				logger_file = other.logger_file;
 				ignore_level = other.ignore_level;
 			}
 			return *this;
 		}
 
-		SimpleLogger::~SimpleLogger() {
+		logger::~logger() {
 			if(logger_file) {
 				fclose(logger_file);
 			}	
 		}
+		
 
-		void SimpleLogger::set_ignore_level(LOG_LEVELS lvl) {
-			ignore_level = lvl;
+		/**
+		 * @brief 
+		 * 
+		 * @tparam Args 
+		 * @param msg 
+		 * @param args 
+		 */
+		template<typename... Args>
+		void logger::trace(std::string msg, Args... args) {
+			trace(argsHelper(msg, args...));
+		}
+		void logger::trace(std::string msg) {
+			log(LOG_LEVELS::TRACE, std::string("[TRACE] ") + msg);
 		}
 
-		void SimpleLogger::log(LOG_LEVELS level, std::string msg) {
+		/**
+		 * @brief 
+		 * 
+		 * @tparam Args 
+		 * @param msg 
+		 * @param args 
+		 */
+		template<typename... Args>
+		void logger::debug(std::string msg, Args... args) {
+			debug(argsHelper(msg, args...));
+		}
+		void logger::debug(std::string msg) {
+			log(LOG_LEVELS::DEBUG, "[" + std::string(GRY) + "DEBUG" + std::string(NC) + "]" + " " + msg );
+		}
+
+		/**
+		 * @brief 
+		 * 
+		 * @tparam Args 
+		 * @param msg 
+		 * @param args 
+		 */
+		template<typename... Args>
+		void logger::info(std::string msg, Args... args) {
+			info(argsHelper(msg, args...));
+		}
+		void logger::info(std::string msg) {
+			log(LOG_LEVELS::INFO, "[" + std::string(GRE) + "INFO" + std::string(NC) + "]" + " " + msg);
+		}
+
+		/**
+		 * @brief 
+		 * 
+		 * @tparam Args 
+		 * @param msg 
+		 * @param args 
+		 */
+		template<typename... Args>
+		void logger::warn(std::string msg, Args... args) {
+			warn(argsHelper(msg, args...));
+		}
+		void logger::warn(std::string msg) {
+			log(LOG_LEVELS::WARN, "[" + std::string(YEL) + "WARN" + std::string(NC) + "]" + " " + msg);
+		}
+
+		/**
+		 * @brief 
+		 * 
+		 * @tparam Args 
+		 * @param msg 
+		 * @param args 
+		 */
+		template<typename... Args>
+		void logger::error(std::string msg, Args... args) {
+			error(argsHelper(msg, args...));
+		}
+		void logger::error(std::string msg) {
+			log(LOG_LEVELS::ERROR, "[" + std::string(RED) + "ERROR" + std::string(NC) + "]" + " " + msg);
+		}
+
+
+		/**
+		 * @brief 
+		 * 
+		 * @tparam T 
+		 * @param msg 
+		 * @param t 
+		 * @return std::string 
+		 */
+		template<typename T>
+		std::string logger::argsHelper(std::string msg, T t) {
+			// std::cout << __PRETTY_FUNCTION__ << std::endl ;
+			//find first index of {}
+			std::string::size_type n = msg.find(PLACEHOLDER);
+			if (n != std::string::npos) {
+				//if it exists, replace with string
+				std::stringstream ss;
+				ss << t;
+				msg.replace(n, PLACEHOLDER.length(), ss.str());
+			}//if not, return msg as is
+			return msg;
+		}
+		/**
+		 * @brief 
+		 * 
+		 * @tparam T 
+		 * @tparam Args 
+		 * @param msg 
+		 * @param t 
+		 * @param args 
+		 * @return std::string 
+		 */
+		template<typename T, typename... Args>
+		std::string logger::argsHelper(std::string msg, T t, Args... args) {
+			return msg.find(PLACEHOLDER) == std::string::npos ? msg : argsHelper(argsHelper(msg, t), args...);
+		}
+
+		/**
+		 * @brief 
+		 * 
+		 * @param level 
+		 * @param msg 
+		 */
+		void logger::log(LOG_LEVELS level, std::string msg) {
 			std::lock_guard<std::mutex> guard(logMutex);
-			if (logger_file && level > ignore_level)
-			{
-				msg = msg + "\n";
+			if (logger_file && level > ignore_level) {
+				msg = "[" + name + "]" + msg + "\n";
 				fwrite(msg.data(), sizeof(char), msg.length(), logger_file);
 			}
 		}

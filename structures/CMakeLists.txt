@@ -6,7 +6,10 @@ add_library(${ARRAY_LIBRARY_NAME} INTERFACE)
 set(ARRAY_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/arrays/src/cpp/)
 set(ARRAY_INCLUDE_DIRS ${ARRAY_INCLUDE_DIRS} PARENT_SCOPE)
 target_include_directories(${ARRAY_LIBRARY_NAME} INTERFACE ${ARRAY_INCLUDE_DIRS})
-target_link_libraries(${ARRAY_LIBRARY_NAME} INTERFACE ${UTILS_EXCEPTION_LIBRARY_NAME})
+target_link_libraries(${ARRAY_LIBRARY_NAME} INTERFACE 
+                                            ${UTILS_EXCEPTION_LIBRARY_NAME}
+                                            ${LOGGER_LIBRARY_NAME}
+                                            )
 
 #stack target definition
 set(STACKS_LIBRARY_NAME stacks)
