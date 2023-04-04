@@ -17,7 +17,13 @@ enum class LOG_LEVELS {
 #define YEL "\033[0;33m"
 #define RED "\033[0;31m"
 #define NC "\033[0m"
+
 #define PLACEHOLDER std::string("{}")
+#define NAME std::string("#n")
+#define LEVEL std::string("#l")
+#define DATE std::string("#d")
+#define MSG std::string("#m")
+#define LOG_TEMPLATE std::string("[#d] [#n] [#m] [#l]\n")
 
 #define TRACE(msg) trace(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg)) 
 #define DEBUG(msg) debug(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg)) 
@@ -28,7 +34,8 @@ enum class LOG_LEVELS {
 namespace prb17 {
     namespace utils {		
 		class logger {
-			public:	
+			public:
+
 				logger(std::string);
 				logger(std::string, LOG_LEVELS);
 				logger(std::string, LOG_LEVELS, std::string);
@@ -58,20 +65,25 @@ namespace prb17 {
 				void error(std::string);
 			private:
 				std::string name;
+				std::string pre_msg;
 				FILE* logger_file;
 				LOG_LEVELS ignore_level;
 				std::mutex logMutex;
 
 				template<typename T>
-				std::string argsHelper(std::string, T);
+				static std::string argsHelper(std::string, std::string, T);
 				template<typename T, typename... Args>
-				std::string argsHelper(std::string, T, Args...);
+				static std::string argsHelper(std::string, std::string, T, Args...);
 				void log(LOG_LEVELS, std::string);
 		};
 
 		logger::logger(std::string name) : logger(name, LOG_LEVELS::ALL) {}
 		logger::logger(std::string name, LOG_LEVELS level) : logger(name, level, "") {}
-		logger::logger(std::string name,  LOG_LEVELS level, std::string file_name) : name{name}, ignore_level{level}, logger_file{file_name.empty() ? stdout : fopen(file_name.c_str(), "a")} {}
+		logger::logger(std::string name,  LOG_LEVELS level, std::string file_name) : name{name}, ignore_level{level}, logger_file{file_name.empty() ? stdout : fopen(file_name.c_str(), "a")} {
+			pre_msg = argsHelper(LOG_TEMPLATE, NAME, name);
+			pre_msg = argsHelper(pre_msg, LEVEL, "LOG LEVEL");
+			pre_msg = argsHelper(pre_msg, DATE, "04-03-2022");
+		}
 
 		logger::logger(logger const &other) {
 			name = other.name;
@@ -104,7 +116,7 @@ namespace prb17 {
 		 */
 		template<typename... Args>
 		void logger::trace(std::string msg, Args... args) {
-			trace(argsHelper(msg, args...));
+			trace(argsHelper(msg, PLACEHOLDER, args...));
 		}
 		void logger::trace(std::string msg) {
 			log(LOG_LEVELS::TRACE, std::string("[TRACE] ") + msg);
@@ -119,7 +131,7 @@ namespace prb17 {
 		 */
 		template<typename... Args>
 		void logger::debug(std::string msg, Args... args) {
-			debug(argsHelper(msg, args...));
+			debug(argsHelper(msg, PLACEHOLDER, args...));
 		}
 		void logger::debug(std::string msg) {
 			log(LOG_LEVELS::DEBUG, "[" + std::string(GRY) + "DEBUG" + std::string(NC) + "]" + " " + msg );
@@ -134,7 +146,7 @@ namespace prb17 {
 		 */
 		template<typename... Args>
 		void logger::info(std::string msg, Args... args) {
-			info(argsHelper(msg, args...));
+			info(argsHelper(msg, PLACEHOLDER, args...));
 		}
 		void logger::info(std::string msg) {
 			log(LOG_LEVELS::INFO, "[" + std::string(GRE) + "INFO" + std::string(NC) + "]" + " " + msg);
@@ -149,7 +161,7 @@ namespace prb17 {
 		 */
 		template<typename... Args>
 		void logger::warn(std::string msg, Args... args) {
-			warn(argsHelper(msg, args...));
+			warn(argsHelper(msg, PLACEHOLDER, args...));
 		}
 		void logger::warn(std::string msg) {
 			log(LOG_LEVELS::WARN, "[" + std::string(YEL) + "WARN" + std::string(NC) + "]" + " " + msg);
@@ -164,7 +176,7 @@ namespace prb17 {
 		 */
 		template<typename... Args>
 		void logger::error(std::string msg, Args... args) {
-			error(argsHelper(msg, args...));
+			error(argsHelper(msg, PLACEHOLDER, args...));
 		}
 		void logger::error(std::string msg) {
 			log(LOG_LEVELS::ERROR, "[" + std::string(RED) + "ERROR" + std::string(NC) + "]" + " " + msg);
@@ -180,15 +192,15 @@ namespace prb17 {
 		 * @return std::string 
 		 */
 		template<typename T>
-		std::string logger::argsHelper(std::string msg, T t) {
+		std::string logger::argsHelper(std::string msg, std::string token, T t) {
 			// std::cout << __PRETTY_FUNCTION__ << std::endl ;
 			//find first index of {}
-			std::string::size_type n = msg.find(PLACEHOLDER);
+			std::string::size_type n = msg.find(token);
 			if (n != std::string::npos) {
 				//if it exists, replace with string
 				std::stringstream ss;
 				ss << t;
-				msg.replace(n, PLACEHOLDER.length(), ss.str());
+				msg.replace(n, token.length(), ss.str());
 			}//if not, return msg as is
 			return msg;
 		}
@@ -203,8 +215,8 @@ namespace prb17 {
 		 * @return std::string 
 		 */
 		template<typename T, typename... Args>
-		std::string logger::argsHelper(std::string msg, T t, Args... args) {
-			return msg.find(PLACEHOLDER) == std::string::npos ? msg : argsHelper(argsHelper(msg, t), args...);
+		std::string logger::argsHelper(std::string msg, std::string token, T t, Args... args) {
+			return msg.find(token) == std::string::npos ? msg : argsHelper(argsHelper(msg, token, t), token, args...);
 		}
 
 		/**
@@ -216,7 +228,7 @@ namespace prb17 {
 		void logger::log(LOG_LEVELS level, std::string msg) {
 			std::lock_guard<std::mutex> guard(logMutex);
 			if (logger_file && level > ignore_level) {
-				msg = "[" + name + "]" + msg + "\n";
+				msg = argsHelper(pre_msg, MSG, msg);
 				fwrite(msg.data(), sizeof(char), msg.length(), logger_file);
 			}
 		}
