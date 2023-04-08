@@ -154,7 +154,7 @@ bool testDefaultConstructor(prb17::utils::parsers::json_parser jp) {
 
 //Map that relates the json file test config file to each test function defined in this file
 template<typename T>
-static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > test_map = {
+static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > array_tests = {
     {"testDefaultConstructor", &testDefaultConstructor<T>},
     {"testCapacityOnlyConstructor", &testCapacityOnlyConstructor<T>},
     {"testArrayFind", &testArrayFind<T>}
@@ -174,13 +174,13 @@ int main(int argc, char** argv) {
     }
     prb17::utils::validator validator{test_files};
     
-    validator.add_tests(&test_map<std::string>);
-    validator.add_tests(&test_map<int>);
-    validator.add_tests(&test_map<uint>);
-    validator.add_tests(&test_map<char>);
-    validator.add_tests(&test_map<bool>);
-    validator.add_tests(&test_map<float>);
-    validator.add_tests(&test_map<double>);
+    validator.add_tests(&array_tests<std::string>);
+    validator.add_tests(&array_tests<int>);
+    validator.add_tests(&array_tests<uint>);
+    validator.add_tests(&array_tests<char>);
+    validator.add_tests(&array_tests<bool>);
+    validator.add_tests(&array_tests<float>);
+    validator.add_tests(&array_tests<double>);
 
     validator.validate();
 }

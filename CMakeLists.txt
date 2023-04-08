@@ -21,6 +21,7 @@ find_package(JsonCpp 1.9.5 COMPONENTS jsoncpp)
 
 #TODO: figure out good options for include or not including certain utilities
 add_subdirectory(exceptions)
+add_subdirectory(time)
 add_subdirectory(logger)
 add_subdirectory(structures)
 add_subdirectory(parsers)

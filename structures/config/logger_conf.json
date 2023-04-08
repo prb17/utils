@@ -1,11 +1,16 @@
 {
-    "logger_template": "[#d] [#n] [#l] #m\n",
+    "logger_template": "[#H-#A-#Y #t.#k.#u.#n] [#N] [#L] #M",
     "array_test": {
         "logger_name": "array_test",
-        "ignore_level": "debug"
+        "logger_file": "/dev/stdout",
+        "logger_level": "debug"
     },
     "validator": {
         "logger_name": "validator",
+        "logger_file": "/dev/stdout",
         "ignore_level": "info"
+    },
+    "root": {
+        
     }
 }

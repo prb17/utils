@@ -1,0 +1,14 @@
+#logger target definition
+message(DEBUG "Creating TIME target")
+set(TIME_LIBRARY_NAME time)
+set(TIME_LIBRARY_NAME ${TIME_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${TIME_LIBRARY_NAME} INTERFACE)
+
+set(TIME_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/)
+set(TIME_INCLUDE_DIRS ${TIME_INCLUDE_DIRS} PARENT_SCOPE)
+target_include_directories(${TIME_LIBRARY_NAME} INTERFACE ${TIME_INCLUDE_DIRS})
+
+message(DEBUG "Finished creating TIME target")
+
+file(GLOB TIME_HEADERS ${TIME_INCLUDE_DIRS}/*.hh)
+install(FILES ${TIME_HEADERS} DESTINATION time/include)
