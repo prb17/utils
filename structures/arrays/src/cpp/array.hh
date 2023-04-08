@@ -317,6 +317,9 @@ namespace prb17 {
             template<typename T>
             array<T>& array<T>::operator=(array &a) {
                 if (&a != this) {
+                    if (data) {
+                        free(data);
+                    }
                     cap = a.cap;
                     sz = a.sz;
                     data = (container<T> **)malloc(sizeof(container<T>*) * cap);                    
@@ -332,6 +335,9 @@ namespace prb17 {
             //operator =
             template<typename T>
             array<T> array<T>::operator=(array a) {
+                if (data) {
+                    free(data);
+                }
                 cap = a.cap;
                 sz = a.sz;
                 data = (container<T> **)malloc(sizeof(container<T>**) * cap);                    
