@@ -48,5 +48,8 @@ install(FILES ${ARRAY_HEADERS}
                 DESTINATION
                 structures/include)
 
+file(GLOB ALL_CONFIGS config/*.json)
+install(FILES ${ALL_CONFIGS} DESTINATION structures/config)
+
 file(GLOB ARRAY_CONFIGS arrays/tests/config/*.json)
 install(FILES ${ARRAY_CONFIGS} DESTINATION structures/config/array)

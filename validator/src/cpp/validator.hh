@@ -44,7 +44,7 @@ namespace prb17 {
                         logger.info("Running test: " + test_to_run);
                         parsers::json_parser tmp{value};
                         bool passed = it->second(tmp);
-                        logger.info("Test: " + test_to_run + " result: " + (passed ? std::string(GRE) + "PASSED" + std::string(NC) : std::string(RED) + "FAILED" + std::string(NC)));
+                        logger.info("Test: " + test_to_run + " result: " + (passed ? GRE + "PASSED" + NC : RED + "FAILED" + NC));
                         passed ? total_passed++ : total_failed++;
                         logger.info("###############################");
 
@@ -54,8 +54,8 @@ namespace prb17 {
                 }
             }
             logger.info("Test results: {} and {}", 
-            std::string(GRE) + std::to_string(total_passed) + " passed" + std::string(NC), 
-            std::string(RED) + std::to_string(total_failed) + " failed" + std::string(NC)
+            GRE + std::to_string(total_passed) + " passed" + NC, 
+            RED + std::to_string(total_failed) + " failed" + NC
             );
         }
 

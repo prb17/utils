@@ -1,0 +1,11 @@
+{
+    "logger_template": "[#d] [#n] [#l] #m\n",
+    "array_test": {
+        "logger_name": "array_test",
+        "ignore_level": "debug"
+    },
+    "validator": {
+        "logger_name": "validator",
+        "ignore_level": "info"
+    }
+}

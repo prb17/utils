@@ -3,6 +3,10 @@
 #include <sstream>
 #include <ostream>
 #include <mutex>
+#include <map>
+#include <filesystem>
+
+#include "json_parser.hh"
 
 enum class LOG_LEVELS {
 	ALL,
@@ -12,18 +16,18 @@ enum class LOG_LEVELS {
 	WARN,
 	ERROR
 };
-#define GRY "\033[0;37m"
-#define GRE "\033[0;32m"
-#define YEL "\033[0;33m"
-#define RED "\033[0;31m"
-#define NC "\033[0m"
+#define GRY std::string("\033[0;37m")
+#define GRE std::string("\033[0;32m")
+#define YEL std::string("\033[0;33m")
+#define RED std::string("\033[0;31m")
+#define NC std::string("\033[0m")
 
 #define PLACEHOLDER std::string("{}")
 #define NAME std::string("#n")
 #define LEVEL std::string("#l")
 #define DATE std::string("#d")
 #define MSG std::string("#m")
-#define LOG_TEMPLATE std::string("[#d] [#n] [#m] [#l]\n")
+#define LOG_TEMPLATE std::string("[#d] [#n] [#l] #m\n")
 
 #define TRACE(msg) trace(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg)) 
 #define DEBUG(msg) debug(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg)) 
@@ -31,14 +35,28 @@ enum class LOG_LEVELS {
 #define WARN(msg) warn(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg))
 #define ERROR(msg) error(std::string(__FILE__) + ":" + std::to_string(__LINE__) + ": " + std::string(msg))
 
+
+static std::map<LOG_LEVELS, std::string> level_map = {
+	{LOG_LEVELS::TRACE, "TRACE"},
+	{LOG_LEVELS::DEBUG, GRY + "DEBUG" + NC},
+	{LOG_LEVELS::INFO, GRE + "INFO" + NC},
+	{LOG_LEVELS::WARN, YEL + "WARN" + NC},
+	{LOG_LEVELS::ERROR, RED + "ERROR" + NC}
+};
+static std::map<std::string, LOG_LEVELS> level_map_str = {
+	{"trace", LOG_LEVELS::TRACE},
+	{"debug", LOG_LEVELS::DEBUG},
+	{"info", LOG_LEVELS::INFO},
+	{"warn", LOG_LEVELS::WARN},
+	{"error", LOG_LEVELS::ERROR}
+};
+// static std::string logger_conf_file = std::filesystem::canonical("/proc/self/exe").parent_path() + std::string("../config/logger_conf.json");
+
 namespace prb17 {
     namespace utils {		
 		class logger {
 			public:
-
 				logger(std::string);
-				logger(std::string, LOG_LEVELS);
-				logger(std::string, LOG_LEVELS, std::string);
 
 				logger(logger const&);
 				logger& operator=(logger const&);
@@ -65,9 +83,9 @@ namespace prb17 {
 				void error(std::string);
 			private:
 				std::string name;
-				std::string pre_msg;
 				FILE* logger_file;
 				LOG_LEVELS ignore_level;
+				std::string logger_template;
 				std::mutex logMutex;
 
 				template<typename T>
@@ -77,12 +95,23 @@ namespace prb17 {
 				void log(LOG_LEVELS, std::string);
 		};
 
-		logger::logger(std::string name) : logger(name, LOG_LEVELS::ALL) {}
-		logger::logger(std::string name, LOG_LEVELS level) : logger(name, level, "") {}
-		logger::logger(std::string name,  LOG_LEVELS level, std::string file_name) : name{name}, ignore_level{level}, logger_file{file_name.empty() ? stdout : fopen(file_name.c_str(), "a")} {
-			pre_msg = argsHelper(LOG_TEMPLATE, NAME, name);
-			pre_msg = argsHelper(pre_msg, LEVEL, "LOG LEVEL");
-			pre_msg = argsHelper(pre_msg, DATE, "04-03-2022");
+		logger::logger(std::string name) {
+			parsers::json_parser jp{};
+			logger_file = stdout;
+			std::string logger_conf_file = std::filesystem::canonical("/proc/self/exe").parent_path();
+			logger_conf_file = logger_conf_file + "/../config/logger_conf.json";
+			try {
+				jp.parse(logger_conf_file);
+				this->name = jp.json_value(name).as_string("logger_name");
+				this->ignore_level = level_map_str[jp.json_value(name).as_string("ignore_level")];
+				this->logger_template = jp.as_string("logger_template");
+			} catch (prb17::utils::exception e) {
+				warn("Problem parsing {}, using default values", logger_conf_file);
+				this->name = "default";
+				this->ignore_level = LOG_LEVELS::INFO;
+				this->logger_template = "[#n] [#l] #m\n";
+			}
+            
 		}
 
 		logger::logger(logger const &other) {
@@ -119,7 +148,7 @@ namespace prb17 {
 			trace(argsHelper(msg, PLACEHOLDER, args...));
 		}
 		void logger::trace(std::string msg) {
-			log(LOG_LEVELS::TRACE, std::string("[TRACE] ") + msg);
+			log(LOG_LEVELS::TRACE, msg);
 		}
 
 		/**
@@ -134,7 +163,7 @@ namespace prb17 {
 			debug(argsHelper(msg, PLACEHOLDER, args...));
 		}
 		void logger::debug(std::string msg) {
-			log(LOG_LEVELS::DEBUG, "[" + std::string(GRY) + "DEBUG" + std::string(NC) + "]" + " " + msg );
+			log(LOG_LEVELS::DEBUG, msg );
 		}
 
 		/**
@@ -149,7 +178,7 @@ namespace prb17 {
 			info(argsHelper(msg, PLACEHOLDER, args...));
 		}
 		void logger::info(std::string msg) {
-			log(LOG_LEVELS::INFO, "[" + std::string(GRE) + "INFO" + std::string(NC) + "]" + " " + msg);
+			log(LOG_LEVELS::INFO, msg);
 		}
 
 		/**
@@ -164,7 +193,7 @@ namespace prb17 {
 			warn(argsHelper(msg, PLACEHOLDER, args...));
 		}
 		void logger::warn(std::string msg) {
-			log(LOG_LEVELS::WARN, "[" + std::string(YEL) + "WARN" + std::string(NC) + "]" + " " + msg);
+			log(LOG_LEVELS::WARN, msg);
 		}
 
 		/**
@@ -179,7 +208,7 @@ namespace prb17 {
 			error(argsHelper(msg, PLACEHOLDER, args...));
 		}
 		void logger::error(std::string msg) {
-			log(LOG_LEVELS::ERROR, "[" + std::string(RED) + "ERROR" + std::string(NC) + "]" + " " + msg);
+			log(LOG_LEVELS::ERROR, msg);
 		}
 
 
@@ -194,14 +223,14 @@ namespace prb17 {
 		template<typename T>
 		std::string logger::argsHelper(std::string msg, std::string token, T t) {
 			// std::cout << __PRETTY_FUNCTION__ << std::endl ;
-			//find first index of {}
+			// find first index of {}
 			std::string::size_type n = msg.find(token);
 			if (n != std::string::npos) {
-				//if it exists, replace with string
+				// if it exists, replace with string
 				std::stringstream ss;
 				ss << t;
 				msg.replace(n, token.length(), ss.str());
-			}//if not, return msg as is
+			} //if not, return msg as is
 			return msg;
 		}
 		/**
@@ -226,9 +255,12 @@ namespace prb17 {
 		 * @param msg 
 		 */
 		void logger::log(LOG_LEVELS level, std::string msg) {
+			std::string tmp = argsHelper(logger_template, NAME, name);
+			tmp = argsHelper(tmp, DATE, "04-03-2022 00:00:00");
+			tmp = argsHelper(tmp, LEVEL, level_map[level]);
+			msg = argsHelper(tmp, MSG, msg);
 			std::lock_guard<std::mutex> guard(logMutex);
-			if (logger_file && level > ignore_level) {
-				msg = argsHelper(pre_msg, MSG, msg);
+			if (logger_file && level >= ignore_level) {
 				fwrite(msg.data(), sizeof(char), msg.length(), logger_file);
 			}
 		}

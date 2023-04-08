@@ -9,7 +9,7 @@
 // using namespace prb17::utils;
 // using namespace prb17::utils::structures;
 
-static prb17::utils::logger logger{"array_test", LOG_LEVELS::INFO};
+static prb17::utils::logger logger{"array_test"};
 
 // void debugArray(array<int> &arr) {
 //     std::cout << arr << std::endl;
@@ -117,11 +117,12 @@ bool testArrayFind(prb17::utils::parsers::json_parser jp) {
     auto arr = jp.as_array<T>("array");
 
     logger.debug("input array: {}", arr);
-    int expected = jp.as_int("expected");
-    logger.debug("expected index: '{}'", expected);
 
     auto find_value = jp.as_value<T>("find");
     logger.debug("finding value: '{}'", find_value);
+    
+    int expected = jp.as_int("expected");
+    logger.debug("expected index: '{}'", expected);
 
     int result = arr.find(find_value);
     logger.debug("result index was: '{}'", result);
@@ -167,7 +168,8 @@ int main(int argc, char** argv) {
     }
     prb17::utils::structures::array<std::string> test_files{};
     for (int i=1; i<argc; i++) {
-        std::cout << "adding test file to validator: " << &argv[i][0] << std::endl;
+        //TODO: test if string is a valid file name/path
+        logger.info("adding test file to validator: '{}'", &argv[i][0]);
         test_files.add(&argv[i][0]);
     }
     prb17::utils::validator validator{test_files};
