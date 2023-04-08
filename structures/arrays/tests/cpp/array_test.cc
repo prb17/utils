@@ -169,7 +169,7 @@ int main(int argc, char** argv) {
     prb17::utils::structures::array<std::string> test_files{};
     for (int i=1; i<argc; i++) {
         //TODO: test if string is a valid file name/path
-        logger.info("adding test file to validator: '{}'", &argv[i][0]);
+        logger.debug("adding test file to validator: '{}'", &argv[i][0]);
         test_files.add(&argv[i][0]);
     }
     prb17::utils::validator validator{test_files};
@@ -182,5 +182,7 @@ int main(int argc, char** argv) {
     validator.add_tests(&array_tests<float>);
     validator.add_tests(&array_tests<double>);
 
+    logger.info("Starting validation tests of array_tests");
     validator.validate();
+    logger.info("Finished validation tests of array_tests");
 }

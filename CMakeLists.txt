@@ -22,8 +22,8 @@ find_package(JsonCpp 1.9.5 COMPONENTS jsoncpp)
 #TODO: figure out good options for include or not including certain utilities
 add_subdirectory(exceptions)
 add_subdirectory(time)
-add_subdirectory(logger)
 add_subdirectory(structures)
+add_subdirectory(logger)
 add_subdirectory(parsers)
 add_subdirectory(validator)
 
@@ -43,7 +43,7 @@ if(BUILD_UTILS_TESTS)
     
     target_include_directories(${ARRAY_TEST_NAME} INTERFACE ${VALIDATOR_INCLUDE_DIRS})
     target_include_directories(${CONTAINER_TEST_NAME} INTERFACE ${VALIDATOR_INCLUDE_DIRS})
-    target_link_libraries(${ARRAY_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME} ${VALIDATOR_LIBRARY_NAME} ${PARSERS_LIBRARY_NAME})
+    target_link_libraries(${ARRAY_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME} ${VALIDATOR_LIBRARY_NAME} ${PARSERS_LIBRARY_NAME} ${LOGGER_LIBRARY_NAME})
     target_link_libraries(${CONTAINER_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME} ${VALIDATOR_LIBRARY_NAME} ${PARSERS_LIBRARY_NAME})
 
     # Configure stack tests

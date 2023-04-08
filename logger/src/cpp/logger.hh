@@ -27,14 +27,9 @@ enum class LOG_LEVELS {
 #define PLACEHOLDER std::string("{}")
 #define TOKEN_IDENTIFIER std::string("#");
 
-#define DATE std::string("#d")
 #define MONTH std::string("#H")
 #define DAY std::string("#A")
 #define YEAR std::string("#Y")
-
-// #define HOUR std::string("#h")
-// #define MINUTE std::string("#m")
-// #define SECOND std::string("#s")
 #define TIME std::string("#t")
 #define MILLIS std::string("#k")
 #define MICROS std::string("#u")
@@ -85,6 +80,11 @@ namespace prb17 {
 				std::string tokenReplaceName(std::string, std::string);
 				std::string tokenReplaceMsg(std::string, std::string);
 
+				static void initializeRootLogger();
+				static bool root_logger_initialized;
+				static LOG_LEVELS root_logger_level;
+				static structures::array<std::string> appenders;
+
 				template<typename T>
 				static std::map<std::string, std::function<std::string(std::string, std::string, T)> > token_map;
 				template<typename T>
@@ -112,7 +112,8 @@ namespace prb17 {
 		};
 
 		logger::logger(std::string name) {
-			initialize(name); 
+			initialize(name);
+			initializeRootLogger();
 		}
 
 		logger::logger(logger const &other) {
@@ -133,7 +134,7 @@ namespace prb17 {
 		logger::~logger() {
 			if(logger_file) {
 				fclose(logger_file);
-			}	
+			}
 		}
 
 		/**
@@ -158,7 +159,22 @@ namespace prb17 {
 				this->logger_name = "";
 				this->logger_file = stdout;
 				this->logger_level = LOG_LEVELS::INFO;
-				this->logger_template = "[#d #h:#m:#s] [#N] [#L] #M\n";
+				this->logger_template = "[#H-#A-#Y #t] [#N] [#L] #M\n";
+			}
+		}
+
+		bool logger::root_logger_initialized = false;
+		structures::array<std::string> logger::appenders{};
+		LOG_LEVELS logger::root_logger_level = LOG_LEVELS::ALL;
+		void logger::initializeRootLogger() {
+			if (!root_logger_initialized) {
+				std::string logger_conf_file = std::filesystem::canonical("/proc/self/exe").parent_path().parent_path();
+				logger_conf_file = logger_conf_file + "/config/logger_conf.json";
+				parsers::json_parser jp{};
+				jp.parse(logger_conf_file);
+				root_logger_level = level_map_str[jp.json_value("root").as_string("logger_level")];
+				appenders = structures::array<std::string>{jp.json_value("root").as_string_array("appenders")};
+				root_logger_initialized = true;
 			}
 		}
 		
@@ -355,14 +371,16 @@ namespace prb17 {
 		 * @param msg 
 		 */
 		void logger::log(LOG_LEVELS level, std::string msg) {
-			if (logger_file) {
-				std::string tmp;
-				tmp = tokenReplaceName(logger_template, logger_name);
-				tmp = tokenReplaceDate(tmp);
-				tmp = tokenReplaceLevel(tmp, level);				
-				msg = tokenReplaceMsg(tmp, msg);
-				std::lock_guard<std::mutex> guard(logger_lock);
-				fwrite(msg.data(), sizeof(char), msg.length(), logger_file);
+			if (logger_file && level >= logger_level) {
+				if (level >= root_logger_level && appenders.find(logger_name) > -1) {
+					std::string tmp;
+					tmp = tokenReplaceName(logger_template, logger_name);
+					tmp = tokenReplaceDate(tmp);
+					tmp = tokenReplaceLevel(tmp, level);				
+					msg = tokenReplaceMsg(tmp, msg);
+					std::lock_guard<std::mutex> guard(logger_lock);
+					fwrite(msg.data(), sizeof(char), msg.length(), logger_file);
+				}				
 			}
 		}
 	}

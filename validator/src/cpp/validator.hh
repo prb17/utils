@@ -34,19 +34,19 @@ namespace prb17 {
                 std::string test_file = test_files[i].value();
                 parsers::json_parser jp{};
                 jp.parse(test_file);
-                logger.info("Running test file: " + test_file);
-                logger.info(jp.json_value("MetaData").to_string());
+                logger.debug("Running test file: " + test_file);
+                logger.debug(jp.json_value("MetaData").to_string());
                 for (Json::Value value : jp.json_value("Tests").get_json_value()) {
                     std::string test_to_run = value["name"].asString();
                     auto it = tests_to_validate.find(test_to_run);
                     if (it != tests_to_validate.end()) {
-                        logger.info("###############################");
-                        logger.info("Running test: " + test_to_run);
+                        logger.debug("###############################");
+                        logger.debug("Running test: " + test_to_run);
                         parsers::json_parser tmp{value};
                         bool passed = it->second(tmp);
-                        logger.info("Test: " + test_to_run + " result: " + (passed ? GRE + "PASSED" + NC : RED + "FAILED" + NC));
+                        logger.debug("Test: " + test_to_run + " result: " + (passed ? GRE + "PASSED" + NC : RED + "FAILED" + NC));
                         passed ? total_passed++ : total_failed++;
-                        logger.info("###############################");
+                        logger.debug("###############################");
 
                     } else {
                         throw exception("config test file provided used unrecognized test name, please fix now");
@@ -58,6 +58,5 @@ namespace prb17 {
             RED + std::to_string(total_failed) + " failed" + NC
             );
         }
-
     }
 }

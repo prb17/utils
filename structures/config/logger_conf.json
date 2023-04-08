@@ -1,5 +1,5 @@
 {
-    "logger_template": "[#H-#A-#Y #t.#k.#u.#n] [#N] [#L] #M",
+    "logger_template": "[#H-#A-#Y #t.#k] [#N] [#L] #M",
     "array_test": {
         "logger_name": "array_test",
         "logger_file": "/dev/stdout",
@@ -8,9 +8,10 @@
     "validator": {
         "logger_name": "validator",
         "logger_file": "/dev/stdout",
-        "ignore_level": "info"
+        "logger_level": "debug"
     },
     "root": {
-        
+        "logger_level": "info",
+        "appenders": ["array_test", "validator"]        
     }
 }

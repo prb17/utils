@@ -45,7 +45,8 @@ namespace prb17 {
                     virtual std::string to_string() const;
 
                     //overloaded operators
-                    array& operator=(array &);                    
+                    array& operator=(array &);
+                    array operator=(array);          
                     bool operator==(const array&) const;
                     bool operator!=(const array&) const;
                     container<T>& operator[](size_t);
@@ -319,11 +320,25 @@ namespace prb17 {
                     cap = a.cap;
                     sz = a.sz;
                     data = (container<T> **)malloc(sizeof(container<T>*) * cap);                    
-                    memset(data, 0, sizeof(container<T>) * cap);
+                    memset(data, 0, sizeof(container<T>**) * cap);
                     
                     for(int i=0; i<sz; i++) {
                         data[i] = a.data != nullptr ? new container<T>{a[i].value()} : new container<T>;
                     }
+                }
+                return *this;
+            }
+
+            //operator =
+            template<typename T>
+            array<T> array<T>::operator=(array a) {
+                cap = a.cap;
+                sz = a.sz;
+                data = (container<T> **)malloc(sizeof(container<T>**) * cap);                    
+                memset(data, 0, sizeof(container<T>**) * cap);
+                
+                for(int i=0; i<sz; i++) {
+                    data[i] = a.data != nullptr ? new container<T>{a[i].value()} : new container<T>;
                 }
                 return *this;
             }
