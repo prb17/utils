@@ -6,49 +6,42 @@
     "Tests" : [
         {
             "name" : "testArrayFind",
-            "datatype" : "int",
             "array" : [ 3, 6, 9, 12, 15, -11],
             "find" : 6,
             "expected" : 1
         },
         {
             "name" : "testArrayFind",
-            "datatype" : "uint",
             "array" : [ 3, 6, 9, 12, 15, 11],
             "find" : 7,
             "expected" : -1
         },
         {
             "name" : "testArrayFind",
-            "datatype" : "bool",
             "array" : [ true, false, true, false, true, false],
             "find" : true,
             "expected" : 0
         },
         {
             "name" : "testArrayFind",
-            "datatype" : "float",
             "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1],
             "find" : 11.1,
             "expected" : 5
         },
         {
             "name" : "testArrayFind",
-            "datatype" : "double",
             "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1],
             "find" : 9.7,
             "expected" : 2
         }, 
         {
             "name" : "testArrayFind",
-            "datatype" : "char",
             "array" : [ "a", "b", "c", "d", "e" ],
             "find" : "d",
             "expected" : 3
         }, 
         {
             "name" : "testArrayFind",
-            "datatype" : "string",
             "array" : [ "one", "two", "three", "four", "five" ],
             "find" : "three",
             "expected" : 2
