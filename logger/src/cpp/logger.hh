@@ -44,8 +44,6 @@ namespace prb17 {
 		class logger {
 			public:
 				logger(std::string);
-				logger(logger const&);
-				logger& operator=(logger const&);
 				~logger();
 
 				template<typename... Args>
@@ -68,13 +66,14 @@ namespace prb17 {
 				void error(std::string, Args...);
 				void error(std::string);
 			private:
+				static std::string logger_conf_file;
+				static std::mutex appenders_lock;
+
 				std::string logger_name;
-				FILE* logger_file;
 				LOG_LEVELS logger_level;
 				std::string logger_template;
-				std::mutex logger_lock;
 
-				void initialize(std::string);
+				void initializeLogger(std::string);
 				std::string tokenReplaceDate(std::string);
 				std::string tokenReplaceLevel(std::string, LOG_LEVELS);
 				std::string tokenReplaceName(std::string, std::string);
@@ -83,7 +82,11 @@ namespace prb17 {
 				static void initializeRootLogger();
 				static bool root_logger_initialized;
 				static LOG_LEVELS root_logger_level;
-				static structures::array<std::string> appenders;
+				static structures::array<std::string> root_logger_appenders;
+
+				static int appenders_initialized_ref_cnt;
+				static std::map<std::string, FILE*> appenders;
+				static void initializeAppenders();
 
 				template<typename T>
 				static std::map<std::string, std::function<std::string(std::string, std::string, T)> > token_map;
@@ -112,70 +115,95 @@ namespace prb17 {
 		};
 
 		logger::logger(std::string name) {
-			initialize(name);
+			initializeAppenders();
 			initializeRootLogger();
-		}
-
-		logger::logger(logger const &other) {
-			logger_name = other.logger_name;
-			logger_file = other.logger_file;
-			logger_level = other.logger_level;
-		}
-
-		logger& logger::operator=(logger const& other) {
-			if (&other != this) {
-				logger_name = other.logger_name;
-				logger_file = other.logger_file;
-				logger_level = other.logger_level;
-			}
-			return *this;
+			initializeLogger(name);
 		}
 
 		logger::~logger() {
-			if(logger_file) {
-				fclose(logger_file);
+			appenders_initialized_ref_cnt--;
+			if (!appenders_initialized_ref_cnt) {
+				for( auto it = appenders.begin(); it != appenders.end(); ++it) {
+					if (it->first != "stdout") {
+						fclose(it->second);
+					}
+				}
 			}
 		}
 
+		std::string logger::logger_conf_file = std::string(std::filesystem::canonical("/proc/self/exe").parent_path().parent_path()) + "/config/logger_conf.json";
+		std::mutex logger::appenders_lock;
 		/**
 		 * @brief 
 		 * 
 		 * @param name 
 		 */
-		void logger::initialize(std::string name) {
+		void logger::initializeLogger(std::string name) {
 			parsers::json_parser jp{};
-			logger_file = stdout;
-			std::string logger_conf_file = std::filesystem::canonical("/proc/self/exe").parent_path().parent_path();
-			logger_conf_file = logger_conf_file + "/config/logger_conf.json";
 			try {
 				jp.parse(logger_conf_file);
-				this->logger_name = jp.json_value(name).as_string("logger_name");
-				std::string file_name = jp.json_value(name).as_string("logger_file");
-				this->logger_file = file_name.empty() ? nullptr : fopen(file_name.c_str(), "a");
-				this->logger_level = level_map_str[jp.json_value(name).as_string("logger_level")];
 				this->logger_template = jp.as_string("logger_template") + "\n";
+
+				jp = jp.json_value("loggers").json_value(name);
+				this->logger_level = level_map_str[jp.as_string("logger_level")];
+				this->logger_name = name;
 			} catch (prb17::utils::exception e) {
 				trace("{} not found", logger_conf_file);
-				this->logger_name = "";
-				this->logger_file = stdout;
+				this->logger_name = name;
 				this->logger_level = LOG_LEVELS::INFO;
 				this->logger_template = "[#H-#A-#Y #t] [#N] [#L] #M\n";
 			}
 		}
 
 		bool logger::root_logger_initialized = false;
-		structures::array<std::string> logger::appenders{};
+		structures::array<std::string> logger::root_logger_appenders{};
 		LOG_LEVELS logger::root_logger_level = LOG_LEVELS::ALL;
+		/**
+		 * @brief 
+		 * 
+		 */
 		void logger::initializeRootLogger() {
 			if (!root_logger_initialized) {
-				std::string logger_conf_file = std::filesystem::canonical("/proc/self/exe").parent_path().parent_path();
-				logger_conf_file = logger_conf_file + "/config/logger_conf.json";
-				parsers::json_parser jp{};
-				jp.parse(logger_conf_file);
-				root_logger_level = level_map_str[jp.json_value("root").as_string("logger_level")];
-				appenders = structures::array<std::string>{jp.json_value("root").as_string_array("appenders")};
+				try {
+					parsers::json_parser jp{};
+					jp.parse(logger_conf_file);
+					root_logger_level = level_map_str[jp.json_value("root").as_string("logger_level")];
+					root_logger_appenders = structures::array<std::string>{jp.json_value("root").as_string_array("appenders")};
+				} catch (prb17::utils::exception e) {
+					root_logger_level = LOG_LEVELS::TRACE;
+					root_logger_appenders = structures::array<std::string>{};
+					root_logger_appenders.add("stdout");
+				}
 				root_logger_initialized = true;
 			}
+		}
+
+		int logger::appenders_initialized_ref_cnt = 0;
+		std::map<std::string, FILE*> logger::appenders{};
+		void logger::initializeAppenders() {
+			if (!appenders_initialized_ref_cnt) {
+				try {				
+					parsers::json_parser jp{};
+					jp.parse(logger_conf_file);
+					jp = jp.json_value("appenders");
+					
+					for(int i=0; i < jp.get_json_value().getMemberNames().size(); i++) {
+						std::string tmp_appender = jp.get_json_value().getMemberNames()[i];
+						if (tmp_appender == "stdout") {
+							appenders.emplace("stdout", stdout);
+						} else {
+							std::string file_location = jp.json_value(tmp_appender).as_string("output_file");
+							std::filesystem::create_directory(std::filesystem::path(file_location).parent_path());
+							FILE* tmp = fopen(file_location.c_str(), "a");
+							appenders.emplace(tmp_appender, tmp);
+						}
+					}
+				} catch (prb17::utils::exception e) {
+					std::cout << "problem parsing something" << std::endl;
+					appenders.emplace("stdout", stdout);
+				}
+			}
+			appenders_initialized_ref_cnt++;
 		}
 		
 
@@ -371,15 +399,18 @@ namespace prb17 {
 		 * @param msg 
 		 */
 		void logger::log(LOG_LEVELS level, std::string msg) {
-			if (logger_file && level >= logger_level) {
-				if (level >= root_logger_level && appenders.find(logger_name) > -1) {
-					std::string tmp;
-					tmp = tokenReplaceName(logger_template, logger_name);
-					tmp = tokenReplaceDate(tmp);
-					tmp = tokenReplaceLevel(tmp, level);				
-					msg = tokenReplaceMsg(tmp, msg);
-					std::lock_guard<std::mutex> guard(logger_lock);
-					fwrite(msg.data(), sizeof(char), msg.length(), logger_file);
+			if (level >= logger_level && level >= root_logger_level) {
+				std::string tmp;
+				tmp = tokenReplaceName(logger_template, logger_name);
+				tmp = tokenReplaceDate(tmp);
+				tmp = tokenReplaceLevel(tmp, level);				
+				msg = tokenReplaceMsg(tmp, msg);
+				for(int i=0; i < root_logger_appenders.size(); i++) {
+					std::string tmp_appender_name = root_logger_appenders[i].value();
+					if(auto it = appenders.find(tmp_appender_name); it != appenders.end()) {
+						std::lock_guard<std::mutex> guard(appenders_lock);
+						fwrite(msg.data(), sizeof(char), msg.length(), it->second);
+					}
 				}				
 			}
 		}

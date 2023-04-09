@@ -1,17 +1,24 @@
 {
     "logger_template": "[#H-#A-#Y #t.#k] [#N] [#L] #M",
-    "array_test": {
-        "logger_name": "array_test",
-        "logger_file": "/dev/stdout",
-        "logger_level": "debug"
+    "appenders": 
+    {
+        "stdout": {
+
+        },
+        "file": {
+            "output_file": "./test_logs/structures_tests.txt"
+        }
     },
-    "validator": {
-        "logger_name": "validator",
-        "logger_file": "/dev/stdout",
-        "logger_level": "debug"
+    "loggers": {
+        "array_test": {
+            "logger_level": "info"
+        },
+        "validator": {
+            "logger_level": "info"
+        }
     },
     "root": {
         "logger_level": "info",
-        "appenders": ["array_test", "validator"]        
-    }
+        "appenders": ["stdout", "file"]        
+    }    
 }
