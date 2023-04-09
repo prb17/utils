@@ -34,6 +34,10 @@ namespace prb17 {
                 std::string test_file = test_files[i].value();
                 parsers::json_parser jp{};
                 jp.parse(test_file);
+
+                size_t current_total_passed = 0;
+                size_t current_total_failed = 0;
+                std::string test_name = jp.json_value("MetaData").as_string("test_name");
                 logger.debug("Running test file: " + test_file);
                 logger.debug(jp.json_value("MetaData").to_string());
                 for (Json::Value value : jp.json_value("Tests").get_json_value()) {
@@ -45,15 +49,21 @@ namespace prb17 {
                         parsers::json_parser tmp{value};
                         bool passed = it->second(tmp);
                         logger.debug("Test: " + test_to_run + " result: " + (passed ? GRE + "PASSED" + NC : RED + "FAILED" + NC));
-                        passed ? total_passed++ : total_failed++;
+                        passed ? current_total_passed++ : current_total_failed++;
                         logger.debug("###############################");
 
                     } else {
                         throw exception("config test file provided used unrecognized test name, please fix now");
                     }
                 }
+                logger.debug("'{}' results: {} and {}", test_name,
+                GRE + std::to_string(current_total_passed) + " passed" + NC, 
+                RED + std::to_string(current_total_failed) + " failed" + NC
+                );
+                total_passed += current_total_passed;
+                total_failed += current_total_failed;
             }
-            logger.info("Test results: {} and {}", 
+            logger.info("Total results: {} and {}", 
             GRE + std::to_string(total_passed) + " passed" + NC, 
             RED + std::to_string(total_failed) + " failed" + NC
             );
