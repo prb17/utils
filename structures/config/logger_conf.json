@@ -18,7 +18,7 @@
         }
     },
     "root": {
-        "logger_level": "debug",
+        "logger_level": "info",
         "appenders": ["stdout"]        
     }    
 }

@@ -1,66 +1,56 @@
 {
-    "MetaData": { 
+    "MetaData": 
+    { 
         "test_name" : "Array Constructors Test",
         "test_type" : "unit"
     },
-    "Tests" : [
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        },
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        },
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        },
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        },
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        }, 
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        }, 
-        {
-            "name" : "testDefaultConstructor",
-            "array" : []
-        },
-
-
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        },
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        },
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        },
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        },
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        }, 
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        }, 
-        {
-            "name" : "testCapacityOnlyConstructor",
-            "capacity" : 5
-        }
-    ]
+    "Tests" : 
+    {
+        "testDefaultConstructor" : [
+            {
+                "array" : []
+            },
+            {
+                "array" : []
+            },
+            {
+                "array" : []
+            },
+            {
+                "array" : []
+            },
+            {
+                "array" : []
+            }, 
+            {
+                "array" : []
+            }, 
+            {
+                "array" : []
+            }
+        ],
+        "testCapacityOnlyConstructor" : [                
+            {
+                "capacity" : 5
+            },
+            {
+                "capacity" : 5
+            },
+            {
+                "capacity" : 5
+            },
+            {
+                "capacity" : 5
+            },
+            {
+                "capacity" : 5
+            }, 
+            {
+                "capacity" : 5
+            }, 
+            {
+                "capacity" : 5
+            }
+        ]
+    }
 }

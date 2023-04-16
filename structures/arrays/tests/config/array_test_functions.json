@@ -1,94 +1,84 @@
 {
-    "MetaData": { 
+    "MetaData": 
+    { 
         "test_name" : "Array Functions Test",
         "test_type" : "unit"
     },
-    "Tests" : [
-        {
-            "name" : "testArrayFind",
-            "array" : [ 3, 6, 9, 12, 15, -11 ],
-            "find" : 6,
-            "expected" : 1
-        },
-        {
-            "name" : "testArrayFind",
-            "array" : [ 3, 6, 9, 12, 15, 11 ],
-            "find" : 7,
-            "expected" : -1
-        },
-        {
-            "name" : "testArrayFind",
-            "array" : [ true, false, true, false, true, false ],
-            "find" : true,
-            "expected" : 0
-        },
-        {
-            "name" : "testArrayFind",
-            "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
-            "find" : 11.1,
-            "expected" : 5
-        },
-        {
-            "name" : "testArrayFind",
-            "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
-            "find" : 9.7,
-            "expected" : 2
-        }, 
-        {
-            "name" : "testArrayFind",
-            "array" : [ "a", "b", "c", "d", "e" ],
-            "find" : "d",
-            "expected" : 3
-        }, 
-        {
-            "name" : "testArrayFind",
-            "array" : [ "one", "two", "three", "four", "five" ],
-            "find" : "three",
-            "expected" : 2
-        },
-
-
-        {
-            "name" : "testArrayAdd",
-            "array" : [ 3, 6, 9 ],
-            "add" : 6,
-            "expected" : 4
-        },
-        {
-            "name" : "testArrayAdd",
-            "array" : [ 3, 6, 9, 12, 15, 11 ],
-            "add" : 7,
-            "expected" : 6
-        },
-        {
-            "name" : "testArrayAdd",
-            "array" : [ true, false, true, false, true, false ],
-            "add" : true,
-            "expected" : 6
-        },
-        {
-            "name" : "testArrayAdd",
-            "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
-            "add" : 11.1,
-            "expected" : 6
-        },
-        {
-            "name" : "testArrayAdd",
-            "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
-            "add" : 9.7,
-            "expected" : 6
-        }, 
-        {
-            "name" : "testArrayAdd",
-            "array" : [ "a", "b", "c", "d", "e" ],
-            "add" : "d",
-            "expected" : 6
-        }, 
-        {
-            "name" : "testArrayAdd",
-            "array" : [ "one", "two", "three", "four", "five" ],
-            "add" : "three",
-            "expected" : 6
-        }
-    ]
+    "Tests" : 
+    {
+        "testArrayFind": [
+            {
+                "array" : [ 3, 6, 9, 12, 15, -11 ],
+                "find" : 6,
+                "expected" : 1
+            }, 
+            {
+                "array" : [ 3, 6, 9, 12, 15, 11 ],
+                "find" : 7,
+                "expected" : -1
+            },
+            {
+                "array" : [ true, false, true, false, true, false ],
+                "find" : true,
+                "expected" : 0
+            },
+            {
+                "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "find" : 11.1,
+                "expected" : 5
+            },
+            {
+                "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "find" : 9.7,
+                "expected" : 2
+            }, 
+            {
+                "array" : [ "a", "b", "c", "d", "e" ],
+                "find" : "d",
+                "expected" : 3
+            }, 
+            {
+                "array" : [ "one", "two", "three", "four", "five" ],
+                "find" : "three",
+                "expected" : 2
+            }
+        ],
+        "testArrayAdd" : [
+            {
+                "array" : [ 3, 6, 9 ],
+                "add" : 6,
+                "expected" : 4
+            },
+            {
+                "array" : [ 3, 6, 9, 12, 15, 11 ],
+                "add" : 7,
+                "expected" : 6
+            },
+            {
+                "array" : [ true, false, true, false, true, false ],
+                "add" : true,
+                "expected" : 6
+            },
+            {
+                "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "add" : 11.1,
+                "expected" : 6
+            },
+            {
+                "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "add" : 9.7,
+                "expected" : 6
+            }, 
+            {
+                "array" : [ "a", "b", "c", "d", "e" ],
+                "add" : "d",
+                "expected" : 6
+            }, 
+            {
+                "array" : [ "one", "two", "three", "four", "five" ],
+                "add" : "three",
+                "expected" : 6
+            }
+        ]           
+    }
 }
