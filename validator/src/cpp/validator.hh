@@ -43,6 +43,10 @@ namespace prb17 {
                 logger.debug("Running test file: " + test_file);
                 logger.debug(jp.json_value("MetaData").to_string());
                 for (auto const &test_to_run : jp.json_value("Tests").get_json_value().getMemberNames()) {
+                    auto it = tests_to_validate.find(test_to_run);
+                    if (it == tests_to_validate.end()) {
+                        continue;
+                    }
                     size_t current_total_passed = 0;
                     size_t current_total_failed = 0;
                     bool passed = false;
@@ -52,11 +56,10 @@ namespace prb17 {
                     try {
                         for(Json::Value value : tmp.get_json_value()) {
                             parsers::json_parser test_config{value};
-                            auto it = tests_to_validate.find(test_to_run);
                             if (it != tests_to_validate.end()) {
                                 passed = it->second(test_config);
-                            }                            
-                            passed ? current_total_passed++ : current_total_failed++;
+                                passed ? current_total_passed++ : current_total_failed++;
+                            }                   
                         }
                     } catch( std::exception e) {
                         logger.warn("Exception happend: {}", e.what());

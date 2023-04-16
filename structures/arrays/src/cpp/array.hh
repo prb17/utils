@@ -32,7 +32,7 @@ namespace prb17 {
 
                     ////modifiers
                     virtual bool insert(size_t, T);
-                    virtual bool remove(size_t);
+                    virtual void remove(size_t);
                     virtual bool add(T);
                     void clear();
                     
@@ -87,7 +87,7 @@ namespace prb17 {
                 data = (container<T> **)malloc(sizeof(container<T>**) * cap);
                 memset(data, 0, sizeof(container<T>**) * cap);
                 for(size_t i=0; i<size(); i++) {
-                    data[i] = a.data[i] ? new container<T>{a.get(i)} :  new container<T>{};
+                    data[i] = a.data[i] ? new container<T>{a[i]} : new container<T>{};
                 }
             }
 
@@ -98,7 +98,7 @@ namespace prb17 {
              */
             template<typename T>
             array<T>::~array() {
-                for (int i=0; i<capacity(); i++) {
+                for (int i=0; i < capacity(); i++) {
                     if (data[i] != nullptr) {
                         delete data[i];
                     }
@@ -122,7 +122,7 @@ namespace prb17 {
             void array<T>::resize() {
                 cap = 2*(size() + 1);
                 container<T>** tmp = (container<T> **)malloc(sizeof(container<T>**) * cap);
-                memset(tmp, 0, sizeof(container<T>*) * cap);
+                memset(tmp, 0, sizeof(container<T>**) * cap);
                 
                 for(int i=0; i<size(); i++) {
                     tmp[i] = data[i];
@@ -154,8 +154,11 @@ namespace prb17 {
                 }
 
                 while(index <= size()) {
-                    T tmp = data[index] ? data[index]->value() : T{};
-                    data[index++] = new container<T>{value};
+                    //todo: could this logic be better? Seems like maybe unnecessary memory calls
+                    T tmp = data[index] ? get(index) : T{};
+                    delete data[index];
+                    data[index] = new container<T>{value};
+                    index++;
                     value = tmp;
                 }
                 sz++;
@@ -178,17 +181,11 @@ namespace prb17 {
              * @param index - where value will be removed from
              */
             template<typename T>
-            bool array<T>::remove(size_t index) {
-                if (valid(index)) {
-                    size_t iterator = index;
-                    while(iterator < size() - 1) {
-                        data[iterator++] = data[iterator + 1];
-                    }
-                    sz--;
-                } else {
-                    return false;
+            void array<T>::remove(size_t index) {
+                while(index < size() - 1) {
+                    data[index++] = data[index + 1];
                 }
-                return true;
+                sz--;
             }
 
             /**
@@ -357,7 +354,7 @@ namespace prb17 {
             }
             template<typename T>
             const T array<T>::operator[] (size_t idx) const {
-                return get(idx)->value(); 
+                return get(idx); 
             }
 
             //operator ==

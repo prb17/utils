@@ -8,10 +8,6 @@
 
 static prb17::utils::logger logger{"array_test"};
 
-// void debugArray(array<int> &arr) {
-//     std::cout << arr << std::endl;
-// }
-
 // void testOperators() {
 //    array<int> arr1{};
 //     arr1.add(3);
@@ -63,19 +59,27 @@ static prb17::utils::logger logger{"array_test"};
 
 // }
 
-// void testArrayRemove() {
-//    prb17::utils::structures::array<int> my_array{};
-//     my_array.add(3);
-//     my_array.add(6);
-//     my_array.add(9);
-//     my_array.add(12);
-//     my_array.add(15);
-//     assert(my_array.size() == 5);
+template<typename T>
+bool testArrayRemove(prb17::utils::parsers::json_parser jp) {
+    auto arr = jp.as_array<T>("array");
 
-//     my_array.remove(2);
-//     assert(my_array.get(2) == 12);
-//     assert(my_array.size() == 4);
-// }
+    logger.debug("input array: {}", arr);
+
+    auto rem_value = jp.as_value<T>("remove");
+    logger.debug("removing value: '{}'", rem_value);
+
+    auto rem_idx = arr.find(rem_value);
+    logger.debug("removing value at index: '{}'", rem_idx);
+    
+    int expected = jp.as_int("expected");
+    logger.debug("expected index: '{}'", expected);
+
+    int result = arr.find(rem_value);
+    logger.debug("result index was: '{}'", result);
+
+    logger.debug("array after: {}", arr);
+    return expected == result;
+}
 
 template<typename T>
 bool testArrayInsert(prb17::utils::parsers::json_parser jp) {
@@ -164,7 +168,8 @@ static std::map<std::string, std::function<bool(prb17::utils::parsers::json_pars
     {"testCapacityOnlyConstructor", &testCapacityOnlyConstructor<T>},
     {"testArrayFind", &testArrayFind<T>},
     {"testArrayAdd", &testArrayAdd<T>},
-    {"testArrayInsert", &testArrayInsert<T>}
+    {"testArrayInsert", &testArrayInsert<T>},
+    {"testArrayRemove", &testArrayRemove<T>}
 };
 
 

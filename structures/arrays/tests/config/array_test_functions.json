@@ -123,6 +123,43 @@
                 "idx" : 2,
                 "expected" : 2
             }
-        ]        
+        ],
+        "testArrayRemove" : [
+            {
+                "array" : [ 3, 6, 9, 12 ],
+                "remove" : 6,
+                "expected" : -1
+            },
+            {
+                "array" : [ 3, 6, 9, 12, 15, 11 ],
+                "remove" : 15,
+                "expected" : -1
+            },
+            {
+                "array" : [ true, false, true, false, true, false ],
+                "remove" : true,
+                "expected" : 1
+            },
+            {
+                "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "remove" : 11.1,
+                "expected" : -1
+            },
+            {
+                "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "remove" : 9.7,
+                "expected" : -1
+            }, 
+            {
+                "array" : [ "a", "b", "c", "d", "e" ],
+                "remove" : "d",
+                "expected" : -1
+            }, 
+            {
+                "array" : [ "one", "two", "three", "four", "five" ],
+                "remove" : "three",
+                "expected" : -1
+            }
+        ]  
     }
 }
