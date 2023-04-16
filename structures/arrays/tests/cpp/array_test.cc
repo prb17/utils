@@ -44,20 +44,21 @@ static prb17::utils::logger logger{"array_test"};
 //     assert(arr3 == arr4);
 // }
 
-// void testArrayClear() {
-//    prb17::utils::structures::array<int> my_array{};
-//     my_array.add(3);
-//     my_array.add(6);
-//     my_array.add(9);
-//     my_array.add(12);
-//     my_array.add(15);
-//     assert(my_array.size() == 5);
+template<typename T>
+bool testArrayClear(prb17::utils::parsers::json_parser jp) {
+    auto arr = jp.as_array<T>("array");
 
-//     my_array.clear();
-//     assert(my_array.size() == 0);
-//     assert(my_array.empty());
+    logger.debug("input array: {}", arr);
+    
+    int expected = jp.as_int("expected");
+    logger.debug("expected size: '{}'", expected);
 
-// }
+    arr.clear();
+    int result = arr.size();
+    logger.debug("array after: {}", arr);
+    return expected == result;
+
+}
 
 template<typename T>
 bool testArrayRemove(prb17::utils::parsers::json_parser jp) {
@@ -66,14 +67,13 @@ bool testArrayRemove(prb17::utils::parsers::json_parser jp) {
     logger.debug("input array: {}", arr);
 
     auto rem_value = jp.as_value<T>("remove");
-    logger.debug("removing value: '{}'", rem_value);
-
     auto rem_idx = arr.find(rem_value);
-    logger.debug("removing value at index: '{}'", rem_idx);
+    logger.debug("removing value: '{}' at idx: '{}'", rem_value, rem_idx);
     
     int expected = jp.as_int("expected");
     logger.debug("expected index: '{}'", expected);
 
+    arr.remove(rem_idx);
     int result = arr.find(rem_value);
     logger.debug("result index was: '{}'", result);
 
@@ -169,7 +169,8 @@ static std::map<std::string, std::function<bool(prb17::utils::parsers::json_pars
     {"testArrayFind", &testArrayFind<T>},
     {"testArrayAdd", &testArrayAdd<T>},
     {"testArrayInsert", &testArrayInsert<T>},
-    {"testArrayRemove", &testArrayRemove<T>}
+    {"testArrayRemove", &testArrayRemove<T>},
+    {"testArrayClear", &testArrayClear<T>}
 };
 
 

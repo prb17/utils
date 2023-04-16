@@ -160,6 +160,36 @@
                 "remove" : "three",
                 "expected" : -1
             }
-        ]  
+        ],
+        "testArrayClear" : [
+            {
+                "array" : [ ],
+                "expected" : 0
+            },
+            {
+                "array" : [ 3, 6, 9, 12, 15, 11 ],
+                "expected" : 0
+            },
+            {
+                "array" : [ true, false, true, false, true, false ],
+                "expected" : 0
+            },
+            {
+                "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "expected" : 0
+            },
+            {
+                "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "expected" : 0
+            }, 
+            {
+                "array" : [ "a", "b", "c", "d", "e" ],
+                "expected" : 0
+            }, 
+            {
+                "array" : [ "one", "two", "three", "four", "five" ],
+                "expected" : 0
+            }
+        ]
     }
 }

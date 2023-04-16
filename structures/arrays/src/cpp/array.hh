@@ -182,6 +182,7 @@ namespace prb17 {
              */
             template<typename T>
             void array<T>::remove(size_t index) {
+                delete data[index];
                 while(index < size() - 1) {
                     data[index++] = data[index + 1];
                 }
