@@ -86,7 +86,7 @@ namespace prb17 {
                 data = nullptr;
                 data = (container<T> **)malloc(sizeof(container<T>**) * cap);
                 memset(data, 0, sizeof(container<T>**) * cap);
-                for(size_t i=0; i<cap; i++) {
+                for(size_t i=0; i<size(); i++) {
                     data[i] = a.data[i] ? new container<T>{a.get(i)} :  new container<T>{};
                 }
             }
@@ -300,10 +300,8 @@ namespace prb17 {
             template<typename T>
             std::string array<T>::to_string() const {
                 std::stringstream stream;
-                std::cout << "array to_string: size: " << sz << std::endl;
                 stream << "[ ";
                 for(int i=0; i<size(); i++) {
-                    std::cout << "index in data: " << i << std::endl;
                     stream << data[i]->value() << " ";
                 }
                 stream << "]";
