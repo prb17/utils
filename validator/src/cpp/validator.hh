@@ -27,6 +27,10 @@ namespace prb17 {
             tests_to_validate.insert(tests->begin(), tests->end());
         }
 
+        /**
+         * @brief 
+         * @todo - could this function logic be better? 3 for loops is very ehh and looks a bit clumsy
+         */
         void validator::validate() {
             size_t total_passed = 0;
             size_t total_failed = 0;
@@ -35,36 +39,36 @@ namespace prb17 {
                 parsers::json_parser jp{};
                 jp.parse(test_file);
 
-                size_t current_total_passed = 0;
-                size_t current_total_failed = 0;
                 std::string test_name = jp.json_value("MetaData").as_string("test_name");
                 logger.debug("Running test file: " + test_file);
                 logger.debug(jp.json_value("MetaData").to_string());
-                for (auto const &it : tests_to_validate) {
+                for (auto const &test_to_run : jp.json_value("Tests").get_json_value().getMemberNames()) {
+                    size_t current_total_passed = 0;
+                    size_t current_total_failed = 0;
                     bool passed = false;
-                    std::string test_to_run = it.first;
                     logger.debug("###############################");
                     logger.debug("Running test: '{}'", test_to_run);
+                    parsers::json_parser tmp{jp.json_value("Tests").json_value(test_to_run)};
                     try {
-                        parsers::json_parser tmp{jp.json_value("Tests").json_value(test_to_run)};
                         for(Json::Value value : tmp.get_json_value()) {
                             parsers::json_parser test_config{value};
-                            passed = it.second(test_config);
+                            auto it = tests_to_validate.find(test_to_run);
+                            if (it != tests_to_validate.end()) {
+                                passed = it->second(test_config);
+                            }                            
+                            passed ? current_total_passed++ : current_total_failed++;
                         }
                     } catch( std::exception e) {
                         logger.warn("Exception happend: {}", e.what());
-                        logger.debug("Is test '{}' configured?", test_to_run);
                     }
-                    logger.info("Test: " + test_to_run + " result: " + (passed ? GRE + "PASSED" + NC : RED + "FAILED" + NC));
-                    passed ? current_total_passed++ : current_total_failed++;
+                    logger.info("'{}' results: {} and {}", test_to_run,
+                    GRE + std::to_string(current_total_passed) + " passed" + NC, 
+                    RED + std::to_string(current_total_failed) + " failed" + NC
+                    );
                     logger.debug("###############################");
+                    total_passed += current_total_passed;
+                    total_failed += current_total_failed;
                 }
-                logger.debug("'{}' results: {} and {}", test_name,
-                GRE + std::to_string(current_total_passed) + " passed" + NC, 
-                RED + std::to_string(current_total_failed) + " failed" + NC
-                );
-                total_passed += current_total_passed;
-                total_failed += current_total_failed;
             }
             logger.info("Total results: {} and {}", 
             GRE + std::to_string(total_passed) + " passed" + NC, 

@@ -79,6 +79,50 @@
                 "add" : "three",
                 "expected" : 6
             }
-        ]           
+        ],
+        "testArrayInsert" : [
+            {
+                "array" : [ 3, 6, 9 ],
+                "insert" : 6,
+                "idx" : 2,
+                "expected" : 1
+            },
+            {
+                "array" : [ 3, 6, 9, 12, 15, 11 ],
+                "insert" : 7,
+                "idx" : 2,
+                "expected" : 2
+            },
+            {
+                "array" : [ true, false, true, false, true, false ],
+                "insert" : true,
+                "idx" : 2,
+                "expected" : 0
+            },
+            {
+                "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "insert" : 11.1,
+                "idx" : 2,
+                "expected" : 2
+            },
+            {
+                "array" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "insert" : 9.7,
+                "idx" : 2,
+                "expected" : 2
+            }, 
+            {
+                "array" : [ "a", "b", "c", "d", "e" ],
+                "insert" : "d",
+                "idx" : 2,
+                "expected" : 2
+            }, 
+            {
+                "array" : [ "one", "two", "three", "four", "five" ],
+                "insert" : "three",
+                "idx" : 2,
+                "expected" : 2
+            }
+        ]        
     }
 }

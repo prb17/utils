@@ -6,9 +6,6 @@
 #include "validator.hh"
 #include "logger.hh"
 
-// using namespace prb17::utils;
-// using namespace prb17::utils::structures;
-
 static prb17::utils::logger logger{"array_test"};
 
 // void debugArray(array<int> &arr) {
@@ -80,19 +77,27 @@ static prb17::utils::logger logger{"array_test"};
 //     assert(my_array.size() == 4);
 // }
 
-// void testArrayInsert() {
-//    prb17::utils::structures::array<int> my_array{};
-//     my_array.add(3);
-//     my_array.add(6);
-//     my_array.add(9);
-//     my_array.add(12);
-//     my_array.add(15);
-//     assert(my_array.size() == 5);
+template<typename T>
+bool testArrayInsert(prb17::utils::parsers::json_parser jp) {
+    auto arr = jp.as_array<T>("array");
 
-//     my_array.insert(2, 200);
-//     assert(my_array.get(2) == 200);
-//     assert(my_array.size() == 6);
-// }
+    logger.debug("input array: {}", arr);
+
+    auto ins_value = jp.as_value<T>("insert");
+    logger.debug("inserting value: '{}'", ins_value);
+
+    auto ins_idx = jp.as_int("idx");
+    logger.debug("inserting value at index: '{}'", ins_idx);
+    
+    int expected = jp.as_int("expected");
+    logger.debug("expected index: '{}'", expected);
+
+    arr.insert(ins_idx, ins_value);
+    int result = arr.find(ins_value);
+    logger.debug("result index was: '{}'", result);
+
+    return expected == result;
+}
 
 template<typename T>
 bool testArrayAdd(prb17::utils::parsers::json_parser jp)  {
@@ -158,7 +163,8 @@ static std::map<std::string, std::function<bool(prb17::utils::parsers::json_pars
     {"testDefaultConstructor", &testDefaultConstructor<T>},
     {"testCapacityOnlyConstructor", &testCapacityOnlyConstructor<T>},
     {"testArrayFind", &testArrayFind<T>},
-    {"testArrayAdd", &testArrayAdd<T>}
+    {"testArrayAdd", &testArrayAdd<T>},
+    {"testArrayInsert", &testArrayInsert<T>}
 };
 
 
