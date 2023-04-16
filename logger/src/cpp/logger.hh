@@ -231,6 +231,7 @@ namespace prb17 {
 		 */
 		template<typename... Args>
 		void logger::debug(std::string msg, Args... args) {
+			std::cout << "in debug with Args..." << std::endl;
 			log(LOG_LEVELS::DEBUG, msg, args...);
 		}
 		void logger::debug(std::string msg) {
@@ -293,9 +294,11 @@ namespace prb17 {
 		 */
 		template<typename T>
 		std::string logger::tokenReplacer(std::string msg, std::string token, T t) {
+			std::cout << "In tokenReplacer" << std::endl;
 			std::string::size_type n = msg.find(token);
 			if (n != std::string::npos) {
 				std::stringstream ss;
+				std::cout << "about to string stream into logger_template" << std::endl;
 				ss << t;
 				msg.replace(n, token.length(), ss.str());
 			} 
@@ -386,6 +389,7 @@ namespace prb17 {
 		 */
 		template<typename... Args>
 		void logger::log(LOG_LEVELS level, std::string msg, Args... args) {
+			std::cout << "in log with Args..." << std::endl;
 			if (level >= logger_level) {
 				msg = tokenReplacer(msg, PLACEHOLDER, args...);
 				log(level, msg);
@@ -406,7 +410,7 @@ namespace prb17 {
 				tmp = tokenReplaceLevel(tmp, level);				
 				msg = tokenReplaceMsg(tmp, msg);
 				for(int i=0; i < root_logger_appenders.size(); i++) {
-					std::string tmp_appender_name = root_logger_appenders[i].value();
+					std::string tmp_appender_name = root_logger_appenders[i];
 					if(auto it = appenders.find(tmp_appender_name); it != appenders.end()) {
 						std::lock_guard<std::mutex> guard(appenders_lock);
 						fwrite(msg.data(), sizeof(char), msg.length(), it->second);

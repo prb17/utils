@@ -36,7 +36,7 @@ namespace prb17 {
             template<typename T>
             vertex<T>::~vertex() {
                 for(int i=0; i<edges.size(); i++) {
-                    delete edges[i].value();
+                    delete edges[i];
                 }
             }
 

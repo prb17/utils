@@ -31,7 +31,7 @@ namespace prb17 {
             size_t total_passed = 0;
             size_t total_failed = 0;
             for (int i=0; i<test_files.size(); i++) {
-                std::string test_file = test_files[i].value();
+                std::string test_file = test_files[i];
                 parsers::json_parser jp{};
                 jp.parse(test_file);
 

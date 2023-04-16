@@ -42,7 +42,7 @@ namespace prb17 {
             //accessors
             template<typename T>
             T stack<T>::peek() {
-                return (*this)[this->size() - 1].value();
+                return (*this)[this->size() - 1];
             }
 
             //modifiers

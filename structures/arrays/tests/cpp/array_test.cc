@@ -94,23 +94,23 @@ static prb17::utils::logger logger{"array_test"};
 //     assert(my_array.size() == 6);
 // }
 
-// void testArrayAdd() {
-//    prb17::utils::structures::array<int> my_array{};
-//     assert(my_array.size() == 0);
-//     assert(my_array.capacity() == 0);
+template<typename T>
+bool testArrayAdd(prb17::utils::parsers::json_parser jp)  {
+    auto arr = jp.as_array<T>("array");
+    logger.debug("input array: {}, size: '{}', cap: '{}'", arr, arr.size(), arr.capacity());
 
-//     my_array.add(3);
-//     assert(my_array.size() == 1);
-//     assert(my_array.capacity() == 2);
-    
-//     my_array.add(6);
-//     assert(my_array.size() == 2);
-//     assert(my_array.capacity() == 2);
+    auto add_value = jp.as_value<T>("add");
+    logger.debug("adding value: '{}'", add_value);
 
-//     my_array.add(12);
-//     assert(my_array.size() == 3);
-//     assert(my_array.capacity() == 6);
-// }
+    int expected = jp.as_int("expected");
+    logger.debug("expected index: '{}'", expected);
+
+    arr.add(add_value);
+    logger.debug("array after add: size: '{}', cap: '{}'", arr.size(), arr.capacity());
+    logger.debug("array after add: '{}'", arr);
+    T last_val = arr[arr.size()-1];
+    return last_val == add_value;
+}
 
 template<typename T>
 bool testArrayFind(prb17::utils::parsers::json_parser jp) {
@@ -157,7 +157,8 @@ template<typename T>
 static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > array_tests = {
     {"testDefaultConstructor", &testDefaultConstructor<T>},
     {"testCapacityOnlyConstructor", &testCapacityOnlyConstructor<T>},
-    {"testArrayFind", &testArrayFind<T>}
+    {"testArrayFind", &testArrayFind<T>},
+    {"testArrayAdd", &testArrayAdd<T>}
 };
 
 

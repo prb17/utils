@@ -4,6 +4,7 @@
 #include <sstream>
 #include <memory>
 #include<cstring>
+#include<iostream>
 
 #include "container.hh"
 #include "exception.hh"
@@ -36,10 +37,10 @@ namespace prb17 {
                     void clear();
                     
                     //accessors
-                    virtual bool valid(size_t idx) const;
+                    virtual bool valid(size_t) const;
                     bool empty() const;
-                    virtual int find(T value) const;
-                    virtual container<T>& get(size_t idx) const;
+                    virtual int find(T) const;
+                    virtual T get(size_t) const;
                     virtual size_t size() const;
                     virtual size_t capacity() const;
                     virtual std::string to_string() const;
@@ -49,7 +50,7 @@ namespace prb17 {
                     array operator=(array);          
                     bool operator==(const array&) const;
                     bool operator!=(const array&) const;
-                    container<T>& operator[](size_t);
+                    T operator[](size_t);
                     const T operator[](size_t) const;
             };
 
@@ -263,12 +264,12 @@ namespace prb17 {
              * @return T - the object at the index
              */
             template<typename T>
-            container<T>& array<T>::get(size_t idx) const {
+            T array<T>::get(size_t idx) const {
                 if (!valid(idx)) {
                     throw utils::exception("Index out of range");
                 }
 
-                return *(data[idx]);
+                return (data[idx])->value();
             }
 
             /**
@@ -299,8 +300,10 @@ namespace prb17 {
             template<typename T>
             std::string array<T>::to_string() const {
                 std::stringstream stream;
+                std::cout << "array to_string: size: " << sz << std::endl;
                 stream << "[ ";
                 for(int i=0; i<size(); i++) {
+                    std::cout << "index in data: " << i << std::endl;
                     stream << data[i]->value() << " ";
                 }
                 stream << "]";
@@ -326,7 +329,7 @@ namespace prb17 {
                     memset(data, 0, sizeof(container<T>**) * cap);
                     
                     for(int i=0; i<sz; i++) {
-                        data[i] = a.data != nullptr ? new container<T>{a[i].value()} : new container<T>;
+                        data[i] = a.data != nullptr ? new container<T>{a[i]} : new container<T>;
                     }
                 }
                 return *this;
@@ -344,14 +347,14 @@ namespace prb17 {
                 memset(data, 0, sizeof(container<T>**) * cap);
                 
                 for(int i=0; i<sz; i++) {
-                    data[i] = a.data != nullptr ? new container<T>{a[i].value()} : new container<T>;
+                    data[i] = a.data != nullptr ? new container<T>{a[i]} : new container<T>;
                 }
                 return *this;
             }
 
             //operator []
             template<typename T>
-            container<T>& array<T>::operator[] (size_t idx) {
+            T array<T>::operator[] (size_t idx) {
                 return get(idx);
             }
             template<typename T>

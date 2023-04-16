@@ -11,14 +11,14 @@
     },
     "loggers": {
         "array_test": {
-            "logger_level": "info"
+            "logger_level": "debug"
         },
         "validator": {
             "logger_level": "info"
         }
     },
     "root": {
-        "logger_level": "info",
-        "appenders": ["stdout", "file"]        
+        "logger_level": "debug",
+        "appenders": ["stdout"]        
     }    
 }
