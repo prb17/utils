@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <sstream>
+#include <iostream>
 
 namespace prb17 {
     namespace utils {
@@ -22,7 +23,7 @@ namespace prb17 {
 
                     //overloaded operators
                     container& operator=(const container &);
-                    container& operator=(const T);
+                    container& operator=(T);
                     
                     bool operator==(const container<T>&);
                     bool operator==(T);
@@ -87,8 +88,12 @@ namespace prb17 {
                 return *this;
             }
             template<typename T>
-            container<T>& container<T>::operator=(const T val) {
-                v = val;
+            container<T>& container<T>::operator=(T val) {
+                std::cout << "this: " << this << std::endl;
+                std::cout << "v: " << v << std::endl;
+                std::cout << "op=: contents of in val: " << val << std::endl;
+                v = std::move(val);
+                std::cout << "op=2: contents of in val: " << v << std::endl;
                 return *this;
             }
 

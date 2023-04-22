@@ -20,7 +20,7 @@ namespace prb17 {
                     void resize();
 
                 protected:
-                    container<T> **data;
+                    container<T> *data;
                     size_t sz;
 
                 public:
@@ -69,8 +69,8 @@ namespace prb17 {
              */
             template<typename T>
             array<T>::array(size_t cap) : sz{0}, cap{cap} {                
-                this->data = (container<T> **)malloc(sizeof(container<T>**) * cap);                
-                memset(this->data, 0, sizeof(container<T>**) * cap);
+                this->data = (container<T> *)malloc(sizeof(container<T>*) * cap);                
+                memset(this->data, 0, sizeof(container<T>*) * cap);
             }
 
             /**
@@ -84,10 +84,10 @@ namespace prb17 {
                 cap = a.cap;
                 sz = a.sz;
                 data = nullptr;
-                data = (container<T> **)malloc(sizeof(container<T>**) * cap);
-                memset(data, 0, sizeof(container<T>**) * cap);
+                data = (container<T> *)malloc(sizeof(container<T>*) * cap);
+                memset(data, 0, sizeof(container<T>*) * cap);
                 for(size_t i=0; i<size(); i++) {
-                    data[i] = a.data[i] ? new container<T>{a[i]} : new container<T>{};
+                    data[i] = a.valid(i) ? container<T>{a[i]} : container<T>{};
                 }
             }
 
@@ -98,11 +98,11 @@ namespace prb17 {
              */
             template<typename T>
             array<T>::~array() {
-                for (int i=0; i < capacity(); i++) {
-                    if (data[i] != nullptr) {
-                        delete data[i];
-                    }
-                }
+                // for (int i=0; i < capacity(); i++) {
+                //     if (data[i] != nullptr) {
+                //         delete data[i];
+                //     }
+                // }
                 free(data);
                 data = nullptr;           
             }
@@ -121,12 +121,16 @@ namespace prb17 {
             template<typename T>
             void array<T>::resize() {
                 cap = 2*(size() + 1);
-                container<T>** tmp = (container<T> **)malloc(sizeof(container<T>**) * cap);
-                memset(tmp, 0, sizeof(container<T>**) * cap);
+                container<T>* tmp = (container<T> *)malloc(sizeof(container<T>*) * cap);
+                memset(tmp, 0, sizeof(container<T>*) * cap);
                 
-                for(int i=0; i<size(); i++) {
-                    tmp[i] = data[i];
-                }
+                // int i;
+                // for(i=0; i<size(); i++) {
+                //     tmp[i] = std::move(data[i]);
+                // }
+                // for(; i<cap; i++) {
+                //     tmp[i] = std::move(T{});
+                // }
                 if (data) {
                     free(data);
                 } 
@@ -149,17 +153,19 @@ namespace prb17 {
              */
             template<typename T>
             bool array<T>::insert(size_t index, T value) {
+                std::cout << "insert: contents of in val: " << value << std::endl;
                 if (size() == capacity()) {
                     resize();
                 }
 
                 while(index <= size()) {
-                    //todo: could this logic be better? Seems like maybe unnecessary memory calls
-                    T tmp = data[index] ? get(index) : T{};
-                    delete data[index];
-                    data[index] = new container<T>{value};
+                    T tmp = get(index);
+                    std::cout << "insert2: contents of in val: " << tmp << std::endl;
+                    data[index] = value;
+                    std::cout << "insert3: contents of in val: " << data[index] << std::endl;
                     index++;
                     value = tmp;
+                    std::cout << "insert4: contents of in val: " << value << std::endl;
                 }
                 sz++;
 
@@ -182,7 +188,6 @@ namespace prb17 {
              */
             template<typename T>
             void array<T>::remove(size_t index) {
-                delete data[index];
                 while(index < size() - 1) {
                     data[index++] = data[index + 1];
                 }
@@ -248,7 +253,7 @@ namespace prb17 {
             template<typename T>
             int array<T>::find(T value) const {
                 int index = 0;
-                while (index < size() && data[index]->value() != value) {
+                while (index < size() && data[index] != value) {
                     index++;
                 }
                 return index == size() ? -1 : index;
@@ -267,7 +272,7 @@ namespace prb17 {
                     throw utils::exception("Index out of range");
                 }
 
-                return (data[idx])->value();
+                return data[idx].value();
             }
 
             /**
@@ -300,7 +305,7 @@ namespace prb17 {
                 std::stringstream stream;
                 stream << "[ ";
                 for(int i=0; i<size(); i++) {
-                    stream << data[i]->value() << " ";
+                    stream << data[i] << " ";
                 }
                 stream << "]";
                 return stream.str();
@@ -322,10 +327,10 @@ namespace prb17 {
                     cap = a.cap;
                     sz = a.sz;
                     data = (container<T> **)malloc(sizeof(container<T>*) * cap);                    
-                    memset(data, 0, sizeof(container<T>**) * cap);
+                    memset(data, 0, sizeof(container<T>*) * cap);
                     
                     for(int i=0; i<sz; i++) {
-                        data[i] = a.data != nullptr ? new container<T>{a[i]} : new container<T>;
+                        data[i] = a.valid(i) ? container<T>{a[i]} : container<T>{};
                     }
                 }
                 return *this;
@@ -339,11 +344,11 @@ namespace prb17 {
                 }
                 cap = a.cap;
                 sz = a.sz;
-                data = (container<T> **)malloc(sizeof(container<T>**) * cap);                    
-                memset(data, 0, sizeof(container<T>**) * cap);
+                data = (container<T> *)malloc(sizeof(container<T>*) * cap);                    
+                memset(data, 0, sizeof(container<T>*) * cap);
                 
                 for(int i=0; i<sz; i++) {
-                    data[i] = a.data != nullptr ? new container<T>{a[i]} : new container<T>;
+                    data[i] = a.valid(i) ? container<T>{a[i]} : container<T>{};
                 }
                 return *this;
             }

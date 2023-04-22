@@ -135,7 +135,9 @@ prb17::utils::structures::array<std::string> json_parser::as_string_array(std::s
     prb17::utils::structures::array<std::string> arr{};
 
     for(Json::Value::ArrayIndex i=0; i < root[property].size(); i++) {
+            //todo: try and reuse the base functions
             std::string tmp = root[property][i].asString();
+            std::cout << "as_string_array: contents of in val: " << tmp << std::endl;
             arr.add(tmp);        
     }
     return arr;
