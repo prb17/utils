@@ -10,7 +10,7 @@ namespace prb17 {
             template<typename T>
             class container {
                 private:
-                    T v;
+                    T* v;
 
                 public:
                     container();
@@ -46,20 +46,27 @@ namespace prb17 {
 
             template<typename T>
             container<T>::container(T d) {
-                v = d;
+                v = new T{d};
             }
 
             template<typename T>
             container<T>::container(const container &c) {
-                v = const_cast<container<T>&>(c).value();
+                if (v != nullptr) {
+                    delete v;
+                }
+                v = new T{(const_cast<container<T>&>(c).value())};
             }
 
             template<typename T>
-            container<T>::~container() {}
+            container<T>::~container() {
+                if (v != nullptr && v != 0) {
+                    delete v;
+                }               
+            }
 
             template<typename T>
             T container<T>::value() {
-                return v;
+                return *v;
             }
 
             /**
@@ -83,17 +90,19 @@ namespace prb17 {
             template<typename T>
             container<T>& container<T>::operator=(const container &c) {
                 if (&c != this) {
-                    v = (c.v);
+                    if (v != nullptr) {
+                        delete v;
+                    }
+                    v = new T{(const_cast<container<T>&>(c).value())};
                 }
                 return *this;
             }
             template<typename T>
             container<T>& container<T>::operator=(T val) {
-                std::cout << "this: " << this << std::endl;
-                std::cout << "v: " << v << std::endl;
-                std::cout << "op=: contents of in val: " << val << std::endl;
-                v = std::move(val);
-                std::cout << "op=2: contents of in val: " << v << std::endl;
+                if (v != nullptr) {
+                    delete v;
+                }
+                v = new T{val};
                 return *this;
             }
 

@@ -12,7 +12,6 @@
 namespace prb17 {
     namespace utils {
         namespace structures {
-
             template<typename T>
             class array {
                 private:
@@ -27,7 +26,7 @@ namespace prb17 {
                     //constructors
                     array();
                     array(size_t);
-                    array(const array &);
+                    array(const array<T> &);
                     ~array();
 
                     ////modifiers
@@ -47,7 +46,7 @@ namespace prb17 {
 
                     //overloaded operators
                     array& operator=(array &);
-                    array operator=(array);          
+                    array operator=(array);
                     bool operator==(const array&) const;
                     bool operator!=(const array&) const;
                     T operator[](size_t);
@@ -60,7 +59,7 @@ namespace prb17 {
              * 
              */
             template<typename T>
-            array<T>::array() : array(0) {}
+            array<T>::array() : array<T>(0) {}
 
             /**
              * @brief Construct a new array object starting with certain size and elements
@@ -80,14 +79,15 @@ namespace prb17 {
              * @param a - array to copy from
              */
             template<typename T>
-            array<T>::array(const array &a) {
+            array<T>::array(const array<T> &a) {
                 cap = a.cap;
                 sz = a.sz;
                 data = nullptr;
                 data = (container<T> *)malloc(sizeof(container<T>*) * cap);
                 memset(data, 0, sizeof(container<T>*) * cap);
+
                 for(size_t i=0; i<size(); i++) {
-                    data[i] = a.valid(i) ? container<T>{a[i]} : container<T>{};
+                    data[i] = a.data[i];
                 }
             }
 
@@ -98,11 +98,9 @@ namespace prb17 {
              */
             template<typename T>
             array<T>::~array() {
-                // for (int i=0; i < capacity(); i++) {
-                //     if (data[i] != nullptr) {
-                //         delete data[i];
-                //     }
-                // }
+                for (int i=0; i < capacity(); i++) {
+                    data[i].~container<T>();
+                }
                 free(data);
                 data = nullptr;           
             }
@@ -124,16 +122,13 @@ namespace prb17 {
                 container<T>* tmp = (container<T> *)malloc(sizeof(container<T>*) * cap);
                 memset(tmp, 0, sizeof(container<T>*) * cap);
                 
-                // int i;
-                // for(i=0; i<size(); i++) {
-                //     tmp[i] = std::move(data[i]);
-                // }
-                // for(; i<cap; i++) {
-                //     tmp[i] = std::move(T{});
-                // }
+                for(int i=0; i<size(); i++) {
+                    tmp[i] = data[i];
+                    data[i].~container<T>();
+                }
                 if (data) {
                     free(data);
-                } 
+                }
                 data = tmp;
             }
 
@@ -153,19 +148,14 @@ namespace prb17 {
              */
             template<typename T>
             bool array<T>::insert(size_t index, T value) {
-                std::cout << "insert: contents of in val: " << value << std::endl;
                 if (size() == capacity()) {
                     resize();
                 }
 
                 while(index <= size()) {
-                    T tmp = get(index);
-                    std::cout << "insert2: contents of in val: " << tmp << std::endl;
-                    data[index] = value;
-                    std::cout << "insert3: contents of in val: " << data[index] << std::endl;
-                    index++;
+                    T tmp = valid(index) ? get(index) : T{};
+                    data[index++] = value;
                     value = tmp;
-                    std::cout << "insert4: contents of in val: " << value << std::endl;
                 }
                 sz++;
 
@@ -188,10 +178,10 @@ namespace prb17 {
              */
             template<typename T>
             void array<T>::remove(size_t index) {
-                while(index < size() - 1) {
-                    data[index++] = data[index + 1];
-                }
-                sz--;
+                // while(index < size() - 1) {
+                //     data[index++] = data[index + 1];
+                // }
+                // sz--;
             }
 
             /**
@@ -230,7 +220,7 @@ namespace prb17 {
              */
             template<typename T>
             bool array<T>::valid(size_t idx) const {
-                return idx <= size();
+                return idx < size();
             }
                     
             /**
@@ -322,6 +312,9 @@ namespace prb17 {
             array<T>& array<T>::operator=(array &a) {
                 if (&a != this) {
                     if (data) {
+                        for (int i=0; i < capacity(); i++) {
+                            data[i].~container<T>();
+                        }
                         free(data);
                     }
                     cap = a.cap;
@@ -329,8 +322,8 @@ namespace prb17 {
                     data = (container<T> **)malloc(sizeof(container<T>*) * cap);                    
                     memset(data, 0, sizeof(container<T>*) * cap);
                     
-                    for(int i=0; i<sz; i++) {
-                        data[i] = a.valid(i) ? container<T>{a[i]} : container<T>{};
+                    for(int i=0; i<size(); i++) {
+                        data[i] = a.data[i];
                     }
                 }
                 return *this;
@@ -340,6 +333,9 @@ namespace prb17 {
             template<typename T>
             array<T> array<T>::operator=(array a) {
                 if (data) {
+                    for (int i=0; i < capacity(); i++) {
+                        data[i].~container<T>();
+                    }
                     free(data);
                 }
                 cap = a.cap;
@@ -347,8 +343,8 @@ namespace prb17 {
                 data = (container<T> *)malloc(sizeof(container<T>*) * cap);                    
                 memset(data, 0, sizeof(container<T>*) * cap);
                 
-                for(int i=0; i<sz; i++) {
-                    data[i] = a.valid(i) ? container<T>{a[i]} : container<T>{};
+                for(int i=0; i<size(); i++) {
+                    data[i] = a.data[i];
                 }
                 return *this;
             }

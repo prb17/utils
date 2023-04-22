@@ -11,7 +11,8 @@ option(CMAKE_BUILD_TYPE "Build using this build type" Debug)
 #Specify the location to find files to tell cmake how to resolve third party modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/find-cmakes/")
 
-set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "-g")
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
 set(UTILS_DEPS_BUILD_DIR "${CMAKE_BINARY_DIR}/third_party")
 set(UTILS_DEPS_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/third_party")
