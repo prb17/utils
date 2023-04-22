@@ -178,10 +178,10 @@ namespace prb17 {
              */
             template<typename T>
             void array<T>::remove(size_t index) {
-                // while(index < size() - 1) {
-                //     data[index++] = data[index + 1];
-                // }
-                // sz--;
+                while(index < size() - 1) {
+                    data[index++] = data[index + 1];
+                }
+                sz--;
             }
 
             /**
