@@ -57,5 +57,5 @@ jobs:
         cd structures/bin
         chmod +x queues_test      
         valgrind --leak-check=full --error-exitcode=1 ./queues_test ../config/queues/queue_test_*.json
-        chmod -x queue_test
+        chmod -x queues_test
         cd -
