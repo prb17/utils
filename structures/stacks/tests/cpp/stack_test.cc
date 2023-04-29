@@ -2,155 +2,67 @@
 #include <cassert>
 
 #include "stack.hh"
+#include "validator.hh"
+#include "logger.hh"
 
-void debugStack(prb17::utils::structures::stack<int>& stack) {
-    std::cout << stack << std::endl;
+static prb17::utils::logger logger{"stack_test"};
+
+template<typename T>
+bool testStackPush(prb17::utils::parsers::json_parser jp) {
+    prb17::utils::structures::stack<T> stack{};
+    auto vals = jp.as_array<T>("values");
+    logger.debug("adding vals: {} to empty stack", vals);
+    for(int i=0; i<vals.size(); i++) {
+        stack.push(vals[i]);
+    }
+    logger.debug("Final stack: {}", stack);
+
+    return stack == vals;   
 }
 
-// void testOperators() {
-//    prb17::utils::structures::stack<int> stack1{};
-//     stack1.push(3);
-//     stack1.push(6);
-//     stack1.push(9);
-//     stack1.push(12);
-//     stack1.push(15);
-//     std::cout << "stack1: ";
-//     debugStack(stack1);
+template<typename T>
+bool testStackPop(prb17::utils::parsers::json_parser jp) {
+    prb17::utils::structures::stack<T> stack = jp.as_array<T>("values");
+    logger.debug("Original stack: {}", stack);
+    while (!stack.empty()) {
+        T back = stack.pop();
+        logger.debug("Popped value: '{}' off stack", back);
+    }
+    logger.debug("Stack after all pops", stack);
 
-//     prb17::utils::structures::stack<int> stack2{};
-//     assert(stack2 != stack1);
+    return stack.empty();   
+}
 
-//     stack2 = stack1;
-//     std::cout << "stack2: ";
-//     debugStack(stack2);
-//     assert(stack1 == stack2);
+//Map that relates the json file test config file to each test function defined in this file
+template<typename T>
+static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > stack_tests = {
+    {"testStackPush", &testStackPush<T>},
+    {"testStackPop", &testStackPop<T>}
+};
 
-//     assert(stack1[3] == stack2[3]);
 
-//     stack1[3] = 4;
-//     std::cout << "stack1: ";
-//     debugStack(stack1);
-//     assert(stack1[3] != stack2[3]);
-//     assert(stack1 != stack2);
+#define MIN_NUM_ARGS 2
+int main(int argc, char** argv) {
+    if (argc < MIN_NUM_ARGS) {
+        throw prb17::utils::exception("This test requires a config file to be provided");
+    }
+    prb17::utils::structures::array<std::string> test_files{};
+    for (int i=1; i<argc; i++) {
+        //TODO: test if string is a valid file name/path
+        logger.debug("adding test file to validator: '{}'", &argv[i][0]);
+        test_files.add(&argv[i][0]);
+    }
+    prb17::utils::validator validator{test_files};
+    
+    validator.add_tests(&stack_tests<std::string>);
+    validator.add_tests(&stack_tests<int>);
+    validator.add_tests(&stack_tests<uint>);
+    validator.add_tests(&stack_tests<char>);
+    validator.add_tests(&stack_tests<bool>);
+    validator.add_tests(&stack_tests<float>);
+    validator.add_tests(&stack_tests<double>);
 
-//     stack2[3] = stack1[3];
-//     assert(stack1 == stack2); 
-// }
-
-// void testPush() {
-//     std::cout << "Testing stack push method" << std::endl;
-//    prb17::utils::structures::stack<int> my_stack{};
-
-//    my_stack.push(1);
-//    assert(my_stack.peek() == 1);
-//    debugStack(my_stack);
-
-//    my_stack.push(10);
-//    assert(my_stack.peek() == 10);
-//    debugStack(my_stack);
-
-//    my_stack.push(12345);
-//    assert(my_stack.peek() == 12345);
-//    debugStack(my_stack);
-
-//    my_stack.push(-1);
-//    assert(my_stack.peek() == -1);
-//    debugStack(my_stack);
-
-//    my_stack.push(INT32_MAX);
-//    assert(my_stack.peek() == INT32_MAX);
-//    debugStack(my_stack);
-   
-//    my_stack.push(UINT32_MAX);
-//    assert(my_stack.peek() == UINT32_MAX);
-//    debugStack(my_stack);
-
-//    std::cout << "Finished testing stack push method" << std::endl;
-// }
-
-// void testPop() {
-//     std::cout << "Testing stack pop method" << std::endl;
-//    prb17::utils::structures::stack<int> my_stack{};
-
-//    my_stack.push(1);
-//    debugStack(my_stack);
-//    my_stack.push(10);
-//    debugStack(my_stack);
-//    my_stack.push(12345);
-//    debugStack(my_stack);
-//    my_stack.push(-1);
-//    debugStack(my_stack);
-//    my_stack.push(INT32_MAX);
-//    debugStack(my_stack);
-//    my_stack.push(UINT32_MAX);
-//    debugStack(my_stack);
-//    assert(my_stack.size() == 6);
-//    debugStack(my_stack);
-
-   
-//    assert(my_stack.peek() == UINT32_MAX);
-//    my_stack.pop();
-//    debugStack(my_stack);
-//    assert(my_stack.peek() == INT32_MAX);  
-//    my_stack.pop();
-//    debugStack(my_stack);
-//    assert(my_stack.peek() == -1);
-//    my_stack.pop();
-//    debugStack(my_stack);
-//    assert(my_stack.peek() == 12345);
-//    my_stack.pop();
-//    debugStack(my_stack);
-//    assert(my_stack.pop() == 10);
-//    debugStack(my_stack);
-   
-//    assert(my_stack.pop() == 1);
-//    assert(my_stack.size() == 0);
-//    debugStack(my_stack);
-
-//    std::cout << "Finished testing stack pop method" << std::endl;
-// }
-
-// void testSizeOnlyConstructor() {
-//     size_t size = 5;
-//     prb17::utils::structures::stack<int> my_stack{size};
-//     assert(my_stack.size() == size);
-//     assert(my_stack.capacity() == 2*size);
-
-//     bool exception_happened = false;
-//     int val = -1;
-//     try {
-//         val = my_stack.peek();
-//     } catch (const std::exception& e) {
-//         exception_happened = true;
-//     }
-//     assert(!exception_happened);
-//     assert(val == 0);    
-// }
-
-// void testDefaultConstructor() {
-//    prb17::utils::structures::stack<int> my_stack{};
-//     assert(my_stack.size() == 0);
-//     assert(my_stack.capacity() == 0);
-
-//     bool exception_happened = false;
-//     try {
-//         if (my_stack.size()) {
-//             int val = my_stack.peek();
-//         }
-        
-//     } catch (const std::exception& e) {
-//         exception_happened = true;
-//     }
-//     assert(!exception_happened);
-
-// }
-
-int main() {
-    // testDefaultConstructor();
-    // testSizeOnlyConstructor();
-
-    // testPush();
-    // testPop();
-
-    // testOperators();
+    logger.info("Starting validation tests of stack_tests");
+    validator.validate();
+    logger.info("Finished validation tests of stack_tests");
 }

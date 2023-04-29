@@ -38,21 +38,29 @@ if(BUILD_UTILS_TESTS)
 
     # Configure array tests
     message(DEBUG "configuring the array tests")
-    set(ARRAY_TEST_NAME array_test)
+    set(ARRAY_TEST_NAME arrays_test)
     set(CONTAINER_TEST_NAME container_test)
     add_executable(${ARRAY_TEST_NAME} structures/arrays/tests/cpp/array_test.cc)
     add_executable(${CONTAINER_TEST_NAME} structures/arrays/tests/cpp/container_test.cc)
     
     target_include_directories(${ARRAY_TEST_NAME} INTERFACE ${VALIDATOR_INCLUDE_DIRS})
     target_include_directories(${CONTAINER_TEST_NAME} INTERFACE ${VALIDATOR_INCLUDE_DIRS})
-    target_link_libraries(${ARRAY_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME} ${VALIDATOR_LIBRARY_NAME} ${PARSERS_LIBRARY_NAME} ${LOGGER_LIBRARY_NAME})
-    target_link_libraries(${CONTAINER_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME} ${VALIDATOR_LIBRARY_NAME} ${PARSERS_LIBRARY_NAME})
+    target_link_libraries(${ARRAY_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME} 
+                                                        ${VALIDATOR_LIBRARY_NAME} 
+                                                        ${PARSERS_LIBRARY_NAME} 
+                                                        ${LOGGER_LIBRARY_NAME})
+    target_link_libraries(${CONTAINER_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME} 
+                                                            ${VALIDATOR_LIBRARY_NAME} 
+                                                            ${PARSERS_LIBRARY_NAME})
 
     # Configure stack tests
     message(DEBUG "configuring the stack tests")
     set(STACKS_TEST_NAME stacks_test)
     add_executable(${STACKS_TEST_NAME} structures/stacks/tests/cpp/stack_test.cc)
-    target_link_libraries(${STACKS_TEST_NAME} PRIVATE ${STACKS_LIBRARY_NAME})
+    target_link_libraries(${STACKS_TEST_NAME} PRIVATE ${STACKS_LIBRARY_NAME} 
+                                                        ${VALIDATOR_LIBRARY_NAME} 
+                                                        ${PARSERS_LIBRARY_NAME} 
+                                                        ${LOGGER_LIBRARY_NAME})
 
     # Configur queues tests
     message(DEBUG "configuring the queues tests")

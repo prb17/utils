@@ -1,0 +1,84 @@
+{
+    "MetaData": 
+    { 
+        "test_name" : "Stack Functions Test",
+        "test_type" : "unit"
+    },
+    "Tests" : 
+    {
+        "testStackPush": [
+            {
+                "values" : [ 3, 6, 9, 12, 15, -11 ],
+                "find" : 6,
+                "expected" : 1
+            }, 
+            {
+                "values" : [ 3, 6, 9, 12, 15, 11 ],
+                "find" : 7,
+                "expected" : -1
+            },
+            {
+                "values" : [ true, false, true, false, true, false ],
+                "find" : true,
+                "expected" : 0
+            },
+            {
+                "values" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "find" : 11.1,
+                "expected" : 5
+            },
+            {
+                "values" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "find" : 9.7,
+                "expected" : 2
+            }, 
+            {
+                "values" : [ "a", "b", "c", "d", "e" ],
+                "find" : "d",
+                "expected" : 3
+            }, 
+            {
+                "values" : [ "one", "two", "three", "four", "five" ],
+                "find" : "three",
+                "expected" : 2
+            }
+        ],
+        "testStackPop" : [
+            {
+                "values" : [ 3, 6, 9 ],
+                "add" : 6,
+                "expected" : 4
+            },
+            {
+                "values" : [ 3, 6, 9, 12, 15, 11 ],
+                "add" : 7,
+                "expected" : 6
+            },
+            {
+                "values" : [ true, false, true, false, true, false ],
+                "add" : true,
+                "expected" : 6
+            },
+            {
+                "values" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "add" : 11.1,
+                "expected" : 6
+            },
+            {
+                "values" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ],
+                "add" : 9.7,
+                "expected" : 6
+            }, 
+            {
+                "values" : [ "a", "b", "c", "d", "e" ],
+                "add" : "d",
+                "expected" : 6
+            }, 
+            {
+                "values" : [ "one", "two", "three", "four", "five" ],
+                "add" : "three",
+                "expected" : 6
+            }
+        ]
+    }
+}

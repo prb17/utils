@@ -11,6 +11,9 @@
     },
     "loggers": {
         "array_test": {
+            "logger_level": "info"
+        },
+        "stack_test": {
             "logger_level": "debug"
         },
         "validator": {

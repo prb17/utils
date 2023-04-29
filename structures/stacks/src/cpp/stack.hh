@@ -17,6 +17,8 @@ namespace prb17 {
                     //constructors
                     stack();
                     stack(size_t);
+                    stack(const array<T> &);
+                    stack(const stack<T> &);
                     ~stack();
 
                     //accessors
@@ -27,6 +29,8 @@ namespace prb17 {
                     void push(T);
 
                     //overloaded operators
+                    stack& operator=(stack &);
+                    stack operator=(stack);
             };
 
             //constructors
@@ -35,6 +39,12 @@ namespace prb17 {
 
             template<typename T>
             stack<T>::stack(size_t size) : array<T>(size) {}
+
+            template<typename T>
+            stack<T>::stack(const array<T> &a) : array<T>(a) {}
+
+            template<typename T>
+            stack<T>::stack(const stack<T> &s) : array<T>(s) {}
 
             template<typename T>
             stack<T>::~stack() {}
@@ -59,6 +69,22 @@ namespace prb17 {
             }
             
             //overloaded operators
+            template<typename T>
+            stack<T>& stack<T>::operator=(stack &s) {
+                if (&s != this) {
+                    this = s;
+                }
+                return *this;
+            }
+
+            template<typename T>
+            stack<T> stack<T>::operator=(stack s) {
+                this->clear();
+                for(int i=0; i<s.size(); i++) {
+                    this->push(s[i]);
+                }
+                return *this;
+            }
         }    
     }
 }

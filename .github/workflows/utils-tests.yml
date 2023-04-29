@@ -26,9 +26,10 @@ jobs:
         
     - name: Array Tests
       run: |
-        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        # export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
         cd structures/bin
-        chmod +x array_test
-        valgrind --leak-check=full --error-exitcode=1 ./array_test ../config/array/array_test_*.json
-        chmod -x array_test
+        chmod +x *
+        valgrind --leak-check=full --error-exitcode=1 ./arrays_test ../config/array/array_test_*.json        
+        valgrind --leak-check=full --error-exitcode=1 ./stacks_test ../config/array/array_test_*.json
+        chmod -x *
         cd -

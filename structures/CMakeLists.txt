@@ -51,4 +51,7 @@ file(GLOB ALL_CONFIGS config/*.json)
 install(FILES ${ALL_CONFIGS} DESTINATION structures/config)
 
 file(GLOB ARRAY_CONFIGS arrays/tests/config/*.json)
-install(FILES ${ARRAY_CONFIGS} DESTINATION structures/config/array)
+install(FILES ${ARRAY_CONFIGS} DESTINATION structures/config/arrays)
+
+file(GLOB STACK_CONFIGS stacks/tests/config/*.json)
+install(FILES ${STACK_CONFIGS} DESTINATION structures/config/stacks)
