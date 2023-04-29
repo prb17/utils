@@ -1,0 +1,122 @@
+{
+    "MetaData": 
+    { 
+        "test_name" : "Array Operators Test",
+        "test_type" : "unit"
+    },
+    "Tests" : 
+    {
+        "testArrayEqualsOperator" : [
+            {
+                "array1" : [],
+                "array2" : [],
+                "expected" : true
+            },
+            {
+                "array1" : [0],
+                "array2" : [0],
+                "expected" : true
+            },
+            {
+                "array1" : [""],
+                "array2" : [""],
+                "expected" : true
+            },
+            {
+                "array1" : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                "array2" : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                "expected" : true
+            },
+            {
+                "array1" : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+                "array2" : ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+                "expected" : false
+            }, 
+            {
+                "array1" : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                "array2" : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+                "expected" : true,
+                "_comment_" : "even though this shouldn't be true, it is since the tests operate based on a template type which is always the same. So array1 and array2 is interpreted as the same data type, which makes this true. Not sure what, if I even should, to do something"
+            }, 
+            {
+                "array1" : ["one", "two", "three", "four", "five", "six", "seven"],
+                "array2" : ["one", "two", "three", "four", "five", "six", "seven"],
+                "expected" : true
+            }
+        ],
+        "testArrayNotEqualsOperator" : [
+            {
+                "array1" : [],
+                "array2" : [],
+                "expected" : false
+            },
+            {
+                "array1" : [0],
+                "array2" : [0],
+                "expected" : false
+            },
+            {
+                "array1" : [""],
+                "array2" : [""],
+                "expected" : false
+            },
+            {
+                "array1" : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                "array2" : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                "expected" : false
+            },
+            {
+                "array1" : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+                "array2" : ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+                "expected" : true
+            }, 
+            {
+                "array1" : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                "array2" : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+                "expected" : false
+            }, 
+            {
+                "array1" : ["one", "two", "three", "four", "five", "six", ""],
+                "array2" : ["one", "two", "three", "four", "five", "six", "seven"],
+                "expected" : true
+            }
+        ],
+        "testArraySubscriptOperator" : [
+            {
+                "array1" : [0],
+                "array2" : [0],
+                "index1" : 0,
+                "index2" : 0,
+                "expected" : true
+            },
+            {
+                "array1" : [""],
+                "array2" : [""],
+                "index1" : 0,
+                "index2" : 0,
+                "expected" : true
+            },
+            {
+                "array1" : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                "array2" : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                "index1" : 5,
+                "index2" : 5,
+                "expected" : true
+            },
+            {
+                "array1" : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+                "array2" : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+                "index1" : 5,
+                "index2" : 5,
+                "expected" : true
+            },
+            {
+                "array1" : ["one", "two", "three", "four", "five", "six", ""],
+                "array2" : ["one", "two", "three", "four", "five", "six", ""],
+                "index1" : 5,
+                "index2" : 5,
+                "expected" : true
+            }
+        ]
+    }
+}

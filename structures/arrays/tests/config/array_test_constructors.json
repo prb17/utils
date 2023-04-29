@@ -31,25 +31,25 @@
         ],
         "testCapacityOnlyConstructor" : [                
             {
-                "capacity" : 5
+                "capacity" : 1
+            },
+            {
+                "capacity" : 2
+            },
+            {
+                "capacity" : 3
             },
             {
                 "capacity" : 5
             },
             {
-                "capacity" : 5
-            },
-            {
-                "capacity" : 5
-            },
-            {
-                "capacity" : 5
+                "capacity" : 8
             }, 
             {
-                "capacity" : 5
+                "capacity" : 13
             }, 
             {
-                "capacity" : 5
+                "capacity" : 21
             }
         ]
     }

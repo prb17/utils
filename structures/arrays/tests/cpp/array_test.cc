@@ -8,41 +8,44 @@
 
 static prb17::utils::logger logger{"array_test"};
 
-// void testOperators() {
-//    array<int> arr1{};
-//     arr1.add(3);
-//     arr1.add(6);
-//     arr1.add(9);
-//     arr1.add(12);
-//     arr1.add(15);
-//     std::cout << "arr1: ";
-//     debugArray(arr1);
 
-//     array<int> arr2{};
-//     assert(arr2 != arr1);
 
-//     arr2 = arr1;
-//     std::cout << "arr2: ";
-//     debugArray(arr2);
-//     assert(arr2 == arr1);
+template<typename T>
+bool testArraySubscriptOperator(prb17::utils::parsers::json_parser jp) {
+    auto arr1 = jp.as_array<T>("array1");
+    logger.debug("input array1: {}", arr1);
 
-//     assert(arr1[3] == arr2[3]);
+    auto arr2 = jp.as_array<T>("array2");
+    logger.debug("input array2: {}", arr2);
 
-//     arr1[3] = 4;
-//     std::cout << "arr1: ";
-//     debugArray(arr1);
-//     assert(arr1[3] != arr2[3]);
-//     assert(arr1 != arr2);
-
-//     arr2[3] = arr1[3];
-//     assert(arr1 == arr2);
-
-//     array<int> arr3{arr2};
-//     assert(arr2 == arr3);
+    int index1 = jp.as_int("index1");
+    int index2 = jp.as_int("index2");
+    logger.debug("evaluationg arr1 at index: '{}', agains arr2 at index: '{}'", index1, index2);
     
-//     array<int> arr4 = arr3;
-//     assert(arr3 == arr4);
-// }
+    bool expected = jp.as_bool("expected");
+    bool result = arr1[index1] == arr2[index2];
+    logger.debug("expected equals: '{}', result equals: '{}'", expected ? "true":"false", result ? "true":"false");
+    return expected == result;
+}
+
+template<typename T>
+bool testArrayEqualsOperator(prb17::utils::parsers::json_parser jp) {
+    auto arr1 = jp.as_array<T>("array1");
+    logger.debug("input array1: {}", arr1);
+
+    auto arr2 = jp.as_array<T>("array2");
+    logger.debug("input array2: {}", arr2);
+    
+    bool expected = jp.as_bool("expected");
+    bool result = arr1 == arr2;
+    logger.debug("expected equals: '{}', result equals: '{}'", expected, result);
+    return expected == result;
+}
+
+template<typename T>
+bool testArrayNotEqualsOperator(prb17::utils::parsers::json_parser jp) {
+    return !testArrayEqualsOperator<T>(jp);
+}
 
 template<typename T>
 bool testArrayClear(prb17::utils::parsers::json_parser jp) {
@@ -57,7 +60,6 @@ bool testArrayClear(prb17::utils::parsers::json_parser jp) {
     int result = arr.size();
     logger.debug("array after: {}", arr);
     return expected == result;
-
 }
 
 template<typename T>
@@ -170,7 +172,10 @@ static std::map<std::string, std::function<bool(prb17::utils::parsers::json_pars
     {"testArrayAdd", &testArrayAdd<T>},
     {"testArrayInsert", &testArrayInsert<T>},
     {"testArrayRemove", &testArrayRemove<T>},
-    {"testArrayClear", &testArrayClear<T>}
+    {"testArrayClear", &testArrayClear<T>},
+    {"testArrayEqualsOperator", &testArrayEqualsOperator<T>},
+    {"testArrayNotEqualsOperator", &testArrayNotEqualsOperator<T>},
+    {"testArraySubscriptOperator", &testArraySubscriptOperator<T>}
 };
 
 
