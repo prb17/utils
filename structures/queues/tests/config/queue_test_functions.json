@@ -1,0 +1,56 @@
+{
+    "MetaData": 
+    { 
+        "test_name" : "Queue Functions Test",
+        "test_type" : "unit"
+    },
+    "Tests" : 
+    {
+        "testQueueEnqueue": [
+            {
+                "values" : [ 3, 6, 9, 12, 15, -11 ]
+            }, 
+            {
+                "values" : [ 3, 6, 9, 12, 15, 11 ]
+            },
+            {
+                "values" : [ true, false, true, false, true, false ]
+            },
+            {
+                "values" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ]
+            },
+            {
+                "values" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ]
+            }, 
+            {
+                "values" : [ "a", "b", "c", "d", "e" ]
+            }, 
+            {
+                "values" : [ "one", "two", "three", "four", "five" ]
+            }
+        ],
+        "testQueueDequeue" : [
+            {
+                "values" : [ 3, 6, 9 ]
+            },
+            {
+                "values" : [ 3, 6, 9, 12, 15, 11 ]
+            },
+            {
+                "values" : [ true, false, true, false, true, false ]
+            },
+            {
+                "values" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ]
+            },
+            {
+                "values" : [ 3.2, 6.3, 9.7, 12.5, 15.4, 11.1 ]
+            }, 
+            {
+                "values" : [ "a", "b", "c", "d", "e" ]
+            }, 
+            {
+                "values" : [ "one", "two", "three", "four", "five" ]
+            }
+        ]
+    }
+}

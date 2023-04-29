@@ -19,6 +19,9 @@
         "stack_test": {
             "logger_level": "info"
         },
+        "queue_test": {
+            "logger_level": "debug"
+        },
         "validator": {
             "logger_level": "info"
         }

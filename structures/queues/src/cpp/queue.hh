@@ -10,14 +10,18 @@ namespace prb17 {
                 private:
                     //constructors
                     //accessors
+                    
                     //modifier
                     virtual T pop() override;
+                    virtual void push(T) override;
                     //overloaded operators   
 
                 public:
                     //constructors
                     queue();
                     queue(size_t);
+                    queue(const array<T> &);
+                    queue(const queue<T> &);
                     ~queue();
 
                     //accessors
@@ -29,6 +33,8 @@ namespace prb17 {
                     T dequeue();
                     
                     //overloaded operators   
+                    queue& operator=(queue &);
+                    queue operator=(queue);
             };
 
             //constructors
@@ -37,6 +43,12 @@ namespace prb17 {
 
             template<typename T>
             queue<T>::queue(size_t size) : stack<T>(size) {}
+
+            template<typename T>
+            queue<T>::queue(const array<T> &a) : stack<T>(a) {}
+
+            template<typename T>
+            queue<T>::queue(const queue<T> &q) : stack<T>(q) {}
 
             template<typename T>
             queue<T>::~queue() {}
@@ -50,6 +62,11 @@ namespace prb17 {
             template<typename T>
             T queue<T>::back() {
                 return this->peek();
+            }
+
+            template<typename T>
+            void queue<T>::push(T val) {
+              this->stack<T>::push(val);
             }
 
             template<typename T>
@@ -79,6 +96,22 @@ namespace prb17 {
             }
             
             //overloaded operators   
+            template<typename T>
+            queue<T>& queue<T>::operator=(queue &q) {
+                if (&q != this) {
+                    this = q;
+                }
+                return *this;
+            }
+
+            template<typename T>
+            queue<T> queue<T>::operator=(queue q) {
+                this->clear();
+                for(int i=0; i<q.size(); i++) {
+                    this->enqueue(q[i]);
+                }
+                return *this;
+            }
         }
     }
 }

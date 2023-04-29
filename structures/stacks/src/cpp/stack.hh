@@ -26,7 +26,7 @@ namespace prb17 {
 
                     //modifiers
                     virtual T pop();
-                    void push(T);
+                    virtual void push(T);
 
                     //overloaded operators
                     stack& operator=(stack &);

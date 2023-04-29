@@ -2,191 +2,69 @@
 #include <cassert>
 
 #include "queue.hh"
+#include "validator.hh"
+#include "logger.hh"
+
+static prb17::utils::logger logger{"queue_test"};
 
 
-#include<vector>
+template<typename T>
+bool testQueueEnqueue(prb17::utils::parsers::json_parser jp) {
+    prb17::utils::structures::queue<T> queue{};
+    auto vals = jp.as_array<T>("values");
+    logger.debug("adding vals: {}, to empty queue", vals);
+    for(int i=0; i<vals.size(); i++) {
+        queue.enqueue(vals[i]);
+    }
+    logger.debug("Final queue: {}", queue);
 
-void debug_queue(prb17::utils::structures::queue<int> &queue) {
-    std::cout << queue.to_string() << std::endl;
+    return queue == vals;   
 }
 
-// void test_operators() {
-//    prb17::utils::structures::queue<int> q1{};
-//     q1.enqueue(3);
-//     q1.enqueue(6);
-//     q1.enqueue(9);
-//     q1.enqueue(12);
-//     q1.enqueue(15);
-//     std::cout << "q1: ";
-//     debug_queue(q1);
+template<typename T>
+bool testQueueDequeue(prb17::utils::parsers::json_parser jp) {
+    prb17::utils::structures::queue<T> queue = jp.as_array<T>("values");
+    logger.debug("Original queue: {}", queue);
+    while (!queue.empty()) {
+        T front = queue.dequeue();
+        logger.debug("Dequeued value: '{}' from front of queue", front);
+        logger.debug("Queue now looks like: {}", queue);
+    }
+    logger.debug("Queue after all dequeues", queue);
 
-//     prb17::utils::structures::queue<int> q2{};
-//     assert(q2 != q1);
+    return queue.empty();   
+}
 
-//     q2 = q1;
-//     std::cout << "q2: ";
-//     debug_queue(q2);
-//     assert(q1 == q2);
+//Map that relates the json file test config file to each test function defined in this file
+template<typename T>
+static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > queue_tests = {
+    {"testQueueEnqueue", &testQueueEnqueue<T>},
+    {"testQueueDequeue", &testQueueDequeue<T>}
+};
 
-//     assert(q1[3] == q2[3]);
 
-//     q1[3] = 4;
-//     std::cout << "q1: ";
-//     debug_queue(q1);
-//     assert(q1[3] != q2[3]);
-//     assert(q1 != q2);
-
-//     q2[3] = q1[3];
-//     assert(q1 == q2); 
-// }
-
-// void test_enqueue() {
-//     std::cout << "starting enqueue test" << std::endl; 
-
-//     prb17::utils::structures::queue<int> my_queue{};
-//     debug_queue(my_queue);
-//     my_queue.enqueue(4);
-//     debug_queue(my_queue);
-//     assert(my_queue.size() == 1);
-//     assert(my_queue.capacity() == 2);
-//     assert(my_queue.front() == 4);
-//     assert(my_queue.back() == 4);
+#define MIN_NUM_ARGS 2
+int main(int argc, char** argv) {
+    if (argc < MIN_NUM_ARGS) {
+        throw prb17::utils::exception("This test requires a config file to be provided");
+    }
+    prb17::utils::structures::array<std::string> test_files{};
+    for (int i=1; i<argc; i++) {
+        //TODO: test if string is a valid file name/path
+        logger.debug("adding test file to validator: '{}'", &argv[i][0]);
+        test_files.add(&argv[i][0]);
+    }
+    prb17::utils::validator validator{test_files};
     
-//     my_queue.enqueue(10);
-//     debug_queue(my_queue);
-//     assert(my_queue.back() == 10);
-//     assert(my_queue.front() == 4);
+    validator.add_tests(&queue_tests<std::string>);
+    validator.add_tests(&queue_tests<int>);
+    validator.add_tests(&queue_tests<uint>);
+    validator.add_tests(&queue_tests<char>);
+    validator.add_tests(&queue_tests<bool>);
+    validator.add_tests(&queue_tests<float>);
+    validator.add_tests(&queue_tests<double>);
 
-//     std::cout << "finished enqueue test" << std::endl;
-// }
-
-// void test_dequeue() {    
-//     std::cout << "starting dequeue test" << std::endl;
-
-//     prb17::utils::structures::queue<int> my_queue{};
-//     my_queue.enqueue(4);
-//     my_queue.enqueue(12);
-//     my_queue.enqueue(345);
-//     my_queue.enqueue(-45);
-//     my_queue.enqueue(0);
-//     my_queue.enqueue(1);
-//     my_queue.enqueue(-1);
-//     debug_queue(my_queue);
-//     assert(my_queue.size() == 7);
-
-//     assert(my_queue.back() == -1);
-//     assert(my_queue.front() == 4);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-//     assert(my_queue.back() == -1);
-//     assert(my_queue.front() == 12);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-//     assert(my_queue.back() == -1);
-//     assert(my_queue.front() == 345);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-//     assert(my_queue.back() == -1);
-//     assert(my_queue.front() == -45);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-//     assert(my_queue.back() == -1);
-//     assert(my_queue.front() == 0);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-    
-//     my_queue.enqueue(-18);
-
-//     assert(my_queue.back() == -18);
-//     assert(my_queue.front() == 1);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-
-//     assert(my_queue.back() == -18);
-//     assert(my_queue.front() == -1);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-    
-//     assert(my_queue.back() == -18);
-//     assert(my_queue.front() == -18);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-
-//     assert(my_queue.size() == 0);
-
-//     std::cout << "finished dequeue test" << std::endl;
-// }
-
-// void test_alternate_enq_deq() {
-//     std::cout << "starting alternating test" << std::endl;
-
-//     prb17::utils::structures::queue<int> my_queue{};
-//     my_queue.enqueue(4);
-//     my_queue.enqueue(12);
-//     my_queue.enqueue(345);
-//     my_queue.enqueue(-45);
-//     my_queue.enqueue(0);
-//     my_queue.enqueue(1);
-//     my_queue.enqueue(-1);
-//     debug_queue(my_queue);
-//     assert(my_queue.size() == 7);
-
-//     assert(my_queue.back() == -1);
-//     assert(my_queue.front() == 4);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-
-//     my_queue.enqueue(34);
-//     assert(my_queue.back() == 34);
-//     assert(my_queue.front() == 12);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-    
-//     my_queue.enqueue(56);
-//     assert(my_queue.back() == 56);
-//     assert(my_queue.front() == 345);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-    
-//     my_queue.enqueue(987);
-//     assert(my_queue.back() == 987);
-//     assert(my_queue.front() == -45);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-    
-//     my_queue.enqueue(213);
-//     assert(my_queue.back() == 213);
-//     assert(my_queue.front() == 0);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-    
-//     my_queue.enqueue(-18);
-//     assert(my_queue.back() == -18);
-//     assert(my_queue.front() == 1);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-
-//     my_queue.enqueue(-81);
-//     assert(my_queue.back() == -81);
-//     assert(my_queue.front() == -1);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-    
-//     my_queue.enqueue(0);
-//     assert(my_queue.back() == 0);
-//     assert(my_queue.front() == 34);
-//     my_queue.dequeue();
-//     debug_queue(my_queue);
-
-//     assert(my_queue.size() == 6);
-
-//     std::cout << "finished alternating test" << std::endl;
-// }
-
-int main() {
-    // test_enqueue();
-    // test_dequeue();
-    // test_alternate_enq_deq();
-
-    // test_operators();
+    logger.info("Starting validation tests of queue_tests");
+    validator.validate();
+    logger.info("Finished validation tests of queue_tests");
 }

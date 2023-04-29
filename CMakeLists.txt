@@ -66,7 +66,10 @@ if(BUILD_UTILS_TESTS)
     message(DEBUG "configuring the queues tests")
     set(QUEUES_TEST_NAME queues_test)
     add_executable(${QUEUES_TEST_NAME} structures/queues/tests/cpp/queue_test.cc)
-    target_link_libraries(${QUEUES_TEST_NAME} PRIVATE ${QUEUES_LIBRARY_NAME})
+    target_link_libraries(${QUEUES_TEST_NAME} PRIVATE ${QUEUES_LIBRARY_NAME} 
+                                                        ${VALIDATOR_LIBRARY_NAME} 
+                                                        ${PARSERS_LIBRARY_NAME} 
+                                                        ${LOGGER_LIBRARY_NAME})
 
     # Configure graphs tests
     message(DEBUG "configuring the graphs tests")

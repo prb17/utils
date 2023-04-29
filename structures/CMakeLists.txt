@@ -55,3 +55,6 @@ install(FILES ${ARRAY_CONFIGS} DESTINATION structures/config/arrays)
 
 file(GLOB STACK_CONFIGS stacks/tests/config/*.json)
 install(FILES ${STACK_CONFIGS} DESTINATION structures/config/stacks)
+
+file(GLOB QUEUE_CONFIGS queues/tests/config/*.json)
+install(FILES ${QUEUE_CONFIGS} DESTINATION structures/config/queues)
