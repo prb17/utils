@@ -23,7 +23,15 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: utils_install
-        
+      
+     - name: Container Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x container_test
+        valgrind --leak-check=full --error-exitcode=1 ./container_test ../config/arrays/container_test_*.json
+        chmod -x container_test
+        cd -
     - name: Array Tests
       run: |
         export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib

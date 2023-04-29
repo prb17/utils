@@ -1,0 +1,183 @@
+{
+    "MetaData": 
+    { 
+        "test_name" : "Container Operators Test",
+        "test_type" : "unit",
+        "NOTE" : "These tests are comparing contianer1 to container2"
+    },
+    "Tests" : 
+    {
+        "testContainerEquals" : [
+            {
+                "container1" : 0,
+                "container2" : 0,
+                "expected" : true
+            },
+            {
+                "container1" : "0",
+                "container2" : "0",
+                "expected" : true
+            },
+            {
+                "container1" : 1,
+                "container2" : 0,
+                "expected" : false
+            },
+            {
+                "container1" : "1",
+                "container2" : "0",
+                "expected" : false
+            }
+        ],
+        "testContainerNotEquals" : [
+            {
+                "container1" : 0,
+                "container2" : 0,
+                "expected" : false
+            },
+            {
+                "container1" : "0",
+                "container2" : "0",
+                "expected" : false
+            },
+            {
+                "container1" : 1,
+                "container2" : 0,
+                "expected" : true
+            },
+            {
+                "container1" : "1",
+                "container2" : "0",
+                "expected" : true
+            }
+        ],
+        "testContainerLessThan" : [
+            {
+                "container1" : 0,
+                "container2" : 0,
+                "expected" : false
+            },
+            {
+                "container1" : "0",
+                "container2" : "0",
+                "expected" : false
+            },
+            {
+                "container1" : 1,
+                "container2" : 0,
+                "expected" : false
+            },
+            {
+                "container1" : 0,
+                "container2" : 1,
+                "expected" : true
+            },
+            {
+                "container1" : "1",
+                "container2" : "0",
+                "expected" : false
+            },
+            {
+                "container1" : "0",
+                "container2" : "1",
+                "expected" : true
+            }
+        ],
+        "testContainerGreaterThan" : [
+            {
+                "container1" : 0,
+                "container2" : 0,
+                "expected" : false
+            },
+            {
+                "container1" : "0",
+                "container2" : "0",
+                "expected" : false
+            },
+            {
+                "container1" : 1,
+                "container2" : 0,
+                "expected" : true
+            },
+            {
+                "container1" : 0,
+                "container2" : 1,
+                "expected" : false
+            },
+            {
+                "container1" : "1",
+                "container2" : "0",
+                "expected" : true
+            },
+            {
+                "container1" : "0",
+                "container2" : "1",
+                "expected" : false
+            }
+        ],
+        "testContainerLessThanEqual" : [
+            {
+                "container1" : 0,
+                "container2" : 0,
+                "expected" : true
+            },
+            {
+                "container1" : "0",
+                "container2" : "0",
+                "expected" : true
+            },
+            {
+                "container1" : 1,
+                "container2" : 0,
+                "expected" : false
+            },
+            {
+                "container1" : 0,
+                "container2" : 1,
+                "expected" : true
+            },
+            {
+                "container1" : "1",
+                "container2" : "0",
+                "expected" : false
+            },
+            {
+                "container1" : "0",
+                "container2" : "1",
+                "expected" : true
+            }
+        ],
+        "testContainerGreaterThanEqual" : [
+            {
+                "container1" : 0,
+                "container2" : 0,
+                "expected" : true
+            },
+            {
+                "container1" : "0",
+                "container2" : "0",
+                "expected" : true
+            },
+            {
+                "container1" : 1,
+                "container2" : 0,
+                "expected" : true
+            },
+            {
+                "container1" : 0,
+                "container2" : 1,
+                "expected" : false
+            },
+            {
+                "container1" : "1",
+                "container2" : "0",
+                "expected" : true
+            },
+            {
+                "container1" : "0",
+                "container2" : "1",
+                "expected" : false
+            }
+        ]
+    }
+}

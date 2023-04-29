@@ -13,8 +13,11 @@
         "array_test": {
             "logger_level": "info"
         },
+        "container_test": {
+            "logger_level": "info"
+        },
         "stack_test": {
-            "logger_level": "debug"
+            "logger_level": "info"
         },
         "validator": {
             "logger_level": "info"
