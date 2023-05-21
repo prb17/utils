@@ -31,8 +31,10 @@ set(GRAPHS_LIBRARY_NAME graphs)
 set(GRAPHS_LIBRARY_NAME ${GRAPHS_LIBRARY_NAME} PARENT_SCOPE)
 add_library(${GRAPHS_LIBRARY_NAME} INTERFACE)
 target_include_directories(${GRAPHS_LIBRARY_NAME} INTERFACE graphs/src/cpp/)
-target_link_libraries(${GRAPHS_LIBRARY_NAME} INTERFACE ${ARRAY_LIBRARY_NAME})
-
+target_link_libraries(${GRAPHS_LIBRARY_NAME} INTERFACE 
+                                            ${ARRAY_LIBRARY_NAME}
+                                            ${QUEUES_LIBRARY_NAME}
+                                            )
 
 
 file(GLOB ARRAY_HEADERS arrays/src/cpp/*.hh)

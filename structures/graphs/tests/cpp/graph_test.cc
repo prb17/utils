@@ -41,14 +41,29 @@ void basic_graph_print() {
     delete node3;
 }
 
-void weighted_graph_print() {
-    
+void weighted_graph_print() {    
     vertex<int> *node1 = new vertex<int>("node1", 3);
     vertex<int> *node2 = new vertex<int>("node2", 9);
     vertex<int> *node3 = new vertex<int>("node3", 12);
+    vertex<int> *node4 = new vertex<int>("node4", 1);
+    vertex<int> *node5 = new vertex<int>("node5", 5);
+    vertex<int> *node6 = new vertex<int>("node6", 7);
+    vertex<int> *node7 = new vertex<int>("node7", 162);
+    vertex<int> *node8 = new vertex<int>("node8", 6);
+    vertex<int> *node9 = new vertex<int>("node9", 2);
+    vertex<int> *node10 = new vertex<int>("node10", 45);
 
     node1->add_edge(node3, 5);
     node1->add_edge(node2, 10);
+
+    node3->add_edge(node4);
+    node3->add_edge(node5);
+    node3->add_edge(node6);
+
+    node2->add_edge(node7);
+    node2->add_edge(node8);
+    node2->add_edge(node9);
+    node2->add_edge(node10);
 
     auto g = graph<int>( node1 );
 
@@ -57,6 +72,13 @@ void weighted_graph_print() {
     delete node1;
     delete node2;
     delete node3;
+    delete node4;
+    delete node5;
+    delete node6;
+    delete node7;
+    delete node8;
+    delete node9;
+    delete node10;
 }
 
 int main() {
