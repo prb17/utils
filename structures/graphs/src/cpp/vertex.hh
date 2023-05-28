@@ -79,9 +79,9 @@ namespace prb17 {
             template<typename T>
             std::string vertex<T>::to_string() const {
                 std::stringstream stream;
-                stream << id;
-                stream << "\n\tValue: " << value;
-                stream << "\n\tEdges: " << edges << "\n";
+                stream << "Id: " << id;
+                stream << "\nValue: " << value;
+                stream << "\nEdges: " << edges << "\n";
                 return stream.str();
             }
 

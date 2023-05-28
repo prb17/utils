@@ -30,7 +30,7 @@ bool testQueueDequeue(prb17::utils::parsers::json_parser jp) {
         logger.debug("Dequeued value: '{}' from front of queue", front);
         logger.debug("Queue now looks like: {}", queue);
     }
-    logger.debug("Queue after all dequeues", queue);
+    logger.debug("Queue after all dequeues: {}", queue);
 
     return queue.empty();   
 }

@@ -8,6 +8,7 @@ namespace prb17 {
     namespace utils {
         namespace structures {
 
+            // Normal Edge Class
             template<typename T>
             class edge {
                 private:
@@ -59,6 +60,7 @@ namespace prb17 {
                 return stream << e->to_string();
             }
 
+            // Weighted Edge Class
             template<typename T>
             class weighted_edge : public edge<T> {
                 private:

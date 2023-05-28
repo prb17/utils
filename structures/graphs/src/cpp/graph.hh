@@ -18,6 +18,7 @@ namespace prb17 {
                     
                     std::string to_string() const;
                     void to_string(std::stringstream&, vertex<T>*, prb17::utils::structures::queue<vertex<T>*>&) const;
+                    vertex<T>* get_root();
             };
             
             template<typename T>
@@ -56,6 +57,11 @@ namespace prb17 {
                         }
                     }
                 }
+            }
+            
+            template<typename T>
+            vertex<T>* graph<T>::get_root() {
+                return root;
             }
 
             template<typename T>
