@@ -10,72 +10,42 @@ using namespace prb17::utils::structures;
 static prb17::utils::logger logger{"graph_test"};
 
 // TODO: Could this be better than going through the node list from config file twice?
-// Also, I know there's memory leaks for now, but address that later
-// Also, getting the 'value' won't always be an integer, I'll have to find a way to get a multi-nested value generically a.k.a. jp['graph']['nodes']['value']<T> or something to that affect
 template<typename T>
-graph<T> build_graph(prb17::utils::parsers::json_parser jp) {
-    std::map<std::string, vertex<T>*> nodes_list{};
+void build_graph(prb17::utils::parsers::json_parser jp, graph<T> &g) {
     // Construct the nodes list
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-            vertex<T> *node = new vertex<T>(jp.get_json_value()["graph"]["nodes"][i]["id"].asString(), 
-                                            jp.get_json_value()["graph"]["nodes"][i]["value"].asInt());
+        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
+            vertex<T> *node = new vertex<T>(tmp.as_string("id"), 
+                                            tmp.as_value<T>("value"));
                                             
-            nodes_list.emplace(node->get_id(), node);
+            g.add_vertex(node);
     }
-
     // Assign all the edges for each node
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        vertex<T> *node = nodes_list[jp.get_json_value()["graph"]["nodes"][i]["id"].asString()];
+        vertex<T> *node = g.get_vertex(jp.get_json_value()["graph"]["nodes"][i]["id"].asString());
 
         for(Json::Value::ArrayIndex j=0; j < jp.get_json_value()["graph"]["nodes"][i]["edges"].size(); j++) {
-            vertex<T> *node_to_add = nodes_list[jp.get_json_value()["graph"]["nodes"][i]["edges"][j].asString()];
+            vertex<T> *node_to_add = g.get_vertex(jp.get_json_value()["graph"]["nodes"][i]["edges"][j].asString());
             node->add_edge(node_to_add);
         }
     }
 
-    vertex<T> *root = nodes_list[jp.get_json_value()["graph"]["root"].asString()];
-    return graph<T>( root );
+    vertex<T> *root = g.get_vertex(jp.get_json_value()["graph"]["root"].asString());
+    g.set_root(root);
 }
 
-template<typename T>
-bool unique_ptr_graph_print(prb17::utils::parsers::json_parser jp) {
-    std::unique_ptr<vertex<int>> node1{new vertex<int>("node1", 6)};
-    std::unique_ptr<vertex<int>> node2{new vertex<int>("node2", 12)};
-    std::unique_ptr<vertex<int>> node3{new vertex<int>("node3", 18)};    
-
-    node1->add_edge( node2.get() );
-    node1->add_edge( node3.get() );
-
-    auto g = graph<int>( node1.get() );
-
-    //Get a feel for printing out graph
-    std::cout << "calling basic graph's to_string operator: \n\n" << g << "" << std::endl;
-    return true;
-}
-
+//
 template<typename T>
 bool basic_graph_print(prb17::utils::parsers::json_parser jp) {
-    // vertex<int> *node1 = new vertex<int>(jp.get_json_value()["graph"]["nodes"][0]["id"].asString(), 
-    //                                         jp.get_json_value()["graph"]["nodes"][0]["value"].asInt());
-    // // std::cout << *node1 << std::endl;
-
-    // vertex<int> *node2 = new vertex<int>("node2", 15);
-    // // std::cout << node2->to_string() << std::endl;
-
-    // vertex<int> *node3 = new vertex<int>("node3", 25);
-    // // std::cout << node3->to_string() << std::endl;
-
-    // node1->add_edge( node2 );
-    // node1->add_edge( node3 );
-    // std::cout << *node1 << std::endl;
     logger.info("Building graph");
-    graph<T> g = build_graph<T>(jp);
+    graph<T> g{};
+    build_graph<T>(jp, g);
 
-    //Get a feel for printing out graph
     logger.info("calling basic graph's to_string: \n\n{}", g);
-    // delete node1;
-    // delete node2;
-    // delete node3;
+    logger.info("calling graph's to_adjacency_list: \n\n{}", g.to_adjacency_list());
+    g.set_root(g.get_vertex("9"));
+    logger.info("calling basic graph's to_string: \n\n{}", g);
+    g.cleanup();
     return true;
 }
 
@@ -125,8 +95,7 @@ bool weighted_graph_print(prb17::utils::parsers::json_parser jp) {
 template<typename T>
 static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > graph_tests = {
     {"basicGraphPrint", &basic_graph_print<T>},
-    {"weightedGraphPrint", &weighted_graph_print<T>},
-    {"uniquePtrGraphPrint", &unique_ptr_graph_print<T>}
+    {"weightedGraphPrint", &weighted_graph_print<T>}
 };
 
 #define MIN_NUM_ARGS 2
@@ -142,13 +111,13 @@ int main(int argc, char** argv) {
     }
     prb17::utils::validator validator{test_files};
     
-    // validator.add_tests(&graph_tests<std::string>);
+    validator.add_tests(&graph_tests<std::string>);
     validator.add_tests(&graph_tests<int>);
-    // validator.add_tests(&graph_tests<uint>);
-    // validator.add_tests(&graph_tests<char>);
-    // validator.add_tests(&graph_tests<bool>);
-    // validator.add_tests(&graph_tests<float>);
-    // validator.add_tests(&graph_tests<double>);
+    validator.add_tests(&graph_tests<uint>);
+    validator.add_tests(&graph_tests<char>);
+    validator.add_tests(&graph_tests<bool>);
+    validator.add_tests(&graph_tests<float>);
+    validator.add_tests(&graph_tests<double>);
 
     logger.info("Starting validation tests of graph_tests");
     validator.validate();

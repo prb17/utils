@@ -28,6 +28,7 @@ namespace prb17 {
                     std::string get_id();
                     T get();
                     vertex<T>* get_connected_vertex(size_t idx);
+                    array<edge<vertex<T> > *> get_edges();
 
                     std::string to_string() const;
             };
@@ -74,6 +75,11 @@ namespace prb17 {
             template<typename T>
             vertex<T>* vertex<T>::get_connected_vertex(size_t idx) {
                 return edges.size() > 0 ? edges[idx]->get_vertex() : nullptr;
+            }
+
+            template<typename T>
+           array<edge<vertex<T> > *> vertex<T>::get_edges() {
+                return edges;
             }
 
             template<typename T>
