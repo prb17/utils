@@ -1,7 +1,6 @@
 #pragma once
 
 #include "array.hh"
-#include "edge.hh"
 
 namespace prb17 {
     namespace utils {
@@ -12,7 +11,9 @@ namespace prb17 {
                 private:
                     T value;
                     std::string id;
-                    array<edge<vertex<T> > *> edges;               
+                
+                protected:
+                    array<vertex<T> *> edges;               
 
                 public:
                     vertex() = delete;
@@ -21,14 +22,13 @@ namespace prb17 {
 
                     //modifiers
                     void add_edge(vertex<T>*);
-                    void add_edge(vertex<T>*, int);
 
                     //accessors
+                    T get();
                     size_t num_edges();
                     std::string get_id();
-                    T get();
+                    array<vertex<T> *> get_edges();
                     vertex<T>* get_connected_vertex(size_t idx);
-                    array<edge<vertex<T> > *> get_edges();
 
                     std::string to_string() const;
             };
@@ -37,29 +37,11 @@ namespace prb17 {
             vertex<T>::vertex(std::string id, T value) : id{id}, value{value}, edges{} {}
 
             template<typename T>
-            vertex<T>::~vertex() {
-                for(int i=0; i<edges.size(); i++) {
-                    delete edges[i];
-                }
-            }
+            vertex<T>::~vertex() {}
 
-            //modifiers
-            //todo: determine if I need to keep weighted and normal edges separate
-            //  Does it not make sense to mix the two?
-            //  Are there any benefits (other than simplicity) to having a graph of nodes with mixed edge types?
-            // Looks like you can't, at least it seems safer not to mix the two types of edges, 
-            //      So how do I ensure that they don't mix?
-            //      Maybe by the type of graph? So a weighted graph uses weighted edges, default graph uses normal edges?
             template<typename T>
             void vertex<T>::add_edge(vertex<T>* node) {
-                auto *e = new edge<vertex<T> >(node);
-                edges.add(e);
-            }
-
-            template<typename T>
-            void vertex<T>::add_edge(vertex<T>* node, int weight) {
-                auto *e = new weighted_edge<vertex<T> >(node, weight);
-                edges.add(e);
+                edges.add(node);
             }
 
             //accessors
@@ -74,11 +56,11 @@ namespace prb17 {
 
             template<typename T>
             vertex<T>* vertex<T>::get_connected_vertex(size_t idx) {
-                return edges.size() > 0 ? edges[idx]->get_vertex() : nullptr;
+                return edges.size() > 0 ? edges[idx] : nullptr;
             }
 
             template<typename T>
-           array<edge<vertex<T> > *> vertex<T>::get_edges() {
+            array<vertex<T> *> vertex<T>::get_edges() {
                 return edges;
             }
 
@@ -87,7 +69,11 @@ namespace prb17 {
                 std::stringstream stream;
                 stream << "Id: " << id;
                 stream << "\nValue: " << value;
-                stream << "\nEdges: " << edges << "\n";
+                for (int i=0; i < edges.size(); i++) {
+                    stream << "\nEdges: " << edges[i]->get_id() << " ";
+                }
+                
+                stream << "\n";
                 return stream.str();
             }
 
@@ -99,6 +85,35 @@ namespace prb17 {
             template<typename T>
             inline std::ostream& operator<<(std::ostream &stream, const vertex<T>* v) {
                 return stream << v->to_string();
+            }
+
+            //Weighted vertex 
+            template<typename T>
+            class weighted_vertex : public vertex<T> {
+                private:
+
+                public:
+                    weighted_vertex() = delete;
+                    weighted_vertex(std::string, T);
+                    ~weighted_vertex();
+
+                    void add_edge(weighted_vertex<T>*);
+            };
+
+            template<typename T>
+            weighted_vertex<T>::weighted_vertex(std::string id, T value)  : vertex<T>(id, value) {}
+
+            template<typename T>
+            weighted_vertex<T>::~weighted_vertex() {}
+            
+            template<typename T>
+            void weighted_vertex<T>::add_edge(weighted_vertex<T>* e) {
+                this->edges.add(e);
+            }
+            
+            template<typename T>
+            inline std::ostream& operator<<(std::ostream &stream, const weighted_vertex<T>& v) {
+                return stream << v.to_string();
             }
         }
     }

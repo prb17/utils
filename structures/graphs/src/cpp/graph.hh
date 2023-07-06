@@ -20,7 +20,7 @@ namespace prb17 {
                     ~graph();
                     
                     std::string to_string() const;
-                    void to_string(std::stringstream&, vertex<T>*, prb17::utils::structures::queue<vertex<T>*>&) const;
+                    void to_string(std::stringstream&, vertex<T>*, queue<vertex<T>*>&) const;
                     std::string to_adjacency_list() const;
 
                     vertex<T>* get_root();
@@ -39,11 +39,7 @@ namespace prb17 {
             graph<T>::graph(vertex<T> *r) : root{r}, node_list{} {}
 
             template<typename T>
-            graph<T>::~graph() {
-                // for (int i=0; i<node_list.size(); i++) {
-                //     delete node_list[i];
-                // }
-            }
+            graph<T>::~graph() {}
 
             template<typename T>
             void graph<T>::cleanup() {
@@ -71,13 +67,13 @@ namespace prb17 {
             template<typename T>
             std::string graph<T>::to_string() const {
                 std::stringstream stream;
-                prb17::utils::structures::queue<vertex<T>*> visited_nodes{};
+                queue<vertex<T>*> visited_nodes{};
                 to_string(stream, root, visited_nodes);
                 return stream.str();
             }
 
             template<typename T>
-            void graph<T>::to_string(std::stringstream& prefix, vertex<T>* node, prb17::utils::structures::queue<vertex<T>*>& visited) const {
+            void graph<T>::to_string(std::stringstream& prefix, vertex<T>* node, queue<vertex<T>*>& visited) const {
                 if (visited.find(node) == -1) {
                     visited.enqueue(node);
 
@@ -104,8 +100,12 @@ namespace prb17 {
             template<typename T>
             std::string graph<T>::to_adjacency_list() const {
                 std::stringstream stream;
-                for(int i=0; i<node_list.size(); i++) {
-                    stream << "Node: " << node_list[i]->get_id() << " | Neighbors: " << node_list[i]->get_edges() << std::endl;
+                for(int i=0; i < node_list.size(); i++) {
+                    stream << "Node: " << node_list[i]->get_id() << " | ";
+                    for(int j=0; j < node_list[i]->get_edges().size(); j++) {
+                        stream << node_list[i]->get_edges()[j]->get_id() << " ";
+                    }
+                    stream << std::endl;
                 }                
                 return stream.str();
             }
@@ -127,6 +127,34 @@ namespace prb17 {
             template<typename T>
             inline std::ostream& operator<<(std::ostream &stream, const graph<T>* graph) {
                 return stream << graph->to_string();
+            }
+
+            // Weigted graph 
+            template<typename T>
+            class weighted_graph : public graph<T> {
+                private:
+
+                public:
+                    weighted_graph();
+                    weighted_graph(weighted_vertex<T> *);
+                    ~weighted_graph();
+
+                    void add_vertex(weighted_vertex<T> *);
+
+            };
+
+            template<typename T>
+            weighted_graph<T>::weighted_graph() : graph<T>() {}
+
+            template<typename T>
+            weighted_graph<T>::weighted_graph(weighted_vertex<T> *v) : graph<T>(v) {}
+
+            template<typename T>
+            weighted_graph<T>::~weighted_graph() {}
+
+            template<typename T>
+            void weighted_graph<T>::add_vertex(weighted_vertex<T> *v) {
+                graph<T>::add_vertex(v);
             }
         }
     }
