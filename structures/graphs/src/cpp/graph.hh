@@ -12,6 +12,8 @@ namespace prb17 {
             class graph {
                 private:
                     vertex<T> *root;
+                
+                protected:
                     array<vertex<T>*> node_list;
 
                 public:
@@ -19,14 +21,15 @@ namespace prb17 {
                     graph(vertex<T> *);
                     ~graph();
                     
-                    std::string to_string() const;
+                    virtual std::string to_string() const;
                     void to_string(std::stringstream&, vertex<T>*, queue<vertex<T>*>&) const;
                     std::string to_adjacency_list() const;
 
                     vertex<T>* get_root();
                     void set_root(vertex<T>*);
 
-                    void add_vertex(vertex<T> *);
+                    bool add_vertex(vertex<T> *);
+                    virtual bool add_edge_to_vertex(vertex<T> *, vertex<T> *);
                     vertex<T>* get_vertex(std::string);
 
                     void cleanup();
@@ -49,9 +52,17 @@ namespace prb17 {
             }
 
             template<typename T>
-            void graph<T>::add_vertex(vertex<T> *v) {
-                //todo: throw exception if id of v already exists in node_list
+            bool graph<T>::add_vertex(vertex<T> *v) {
+                //todo: return false if id of  v already exists in node_list
                 node_list.add(v);
+                return true;
+            }
+
+            template<typename T>
+            bool graph<T>::add_edge_to_vertex(vertex<T> *node, vertex<T> *node_to_add) {
+                //todo: check if node_to_add already exists in node edges
+                node->add_edge(node_to_add);
+                return true;
             }
 
             template<typename T>
@@ -140,6 +151,7 @@ namespace prb17 {
                     ~weighted_graph();
 
                     void add_vertex(weighted_vertex<T> *);
+                    weighted_vertex<T>* get_vertex(std::string id);
 
             };
 
@@ -155,6 +167,11 @@ namespace prb17 {
             template<typename T>
             void weighted_graph<T>::add_vertex(weighted_vertex<T> *v) {
                 graph<T>::add_vertex(v);
+            }
+
+            template<typename T>
+            weighted_vertex<T>* weighted_graph<T>::get_vertex(std::string id) {
+                return (weighted_vertex<T>*)(graph<T>::get_vertex(id));
             }
         }
     }

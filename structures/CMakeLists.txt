@@ -36,16 +36,38 @@ target_link_libraries(${GRAPHS_LIBRARY_NAME} INTERFACE
                                             ${QUEUES_LIBRARY_NAME}
                                             )
 
+#linked lists target definition
+set(LINKED_LISTS_LIBRARY_NAME lists)
+set(LINKED_LISTS_LIBRARY_NAME ${LINKED_LISTS_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${LINKED_LISTS_LIBRARY_NAME} INTERFACE)
+target_include_directories(${LINKED_LISTS_LIBRARY_NAME} INTERFACE graphs/src/cpp/linked_lists)
+target_link_libraries(${LINKED_LISTS_LIBRARY_NAME} INTERFACE 
+                                            ${GRAPHS_LIBRARY_NAME}
+                                            )
+
+#trees target definition
+set(TREES_LIBRARY_NAME trees)
+set(TREES_LIBRARY_NAME ${TREES_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${TREES_LIBRARY_NAME} INTERFACE)
+target_include_directories(${TREES_LIBRARY_NAME} INTERFACE graphs/src/cpp/trees)
+target_link_libraries(${TREES_LIBRARY_NAME} INTERFACE 
+                                            ${GRAPHS_LIBRARY_NAME}
+                                            )
+
 
 file(GLOB ARRAY_HEADERS arrays/src/cpp/*.hh)
 file(GLOB STACKS_HEADERS stacks/src/cpp/*.hh)
 file(GLOB QUEUES_HEADERS queues/src/cpp/*.hh)
 file(GLOB GRAPHS_HEADERS graphs/src/cpp/*.hh)
+file(GLOB LINKED_LISTS_HEADERS graphs/src/cpp/linked_lists/*.hh)
+file(GLOB TREES_HEADERS graphs/src/cpp/trees/*.hh)
 
 install(FILES ${ARRAY_HEADERS}
                 ${STACKS_HEADERS}
                 ${QUEUES_HEADERS}
                 ${GRAPHS_HEADERS}
+                ${LINKED_LISTS_HEADERS}
+                ${TREES_HEADERS}
                 DESTINATION
                 structures/include)
 
@@ -63,3 +85,9 @@ install(FILES ${QUEUE_CONFIGS} DESTINATION structures/config/queues)
 
 file(GLOB GRAPH_CONFIGS graphs/tests/config/*.json)
 install(FILES ${GRAPH_CONFIGS} DESTINATION structures/config/graphs)
+
+file(GLOB LINKED_LISTS_CONFIGS graphs/tests/config/linked_lists/*.json)
+install(FILES ${LINKED_LISTS_CONFIGS} DESTINATION structures/config/graphs/linked_lists)
+
+file(GLOB TREES_CONFIGS graphs/tests/config/trees/*.json)
+install(FILES ${TREES_CONFIGS} DESTINATION structures/config/graphs/trees)

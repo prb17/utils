@@ -1,4 +1,6 @@
 #include "graph.hh"
+#include "single_linked_list.hh"
+#include "double_linked_list.hh"
 #include "validator.hh"
 #include "logger.hh"
 
@@ -26,7 +28,7 @@ void build_graph(prb17::utils::parsers::json_parser jp, graph<T> *g) {
 
         for(Json::Value::ArrayIndex j=0; j < jp.get_json_value()["graph"]["nodes"][i]["edges"].size(); j++) {
             vertex<T> *node_to_add = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["edges"][j].asString());
-            node->add_edge(node_to_add);
+            g->add_edge_to_vertex(node, node_to_add);
         }
     }
 
@@ -46,11 +48,11 @@ void build_weighted_graph(prb17::utils::parsers::json_parser jp, weighted_graph<
     }
     // Assign all the edges for each node
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        vertex<T> *node = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["id"].asString());
+        weighted_vertex<T> *node = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["id"].asString());
 
         for(Json::Value::ArrayIndex j=0; j < jp.get_json_value()["graph"]["nodes"][i]["edges"].size(); j++) {
-            vertex<T> *node_to_add = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["edges"][j]["id"].asString());
-            ((weighted_vertex<T> *)node)->add_edge((weighted_vertex<T> *)node_to_add);
+            weighted_vertex<T> *node_to_add = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["edges"][j]["id"].asString());
+            g->add_edge_to_vertex(node, node_to_add);
         }
     }
 
@@ -87,11 +89,36 @@ bool weighted_graph_print(prb17::utils::parsers::json_parser jp) {
     return true;
 }
 
+template<typename T>
+bool single_linked_list_print(prb17::utils::parsers::json_parser jp) {
+    logger.info("Building single linked list");
+    single_linked_list<T> sll{};
+    build_graph<T>(jp, &sll);
+    logger.info("Created single linked list");
+    logger.info("Calling single linked list to_string: \n\n{}", sll);
+    logger.info("Calling single linked list adjacency_list \n\n{}", sll.to_adjacency_list());
+    sll.cleanup();
+
+    return true;
+}
+
+template<typename T>
+bool double_linked_list_print(prb17::utils::parsers::json_parser jp) {
+    logger.info("Building double linked list");
+    double_linked_list<T> dll{};
+    logger.info("Created double linked list");
+    dll.cleanup();
+
+    return true;
+}
+
 //Map that relates the json file test config file to each test function defined in this file
 template<typename T>
 static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > graph_tests = {
     {"basicGraphPrint", &basic_graph_print<T>},
-    {"weightedGraphPrint", &weighted_graph_print<T>}
+    {"weightedGraphPrint", &weighted_graph_print<T>},
+    {"singleLinkedListPrint", &single_linked_list_print<T>},
+    {"doubleLinkedListPrint", &double_linked_list_print<T>}
 };
 
 #define MIN_NUM_ARGS 2

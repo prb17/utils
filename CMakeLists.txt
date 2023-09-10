@@ -76,6 +76,7 @@ if(BUILD_UTILS_TESTS)
     set(GRAPHS_TEST_NAME graphs_test)
     add_executable(${GRAPHS_TEST_NAME} structures/graphs/tests/cpp/graph_test.cc)
     target_link_libraries(${GRAPHS_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
+                                                        ${LINKED_LISTS_LIBRARY_NAME}
                                                         ${VALIDATOR_LIBRARY_NAME} 
                                                         ${PARSERS_LIBRARY_NAME} 
                                                         ${LOGGER_LIBRARY_NAME})
