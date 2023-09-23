@@ -1,1 +1,39 @@
-{}
+{
+    "MetaData": 
+    { 
+        "test_name" : "Linked List Functions Test",
+        "test_type" : "unit"
+    },
+    "Tests" : 
+    {
+        "singleLinkedListPrint": [
+            {
+                "graph": {
+                    "nodes": [
+                      {"id": "10", "value": 10, "next": "1"},
+                      {"id": "1", "value": 1, "next": "100"},
+                      {"id": "100", "value": 100, "next": "9"},
+                      {"id": "9", "value": 9, "next": "10-2"},
+                      {"id": "10-2", "value": 10, "next": ""}
+                    ],
+                    "root": "10"
+                }
+            }
+        ],
+        "doubleLinkedListPrint": [
+            {
+                "graph": {
+                    "nodes": [
+                      {"id": "10", "value": 10, "next": "1", "prev": ""},
+                      {"id": "1", "value": 1, "next": "100", "prev": "10"},
+                      {"id": "100", "value": 100, "next": "9", "prev": "1" },
+                      {"id": "9", "value": 9, "next": "10-2", "prev": "100" },
+                      {"id": "10-2", "value": 10, "next": "", "prev": "9" }
+                    ],
+                    "root": "10"
+                }
+            }
+        ],
+        "treePrint": [{}]
+    }
+}

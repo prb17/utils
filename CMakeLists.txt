@@ -81,6 +81,16 @@ if(BUILD_UTILS_TESTS)
                                                         ${PARSERS_LIBRARY_NAME} 
                                                         ${LOGGER_LIBRARY_NAME})
 
+    # Configure linked list tests
+    message(DEBUG "configuring the linked list tests")
+    set(LINKED_LIST_TEST_NAME linked_list_test)
+    add_executable(${LINKED_LIST_TEST_NAME} structures/graphs/tests/cpp/linked_list_test.cc)
+    target_link_libraries(${LINKED_LIST_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
+                                                            ${LINKED_LISTS_LIBRARY_NAME}
+                                                            ${VALIDATOR_LIBRARY_NAME} 
+                                                            ${PARSERS_LIBRARY_NAME} 
+                                                            ${LOGGER_LIBRARY_NAME})
+
     # Configure target installs
     message(DEBUG "configuring the tests install")
     install(TARGETS ${ARRAY_TEST_NAME} 
@@ -88,6 +98,7 @@ if(BUILD_UTILS_TESTS)
                     ${STACKS_TEST_NAME} 
                     ${QUEUES_TEST_NAME} 
                     ${GRAPHS_TEST_NAME}
+                    ${LINKED_LIST_TEST_NAME}
                     DESTINATION
                     structures/bin
                     )

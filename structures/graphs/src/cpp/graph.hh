@@ -12,9 +12,9 @@ namespace prb17 {
             class graph {
                 private:
                     vertex<T> *root;
+                    array<vertex<T>*> node_list;
                 
                 protected:
-                    array<vertex<T>*> node_list;
 
                 public:
                     graph();
@@ -25,12 +25,14 @@ namespace prb17 {
                     void to_string(std::stringstream&, vertex<T>*, queue<vertex<T>*>&) const;
                     std::string to_adjacency_list() const;
 
-                    vertex<T>* get_root();
+                    vertex<T>* get_root() const;
                     void set_root(vertex<T>*);
+                    size_t num_nodes() const;
 
-                    bool add_vertex(vertex<T> *);
+                    virtual bool add_vertex(vertex<T> *);
                     virtual bool add_edge_to_vertex(vertex<T> *, vertex<T> *);
-                    vertex<T>* get_vertex(std::string);
+                    vertex<T>* get_vertex(std::string) const;
+                    vertex<T>* get_vertex(size_t idx) const;
 
                     void cleanup();
             };
@@ -52,6 +54,11 @@ namespace prb17 {
             }
 
             template<typename T>
+            size_t graph<T>::num_nodes() const {
+                return node_list.size();
+            }
+
+            template<typename T>
             bool graph<T>::add_vertex(vertex<T> *v) {
                 //todo: return false if id of  v already exists in node_list
                 node_list.add(v);
@@ -66,13 +73,17 @@ namespace prb17 {
             }
 
             template<typename T>
-            vertex<T>* graph<T>::get_vertex(std::string id) {
-                //todo: throw exception if id of v already exists in node_list
-                int i=0;
+            vertex<T>* graph<T>::get_vertex(std::string id) const {
+                size_t i=0;
                 while(i < node_list.size() && id != node_list[i]->get_id()) {
                     i++;
                 }
-                return node_list[i];
+                return get_vertex(i);
+            }
+
+            template<typename T>
+            vertex<T>* graph<T>::get_vertex(size_t idx) const {
+                return ( idx < num_nodes() ) ? node_list[idx] : nullptr;
             }
             
             template<typename T>
@@ -114,7 +125,9 @@ namespace prb17 {
                 for(int i=0; i < node_list.size(); i++) {
                     stream << "Node: " << node_list[i]->get_id() << " | ";
                     for(int j=0; j < node_list[i]->get_edges().size(); j++) {
-                        stream << node_list[i]->get_edges()[j]->get_id() << " ";
+                            node_list[i]->get_edges()[j] != nullptr ? 
+                                stream << node_list[i]->get_edges()[j]->get_id() << " " :
+                                stream << "'' "; 
                     }
                     stream << std::endl;
                 }                
@@ -122,7 +135,7 @@ namespace prb17 {
             }
             
             template<typename T>
-            vertex<T>* graph<T>::get_root() {
+            vertex<T>* graph<T>::get_root() const {
                 return root;
             }
             template<typename T>

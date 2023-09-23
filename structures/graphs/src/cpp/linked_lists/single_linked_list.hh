@@ -10,12 +10,12 @@ namespace prb17 {
             template<typename T>
             class single_linked_list : public graph<T> {
                 private:
-
                 public:
                     single_linked_list();
                     ~single_linked_list();
 
-                    bool add_edge_to_vertex(vertex<T> *, vertex<T> *) override;
+                    bool next(vertex<T> *, vertex<T> *);
+                    vertex<T>* next(vertex<T> *) const;
 
                     std::string to_string() const override;
             };
@@ -27,9 +27,9 @@ namespace prb17 {
             single_linked_list<T>::~single_linked_list() {}
 
             template<typename T>
-            bool single_linked_list<T>::add_edge_to_vertex(vertex<T> *node, vertex<T>* node_to_add) {
-                if (node->num_edges() == 0) {
-                    node->add_edge(node_to_add);
+            bool single_linked_list<T>::next(vertex<T> *node, vertex<T> *node_to_add) {
+                if (node != nullptr && node->num_edges() == 0) {
+                    graph<T>::add_edge_to_vertex(node, node_to_add);
                     return true;
                 } else {
                     return false;
@@ -37,11 +37,18 @@ namespace prb17 {
             }
 
             template<typename T>
+            vertex<T>* single_linked_list<T>::next(vertex<T> *node) const {
+                return node->get_edges()[0];
+            }
+
+            template<typename T>
             std::string single_linked_list<T>::to_string() const {
                 std::stringstream stream;
-                for (int i=0; i < graph<T>::node_list.size(); i++) {
-                    stream << "(" << graph<T>::node_list[i]->get_id() << ")";
-                    i == graph<T>::node_list.size() - 1 ? stream << "" : stream << "->";
+                vertex<T>* curr_node = this->get_root();
+                while (curr_node != nullptr) {
+                    stream << "(" << curr_node->get_id() << ")";
+                    curr_node = this->next(curr_node);
+                    curr_node != nullptr ? stream << "->" : stream << "";
                 }
                 return stream.str();
             }
