@@ -36,12 +36,12 @@ namespace prb17 {
                     void clear();
                     
                     //accessors
-                    virtual bool valid(size_t) const;
                     bool empty() const;
                     virtual int find(T) const;
                     virtual T get(size_t) const;
                     virtual size_t size() const;
                     virtual size_t capacity() const;
+                    virtual bool valid(size_t) const;
                     virtual std::string to_string() const;
 
                     //overloaded operators

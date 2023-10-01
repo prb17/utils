@@ -63,6 +63,7 @@ namespace prb17 {
                         }
                     } catch( std::exception e) {
                         logger.warn("Exception happend: {}", e.what());
+                        current_total_failed++;
                     }
                     logger.info("'{}' results: {} and {}", test_to_run,
                     GRE + std::to_string(current_total_passed) + " passed" + NC, 

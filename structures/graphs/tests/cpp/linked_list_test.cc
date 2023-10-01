@@ -10,49 +10,21 @@
 using namespace prb17::utils::structures;
 static prb17::utils::logger logger{"linked_list_test"};
 
-// TODO: Could this be better than going through the node list from config file twice?
 template<typename T>
 void build_single_linked_list(prb17::utils::parsers::json_parser jp, single_linked_list<T> *sll) {
     // Construct the nodes list
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
         prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
-            vertex<T> *node = new vertex<T>(tmp.as_string("id"), 
-                                            tmp.as_value<T>("value"));
-                                            
-            sll->add_vertex(node);
+            sll->add_node(tmp.as_string("id"), tmp.as_value<T>("value"));
     }
-
-    // Assign all the edges for each node
-    for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        vertex<T> *node = sll->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["id"].asString());
-        
-        vertex<T> *next_node = nullptr;
-        std::string node_id = jp.get_json_value()["graph"]["nodes"][i]["next"].asString();
-        if (!node_id.empty()) {
-            next_node = sll->get_vertex(node_id);
-        }
-        sll->next(node, next_node);
-    }
-
-    vertex<T> *root = sll->get_vertex(jp.get_json_value()["graph"]["root"].asString());
-    sll->set_root(root);
 }
 
-// TODO: Could this be better than going through the node list from config file twice?
 template<typename T>
 void build_double_linked_list(prb17::utils::parsers::json_parser jp, double_linked_list<T> *dll) {
-    build_single_linked_list(jp, dll);
-
-    // Assign all the edges for each node
+    // Construct the nodes list
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        vertex<T> *node = dll->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["id"].asString());
-        
-        vertex<T> *prev_node = nullptr;
-        std::string node_id = jp.get_json_value()["graph"]["nodes"][i]["prev"].asString();
-        if (!node_id.empty()) {
-            prev_node = dll->get_vertex(node_id);
-        }
-        dll->prev(node, prev_node);
+        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
+            dll->add_node(tmp.as_string("id"), tmp.as_value<T>("value"));
     }
 }
 

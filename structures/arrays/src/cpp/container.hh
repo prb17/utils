@@ -18,7 +18,7 @@ namespace prb17 {
                     container(const container &);
                     ~container();
 
-                    T value();
+                    T value() const;
                     std::string to_string() const;
 
                     //overloaded operators
@@ -65,7 +65,7 @@ namespace prb17 {
             }
 
             template<typename T>
-            T container<T>::value() {
+            T container<T>::value() const {
                 return *v;
             }
 

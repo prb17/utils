@@ -8,8 +8,6 @@
 
 static prb17::utils::logger logger{"array_test"};
 
-
-
 template<typename T>
 bool testArraySubscriptOperator(prb17::utils::parsers::json_parser jp) {
     auto arr1 = jp.as_array<T>("array1");
