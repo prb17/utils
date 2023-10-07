@@ -10,7 +10,6 @@ namespace prb17 {
             template<typename T>
             class single_linked_list : public graph<T> {
                 private:
-                    bool add_edge_to_vertex(vertex<T> *, vertex<T> *) = delete;
                     size_t get_num_vertices() const = delete;
 
                 protected:
@@ -21,9 +20,9 @@ namespace prb17 {
                     single_linked_list();
                     ~single_linked_list();
 
-                    virtual bool add_node(std::string, T);
+                    virtual bool add(vertex<T> *);
 
-                    virtual vertex<T>* next(vertex<T> *) const;
+                    vertex<T>* next(vertex<T> *) const;
                     size_t num_nodes() const;
 
                     std::string to_string() const override;
@@ -41,10 +40,8 @@ namespace prb17 {
             }
 
             template<typename T>
-            bool single_linked_list<T>::add_node(std::string id, T value) {
-                if (graph<T>::add_vertex(id, value)) {
-                    vertex<T> *node = graph<T>::get_vertex(id);
-                    node->add_edge(nullptr); //set next = nullptr
+            bool single_linked_list<T>::add(vertex<T> *node) {
+                if (node->num_edges() == 1 && graph<T>::add_vertex(node)) {
                     if (head == nullptr) {
                         head = node;
                     }

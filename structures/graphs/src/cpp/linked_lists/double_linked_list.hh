@@ -16,9 +16,7 @@ namespace prb17 {
                     double_linked_list();
                     ~double_linked_list();
                     
-                    bool add_node(std::string, T) override;
-
-                    vertex<T>* next(vertex<T> *) const override;
+                    bool add(vertex<T> *) override;
                     vertex<T>* prev(vertex<T> *) const;                    
 
                     std::string to_string() const override;
@@ -31,11 +29,8 @@ namespace prb17 {
             double_linked_list<T>::~double_linked_list() {}
 
             template<typename T>
-            bool double_linked_list<T>::add_node(std::string id, T value) {
-                if (graph<T>::add_vertex(id, value)) {
-                    vertex<T> *node = graph<T>::get_vertex(id);
-                    node->add_edge(nullptr); //set next to nullptr
-                    node->add_edge(nullptr); //set prev to nullptr
+            bool double_linked_list<T>::add(vertex<T> *node) {
+                if (node->num_edges() == 2 && graph<T>::add_vertex(node)) {
                     if (this->head == nullptr) {
                         this->head = node;
                     }
@@ -54,11 +49,6 @@ namespace prb17 {
                 }
 
                 return true;
-            }
-
-            template<typename T>
-            vertex<T>* double_linked_list<T>::next(vertex<T> *node) const {
-                return node->get_connected_vertex(0);
             }
 
             template<typename T>

@@ -14,34 +14,36 @@ template<typename T>
 void build_graph(prb17::utils::parsers::json_parser jp, graph<T> *g) {
     // Construct the nodes list
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};                                            
-            g->add_vertex(tmp.as_string("id"), tmp.as_value<T>("value"));
+        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
+            vertex<T> *v = new vertex{tmp.as_string("id"), tmp.as_value<T>("value")};
+            g->add_vertex(v);
     }
     // Assign all the edges for each node
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        vertex<T> *node = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["id"].asString());
+        vertex<T> *v = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["id"].asString());
 
         for(Json::Value::ArrayIndex j=0; j < jp.get_json_value()["graph"]["nodes"][i]["edges"].size(); j++) {
-            vertex<T> *node_to_add = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["edges"][j].asString());
-            g->add_edge_to_vertex(node, node_to_add);
+            vertex<T> *vertex_to_add = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["edges"][j].asString());
+            v->add_edge(vertex_to_add);
         }
     }
 }
 
 template<typename T>
-void build_weighted_graph(prb17::utils::parsers::json_parser jp, weighted_graph<T> *g) {
+void build_weighted_graph(prb17::utils::parsers::json_parser jp, graph<T> *g) {
     // Construct the nodes list
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};                                            
-            g->add_vertex(tmp.as_string("id"), tmp.as_value<T>("value"));
+        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
+            vertex<T> *wvertex = new weighted_vertex<T>{tmp.as_string("id"), tmp.as_value<T>("value")};
+            g->add_vertex(wvertex);
     }
     // Assign all the edges for each node
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        weighted_vertex<T> *node = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["id"].asString());
+        vertex<T> *wvertex = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["id"].asString());
 
         for(Json::Value::ArrayIndex j=0; j < jp.get_json_value()["graph"]["nodes"][i]["edges"].size(); j++) {
-            weighted_vertex<T> *node_to_add = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["edges"][j]["id"].asString());
-            g->add_edge_to_vertex(node, node_to_add);
+            vertex<T> *wvertex_to_add = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["edges"][j]["id"].asString());
+            wvertex->add_edge(wvertex_to_add);
         }
     }
 }
@@ -61,11 +63,11 @@ bool basic_graph_print(prb17::utils::parsers::json_parser jp) {
 template<typename T>
 bool weighted_graph_print(prb17::utils::parsers::json_parser jp) {
     logger.info("Building weighted graph");
-    weighted_graph<T> g{};
-    build_weighted_graph<T>(jp, &g);
+    graph<T> wg{};
+    build_weighted_graph<T>(jp, &wg);
 
-    logger.info("calling weighted graph's to_string: \n\n{}", g);
-    logger.info("calling weighted graph's to_adjacency_list: \n\n{}", g.to_adjacency_list());
+    logger.info("calling weighted graph's to_string: \n\n{}", wg);
+    logger.info("calling weighted graph's to_adjacency_list: \n\n{}", wg.to_adjacency_list());
 
     return true;
 }

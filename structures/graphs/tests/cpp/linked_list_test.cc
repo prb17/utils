@@ -15,7 +15,9 @@ void build_single_linked_list(prb17::utils::parsers::json_parser jp, single_link
     // Construct the nodes list
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
         prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
-            sll->add_node(tmp.as_string("id"), tmp.as_value<T>("value"));
+            vertex<T> *node = new vertex<T>(tmp.as_string("id"), tmp.as_value<T>("value"), 1);
+            node->add_edge(nullptr);
+            sll->add(node);
     }
 }
 
@@ -24,34 +26,12 @@ void build_double_linked_list(prb17::utils::parsers::json_parser jp, double_link
     // Construct the nodes list
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
         prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
-            dll->add_node(tmp.as_string("id"), tmp.as_value<T>("value"));
+            vertex<T> *node = new vertex<T>(tmp.as_string("id"), tmp.as_value<T>("value"), 2);
+            node->add_edge(nullptr);
+            node->add_edge(nullptr);
+            dll->add(node);
     }
 }
-
-// template<typename T>
-// void build_weighted_linked_list(prb17::utils::parsers::json_parser jp, weighted_graph<T> *g) {
-//     // Construct the nodes list
-//     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-//         prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
-//             weighted_vertex<T> *node = new weighted_vertex<T>(tmp.as_string("id"), 
-//                                             tmp.as_value<T>("value"));
-                                            
-//             g->add_vertex(node);
-//     }
-//     // Assign all the edges for each node
-//     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-//         weighted_vertex<T> *node = g->get_vertex(jp.get_json_value()["graph"]["nodes"][i]["id"].asString());
-
-//         std::string node_id = jp.get_json_value()["graph"]["nodes"][i]["next"].asString();
-//         if (!node_id.empty()) {
-//             weighted_vertex<T> *node_to_add = g->get_vertex(node_id);
-//             g->add_edge_to_vertex(node, node_to_add);
-//         }
-//     }
-
-//     vertex<T> *root = g->get_vertex(jp.get_json_value()["graph"]["root"].asString());
-//     g->set_root(root);
-// }
 
 template<typename T>
 bool single_linked_list_print(prb17::utils::parsers::json_parser jp) {

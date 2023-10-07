@@ -125,7 +125,7 @@ namespace prb17 {
             
             template<typename T>
             void weighted_vertex<T>::add_edge(weighted_vertex<T>* e) {
-                this->edges.add(e);
+                vertex<T>::add_edge(e);
             }
             
             template<typename T>

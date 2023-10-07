@@ -21,13 +21,11 @@ namespace prb17 {
                     graph();
                     ~graph();
                     void cleanup();
-
-                    bool add_vertex(std::string, T);
+                    
                     size_t get_num_vertices() const;
                     vertex<T>* get_vertex(std::string id) const;
-                    vertex<T>* get_vertex(size_t index) const;
 
-                    bool add_edge_to_vertex(vertex<T> *, vertex<T> *);
+                    bool add_vertex(vertex<T> *v);
                     
                     virtual std::string to_string() const;                    
                     std::string to_adjacency_list() const;
@@ -52,21 +50,12 @@ namespace prb17 {
             }
 
             template<typename T>
-            bool graph<T>::add_vertex(std::string id, T value) {
-                if (id.empty()) { return false; }
+            bool graph<T>::add_vertex(vertex<T> *vertex) {
+                if (vertex == nullptr) { return false; }
                 //todo: find if id is already present in vertex_list
                 
-                vertex<T> *v = new vertex<T>(id, value);
-                vertex_list.add(v);
+                vertex_list.add(vertex);
                 num_vertices++;
-                return true;
-            }
-
-            template<typename T>
-            bool graph<T>::add_edge_to_vertex(vertex<T> *v, vertex<T> *v2) {
-                if (v == nullptr) { return false; }
-                
-                v->add_edge(v2);
                 return true;
             }
 
@@ -76,14 +65,9 @@ namespace prb17 {
                 while(i < vertex_list.size() && id != vertex_list[i]->get_id()) {
                     i++;
                 }
-                return get_vertex(i);
+                return ( i < get_num_vertices() ) ? vertex_list[i] : nullptr;
             }
 
-            template<typename T>
-            vertex<T>* graph<T>::get_vertex(size_t idx) const {
-                return ( idx < get_num_vertices() ) ? vertex_list[idx] : nullptr;
-            }
-            
             template<typename T>
             std::string graph<T>::to_string() const {
                 std::stringstream stream;
@@ -123,9 +107,9 @@ namespace prb17 {
                 for(int i=0; i < vertex_list.size(); i++) {
                     stream << "Node: " << vertex_list[i]->get_id() << " | ";
                     for(int j=0; j < vertex_list[i]->get_edges().size(); j++) {
-                            vertex_list[i]->get_edges()[j] != nullptr ? 
-                                stream << vertex_list[i]->get_edges()[j]->get_id() << " " :
-                                stream << "'' "; 
+                        if (vertex_list[i]->get_edges()[j] != nullptr) {
+                            stream << vertex_list[i]->get_edges()[j]->get_id() << " "; 
+                        }                                
                     }
                     stream << std::endl;
                 }                
@@ -140,37 +124,6 @@ namespace prb17 {
             template<typename T>
             inline std::ostream& operator<<(std::ostream &stream, const graph<T>* graph) {
                 return stream << graph->to_string();
-            }
-
-            // Weigted graph 
-            template<typename T>
-            class weighted_graph : public graph<T> {
-                private:
-
-                public:
-                    weighted_graph();
-                    weighted_graph(weighted_vertex<T> *);
-                    ~weighted_graph();
-
-                    // bool add_vertex(std::string, T) override;
-                    weighted_vertex<T>* get_vertex(std::string id);
-
-            };
-
-            template<typename T>
-            weighted_graph<T>::weighted_graph() {}
-
-            template<typename T>
-            weighted_graph<T>::~weighted_graph() {}
-
-            // template<typename T>
-            // bool weighted_graph<T>::add_vertex(std::string id, T value) {
-            //     return graph<T>::add_vertex(id, value);
-            // }
-
-            template<typename T>
-            weighted_vertex<T>* weighted_graph<T>::get_vertex(std::string id) {
-                return (weighted_vertex<T>*)(graph<T>::get_vertex(id));
             }
         }
     }
