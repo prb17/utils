@@ -22,6 +22,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 find_package(JsonCpp 1.9.5 COMPONENTS jsoncpp)
 
 #TODO: figure out good options for include or not including certain utilities
+add_subdirectory(patterns)
 add_subdirectory(exceptions)
 add_subdirectory(time)
 add_subdirectory(structures)
@@ -79,7 +80,9 @@ if(BUILD_UTILS_TESTS)
                                                         ${LINKED_LISTS_LIBRARY_NAME}
                                                         ${VALIDATOR_LIBRARY_NAME} 
                                                         ${PARSERS_LIBRARY_NAME} 
-                                                        ${LOGGER_LIBRARY_NAME})
+                                                        ${LOGGER_LIBRARY_NAME}
+                                                        ${BUILDER_PATTERN_LIBRARY_NAME}
+                                                        ${GRAPH_BUILDER_LIBRARY_NAME})
 
     # Configure linked list tests
     message(DEBUG "configuring the linked list tests")
@@ -89,7 +92,8 @@ if(BUILD_UTILS_TESTS)
                                                             ${LINKED_LISTS_LIBRARY_NAME}
                                                             ${VALIDATOR_LIBRARY_NAME} 
                                                             ${PARSERS_LIBRARY_NAME} 
-                                                            ${LOGGER_LIBRARY_NAME})
+                                                            ${LOGGER_LIBRARY_NAME}
+                                                            ${BUILDER_PATTERN_LIBRARY_NAME})
 
     # Configure target installs
     message(DEBUG "configuring the tests install")

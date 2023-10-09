@@ -1,6 +1,9 @@
 # Utils 
 
 ## Algorithms (TBD)
+
+## Patterns
+`NOTE: all info on patterns was taken from the book 'Design Patterns Elements of Reusable Object-Oriented Software by Erich Gamma, Richard Helm, Ralph Johnson, John M. Vlisside (1994)'`
 ## Structures
 
 ### Arrays

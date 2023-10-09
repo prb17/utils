@@ -59,3 +59,21 @@ jobs:
         valgrind --leak-check=full --error-exitcode=1 ./queues_test ../config/queues/queue_test_*.json
         chmod -x queues_test
         cd -
+
+    - name: Graph Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x graphs_test      
+        valgrind --leak-check=full --error-exitcode=1 ./graphs_test ../config/graphs/graph_test_*.json
+        chmod -x graphs_test
+        cd -
+
+    - name: Lists Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x linked_list_test      
+        valgrind --leak-check=full --error-exitcode=1 ./linked_list_test ../config/graphs/linked_lists/linked_lists_test_*.json
+        chmod -x linked_list_test
+        cd -

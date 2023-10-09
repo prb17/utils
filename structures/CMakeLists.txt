@@ -35,6 +35,12 @@ target_link_libraries(${GRAPHS_LIBRARY_NAME} INTERFACE
                                             ${ARRAY_LIBRARY_NAME}
                                             ${QUEUES_LIBRARY_NAME}
                                             )
+# graph builder target definition                                        
+set(GRAPH_BUILDER_LIBRARY_NAME graph_builder)
+set(GRAPH_BUILDER_LIBRARY_NAME ${GRAPH_BUILDER_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${GRAPH_BUILDER_LIBRARY_NAME} INTERFACE)
+target_include_directories(${GRAPH_BUILDER_LIBRARY_NAME} INTERFACE graphs/src/cpp/builder/)
+# target_link_libraries(${GRAPH_BUILDER_LIBRARY_NAME} INTERFACE )
 
 #linked lists target definition
 set(LINKED_LISTS_LIBRARY_NAME lists)
@@ -59,6 +65,7 @@ file(GLOB ARRAY_HEADERS arrays/src/cpp/*.hh)
 file(GLOB STACKS_HEADERS stacks/src/cpp/*.hh)
 file(GLOB QUEUES_HEADERS queues/src/cpp/*.hh)
 file(GLOB GRAPHS_HEADERS graphs/src/cpp/*.hh)
+file(GLOB GRAPH_BUILDER_HEADERS graphs/builder/cpp/*.hh)
 file(GLOB LINKED_LISTS_HEADERS graphs/src/cpp/linked_lists/*.hh)
 file(GLOB TREES_HEADERS graphs/src/cpp/trees/*.hh)
 
@@ -66,6 +73,7 @@ install(FILES ${ARRAY_HEADERS}
                 ${STACKS_HEADERS}
                 ${QUEUES_HEADERS}
                 ${GRAPHS_HEADERS}
+                ${GRAPH_BUILDER_HEADERS}
                 ${LINKED_LISTS_HEADERS}
                 ${TREES_HEADERS}
                 DESTINATION

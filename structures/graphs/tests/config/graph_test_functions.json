@@ -34,21 +34,6 @@
                     ]
                   }
             }
-        ],
-        "singleLinkedListPrint": [
-            {
-                "graph": {
-                    "nodes": [
-                      {"id": "10", "value": 10, "edges": ["1"] },
-                      {"id": "1", "value": 1, "edges": ["100"] },
-                      {"id": "100", "value": 100, "edges": ["9"] },
-                      {"id": "9", "value": 9, "edges": ["10-2"] },
-                      {"id": "10-2", "value": 10, "edges": [] }
-                    ]
-                }
-            }
-        ],
-        "doubleLinkedListPrint": [{}],
-        "treePrint": [{}]
+        ]
     }
 }
