@@ -82,7 +82,9 @@ if(BUILD_UTILS_TESTS)
                                                         ${PARSERS_LIBRARY_NAME} 
                                                         ${LOGGER_LIBRARY_NAME}
                                                         ${BUILDER_PATTERN_LIBRARY_NAME}
-                                                        ${GRAPH_BUILDER_LIBRARY_NAME})
+                                                        ${STRUCTURES_BUILDER_LIBRARY_NAME}
+                                                        ${GRAPH_BUILDER_LIBRARY_NAME}
+                                                        )
 
     # Configure linked list tests
     message(DEBUG "configuring the linked list tests")

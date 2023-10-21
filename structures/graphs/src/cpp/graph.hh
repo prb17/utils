@@ -4,10 +4,16 @@
 #include "queue.hh"
 #include "array.hh"
 
+// #include "graph_concrete_builder.hh"
+#include "structures_builder.hh"
+#include "concrete_builder_role.hh"
+
+#include<utility>
+#include<map>
+
 namespace prb17 {
     namespace utils {
         namespace structures {
-
             template<typename T>
             class graph {
                 private:

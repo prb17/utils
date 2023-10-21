@@ -2,8 +2,8 @@
 #include "validator.hh"
 #include "logger.hh"
 
-#include "graph_concrete_builder.hh"
-#include "graph_director.hh"
+#include "structures_director.hh"
+#include "graph_builder.hh"
 
 #include <iostream>
 #include <memory>
@@ -15,8 +15,8 @@ static prb17::utils::logger logger{"graph_test"};
 // TODO: Could this be better than going through the node list from config file twice?
 template<typename T>
 graph<T>* build_graph(prb17::utils::parsers::json_parser jp) {
-    graph_director d{};
-    graph_concrete_builder<T> b{};
+    structures_director d{};
+    graph_builder<T> b{};
 
     // Construct the nodes list
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
@@ -25,30 +25,30 @@ graph<T>* build_graph(prb17::utils::parsers::json_parser jp) {
     }
 
     d.construct(&b);
-    return static_cast<graph<T>*>(b.get_product());
+    return b.graph_product();
 }
 
 template<typename T>
 graph<T>* build_weighted_graph(prb17::utils::parsers::json_parser jp) {
-    graph_director d{};
-    graph_concrete_builder<T> b{};
+    structures_director d{};
+    graph_builder<T> b{};
 
     // Construct the nodes list
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
         prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
-            vertex<T> *wvertex = new weighted_vertex<T>{tmp.as_string("id"), tmp.as_value<T>("value")};
-            b.add(wvertex);
+            // vertex<T> *wvertex = new weighted_vertex<T>{tmp.as_string("id"), tmp.as_value<T>("value")};
+            b.add(tmp.as_string("id"), tmp.as_value<T>("value"));
     }
 
-    // Assign all the edges for each node
-    for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        std::string id = jp.get_json_value()["graph"]["nodes"][i]["id"].asString();
+    // // Assign all the edges for each node
+    // for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
+    //     std::string id = jp.get_json_value()["graph"]["nodes"][i]["id"].asString();
 
-        for(Json::Value::ArrayIndex j=0; j < jp.get_json_value()["graph"]["nodes"][i]["edges"].size(); j++) {
-            std::string edge_id = jp.get_json_value()["graph"]["nodes"][i]["edges"][j]["id"].asString();
-            b.add_edge_to_vertex(id, edge_id);
-        }
-    }
+    //     for(Json::Value::ArrayIndex j=0; j < jp.get_json_value()["graph"]["nodes"][i]["edges"].size(); j++) {
+    //         std::string edge_id = jp.get_json_value()["graph"]["nodes"][i]["edges"][j]["id"].asString();
+    //         b.add_edge_to_vertex(id, edge_id);
+    //     }
+    // }
 
     d.construct(&b);
     return static_cast<graph<T>*>(b.get_product());
@@ -58,18 +58,8 @@ graph<T>* build_weighted_graph(prb17::utils::parsers::json_parser jp) {
 template<typename T>
 bool basic_graph_print(prb17::utils::parsers::json_parser jp) {
     logger.info("Building graph");
-    graph_director d{};
-    graph_concrete_builder<T> b{};
-
-    // Construct the nodes list
-    for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
-        b.add(tmp.as_string("id"), tmp.as_value<T>("value"), tmp.as_string_array("edges"));
-    }
-
-    d.construct(&b);
-    graph<T> *g = static_cast<graph<T>*>(b.get_product());
-    // graph<T> *g = build_graph<T>(jp);
+    
+    graph<T> *g = build_graph<T>(jp);
 
     logger.info("calling basic graph's to_string: \n\n{}", g);
     logger.info("calling graph's to_adjacency_list: \n\n{}", g->to_adjacency_list());
@@ -126,22 +116,21 @@ int main(int argc, char** argv) {
 
 
     
-    graph_director d{};
-    graph_concrete_builder<int> *b = new graph_concrete_builder<int>{};
-    b->add("100", 10)
-     ->add("101", 45)
-     ->add("102", 78)
-     ->add_edge_to_vertex("100", "101")
-     ->add_edge_to_vertex("102", "100")
-     ->add_edge_to_vertex("101", "100")
-     ->add_edge_to_vertex("101", "102")
-     ->build();
-    d.construct(b);
-    graph<int> *g = static_cast<graph<int>*>(b->get_product());
+    structures_director d{};
+    graph_builder<int> b = graph_builder<int>{};
+    b.add("100", 10)
+     .add("101", 45)
+     .add("102", 78)
+     .add_edge_to_vertex("100", "101")
+     .add_edge_to_vertex("102", "100")
+     .add_edge_to_vertex("101", "100")
+     .add_edge_to_vertex("101", "102")
+     .build();
+    d.construct(&b);
+    graph<int> *g = b.graph_product();
 
     logger.info("Printing to_string when manual building of graph in typical builder fashion: \n'\n{}'\n", g);
     logger.info("Printing adjacency list when manual building of graph in typical builder fashion: \n'\n{}'\n", g->to_adjacency_list());
     g->cleanup();
     delete g;
-    delete b;
 }
