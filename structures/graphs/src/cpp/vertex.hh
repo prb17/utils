@@ -27,12 +27,12 @@ namespace prb17 {
 
                     //accessors
                     T get();
-                    size_t num_edges();
-                    std::string get_id();
-                    array<vertex<T> *> get_edges();
+                    size_t num_edges() const;
+                    std::string get_id() const;
+                    array<vertex<T> *> get_edges() const;
                     vertex<T>* get_connected_vertex(size_t idx);
 
-                    std::string to_string() const;
+                    virtual std::string to_string() const;
             };
             
             template<typename T>
@@ -63,13 +63,13 @@ namespace prb17 {
 
             //accessors
             template<typename T>
-            std::string vertex<T>::get_id() { return id; }
+            std::string vertex<T>::get_id() const { return id; }
             
             template<typename T>
             T vertex<T>::get() { return this->value(); }
 
             template<typename T>
-            size_t vertex<T>::num_edges() { return edges.size(); }
+            size_t vertex<T>::num_edges() const { return edges.size(); }
 
             template<typename T>
             vertex<T>* vertex<T>::get_connected_vertex(size_t idx) {
@@ -77,20 +77,20 @@ namespace prb17 {
             }
 
             template<typename T>
-            array<vertex<T> *> vertex<T>::get_edges() {
+            array<vertex<T> *> vertex<T>::get_edges() const{
                 return edges;
             }
 
             template<typename T>
             std::string vertex<T>::to_string() const {
                 std::stringstream stream;
-                stream << "Id: " << id;
-                stream << "\nValue: " << this->value();
+                stream << "(Id: " << id;
+                stream << ", Value: " << this->value();
                 for (int i=0; i < edges.size(); i++) {
-                    stream << "\nEdges: " << edges[i]->get_id() << " ";
+                    stream << ", Edges: {id: " << edges[i]->get_id() << "} ";
                 }
                 
-                stream << "\n";
+                stream << ")";
                 return stream.str();
             }
 
@@ -108,29 +108,50 @@ namespace prb17 {
             template<typename T>
             class weighted_vertex : public vertex<T> {
                 private:
+                    array<int> weights;
 
                 public:
                     weighted_vertex() = delete;
                     weighted_vertex(std::string, T);
                     ~weighted_vertex();
 
-                    void add_edge(weighted_vertex<T>*);
+                    void add_edge(weighted_vertex<T>*, int weight);
+                    std::string to_string() const override;
             };
 
             template<typename T>
-            weighted_vertex<T>::weighted_vertex(std::string id, T value)  : vertex<T>(id, value) {}
+            weighted_vertex<T>::weighted_vertex(std::string id, T value) : weights{}, vertex<T>(id, value) {}
 
             template<typename T>
             weighted_vertex<T>::~weighted_vertex() {}
             
             template<typename T>
-            void weighted_vertex<T>::add_edge(weighted_vertex<T>* e) {
+            void weighted_vertex<T>::add_edge(weighted_vertex<T>* e, int weight) {
                 vertex<T>::add_edge(e);
+                weights.add(weight);
+            }
+
+            template<typename T>
+            std::string weighted_vertex<T>::to_string() const {
+                std::stringstream stream;
+                stream << "(Id: " << this->get_id();
+                stream << ", Value: " << this->value();
+                for (int i=0; i < this->get_edges().size(); i++) {
+                    stream << ", Edges: {id: " << this->get_edges()[i]->get_id() << ", weight: " <<  weights[i] << "} ";
+                }
+                
+                stream << ")";
+                return stream.str();
             }
             
             template<typename T>
             inline std::ostream& operator<<(std::ostream &stream, const weighted_vertex<T>& v) {
                 return stream << v.to_string();
+            }
+
+            template<typename T>
+            inline std::ostream& operator<<(std::ostream &stream, const weighted_vertex<T>* v) {
+                return stream << v->to_string();
             }
         }
     }

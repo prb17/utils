@@ -4,6 +4,7 @@
 
 #include "structures_director.hh"
 #include "graph_builder.hh"
+#include "weighted_graph_builder.hh"
 
 #include <iostream>
 #include <memory>
@@ -31,27 +32,24 @@ graph<T>* build_graph(prb17::utils::parsers::json_parser jp) {
 template<typename T>
 graph<T>* build_weighted_graph(prb17::utils::parsers::json_parser jp) {
     structures_director d{};
-    graph_builder<T> b{};
+    weighted_graph_builder<T> b{};
 
-    // Construct the nodes list
+    // Assign all the edges for each node
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
         prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
-            // vertex<T> *wvertex = new weighted_vertex<T>{tmp.as_string("id"), tmp.as_value<T>("value")};
-            b.add(tmp.as_string("id"), tmp.as_value<T>("value"));
+        prb17::utils::structures::array<std::string> tmp_edges{};
+        prb17::utils::structures::array<int> tmp_weights{};
+        for(Json::Value::ArrayIndex j=0; j < jp.get_json_value()["graph"]["nodes"][i]["edges"].size(); j++) {
+            std::string e = jp.get_json_value()["graph"]["nodes"][i]["edges"][j]["id"].asString();
+            int w = jp.get_json_value()["graph"]["nodes"][i]["edges"][j]["weight"].asInt();
+            tmp_edges.add(e);
+            tmp_weights.add(w);
+        }
+        b.add(tmp.as_string("id"), tmp.as_value<T>("value"), tmp_edges, tmp_weights);
     }
 
-    // // Assign all the edges for each node
-    // for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-    //     std::string id = jp.get_json_value()["graph"]["nodes"][i]["id"].asString();
-
-    //     for(Json::Value::ArrayIndex j=0; j < jp.get_json_value()["graph"]["nodes"][i]["edges"].size(); j++) {
-    //         std::string edge_id = jp.get_json_value()["graph"]["nodes"][i]["edges"][j]["id"].asString();
-    //         b.add_edge_to_vertex(id, edge_id);
-    //     }
-    // }
-
     d.construct(&b);
-    return static_cast<graph<T>*>(b.get_product());
+    return b.graph_product();
 }
 
 //
@@ -113,8 +111,6 @@ int main(int argc, char** argv) {
     logger.info("Starting validation tests of graph_tests");
     validator.validate();
     logger.info("Finished validation tests of graph_tests");
-
-
     
     structures_director d{};
     graph_builder<int> b = graph_builder<int>{};
@@ -124,8 +120,7 @@ int main(int argc, char** argv) {
      .add_edge_to_vertex("100", "101")
      .add_edge_to_vertex("102", "100")
      .add_edge_to_vertex("101", "100")
-     .add_edge_to_vertex("101", "102")
-     .build();
+     .add_edge_to_vertex("101", "102");
     d.construct(&b);
     graph<int> *g = b.graph_product();
 

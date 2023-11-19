@@ -4,7 +4,7 @@
 #include "structures_builder.hh"
 #include "concrete_builder_role.hh"
 
-#include<utility>
+#include <utility>
 
 namespace prb17 {
     namespace utils {
@@ -12,17 +12,16 @@ namespace prb17 {
             template<typename T>
             class graph_builder : public prb17::utils::patterns::creational::builder::concrete_builder_role, public structures_builder {
                 private:
+                    void build() override;
+                    virtual void build_vertices();
+                    virtual void connect_edges();
+
+                protected:
                     array<std::string> node_id_blueprint;
                     array<T> node_value_blueprint;
                     std::map<std::string, array<std::string>> node_edges_blueprint;
 
-                protected:
-
                 public:
-                    void build() override;
-                    void build_vertices();
-                    void connect_edges();
-
                     graph_builder<T>& add(std::string, T);
                     graph_builder<T>& add(std::string, T, array<std::string>);
                     graph_builder<T>& add_edge_to_vertex(std::string, std::string);
@@ -34,7 +33,7 @@ namespace prb17 {
             
             template<typename T>
             graph_builder<T>::graph_builder() : node_id_blueprint{}, node_value_blueprint{}, node_edges_blueprint{} {
-                this->product = new graph<T>{};
+                
             }
 
             template<typename T>
@@ -72,7 +71,7 @@ namespace prb17 {
                 //create the vertices of this graph
                 for(int i=0; i<node_id_blueprint.size(); i++) {
                     vertex<T> *v = new vertex{node_id_blueprint[i], node_value_blueprint[i]};
-                    graph_product()->add_vertex(v);
+                    graph_product()->add(v);
                 }
             }
 
@@ -80,9 +79,9 @@ namespace prb17 {
             void graph_builder<T>::connect_edges() {
                 //connect the edges of this graph
                 for(int i=0; i<node_id_blueprint.size(); i++) {
-                    vertex<T> *v = graph_product()->get_vertex(node_id_blueprint[i]);
+                    vertex<T> *v = graph_product()->get(node_id_blueprint[i]);
                     for(int j=0; j<node_edges_blueprint.at(v->get_id()).size(); j++) {
-                        vertex<T>* v2 = graph_product()->get_vertex(node_edges_blueprint.at(v->get_id())[j]);
+                        vertex<T>* v2 = graph_product()->get(node_edges_blueprint.at(v->get_id())[j]);
                         v->add_edge(v2);
                     }
                 }
@@ -90,8 +89,9 @@ namespace prb17 {
 
             template<typename T>
             void graph_builder<T>::build() {
-                build_vertices();
-                connect_edges();
+                this->product = new graph<T>{};
+                this->build_vertices();
+                this->connect_edges();
             }
         }
     }

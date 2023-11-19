@@ -4,7 +4,6 @@
 #include "queue.hh"
 #include "array.hh"
 
-// #include "graph_concrete_builder.hh"
 #include "structures_builder.hh"
 #include "concrete_builder_role.hh"
 
@@ -17,8 +16,8 @@ namespace prb17 {
             template<typename T>
             class graph {
                 private:
-                    size_t num_vertices;
-                    array<vertex<T>*> vertex_list;
+                    size_t count;
+                    array<vertex<T>*> vertices;
 
                     void to_string(std::stringstream&, vertex<T>*, queue<vertex<T>*>&) const;     
                 protected:
@@ -28,57 +27,57 @@ namespace prb17 {
                     ~graph();
                     void cleanup();
                     
-                    size_t get_num_vertices() const;
-                    vertex<T>* get_vertex(std::string id) const;
+                    size_t get_count() const;
+                    vertex<T>* get(std::string id) const;
 
-                    bool add_vertex(vertex<T> *v);
+                    bool add(vertex<T> *v);
                     
                     virtual std::string to_string() const;                    
                     std::string to_adjacency_list() const;
             };
 
             template<typename T>
-            graph<T>::graph() : num_vertices{0}, vertex_list{} {}
+            graph<T>::graph() : count{0}, vertices{} {}
 
             template<typename T>
             graph<T>::~graph() {}
 
             template<typename T>
             void graph<T>::cleanup() {
-                for (int i=0; i<vertex_list.size(); i++) {
-                    delete vertex_list[i];
+                for (int i=0; i<vertices.size(); i++) {
+                    delete vertices[i];
                 }
             }
 
             template<typename T>
-            size_t graph<T>::get_num_vertices() const {
-                return num_vertices;
+            size_t graph<T>::get_count() const {
+                return count;
             }
 
             template<typename T>
-            bool graph<T>::add_vertex(vertex<T> *vertex) {
+            bool graph<T>::add(vertex<T> *vertex) {
                 if (vertex == nullptr) { return false; }
-                //todo: find if id is already present in vertex_list
+                //todo: find if id is already present in vertices
                 
-                vertex_list.add(vertex);
-                num_vertices++;
+                vertices.add(vertex);
+                count++;
                 return true;
             }
 
             template<typename T>
-            vertex<T>* graph<T>::get_vertex(std::string id) const {
+            vertex<T>* graph<T>::get(std::string id) const {
                 size_t i=0;
-                while(i < vertex_list.size() && id != vertex_list[i]->get_id()) {
+                while(i < vertices.size() && id != vertices[i]->get_id()) {
                     i++;
                 }
-                return ( i < get_num_vertices() ) ? vertex_list[i] : nullptr;
+                return ( i < get_count() ) ? vertices[i] : nullptr;
             }
 
             template<typename T>
             std::string graph<T>::to_string() const {
                 std::stringstream stream;
                 queue<vertex<T>*> visited_nodes{};
-                to_string(stream, vertex_list[0], visited_nodes);
+                to_string(stream, vertices[0], visited_nodes);
                 return stream.str();
             }
 
@@ -88,12 +87,12 @@ namespace prb17 {
                     visited.enqueue(node);
 
                     // Print the current node
-                    prefix << "Node: " << node->get() << " | Neighbors: ";
+                    prefix << "Node: " << node << " | Neighbors: ";
 
                     // Print the neighbors of the current node
                     for (int j=0; j<node->num_edges(); j++) {
                         vertex<T>* neighbor = node->get_connected_vertex(j);
-                        prefix <<  neighbor->get() << " ";                         
+                        prefix <<  neighbor << " ";                         
                     }
                     prefix << std::endl;
 
@@ -110,11 +109,11 @@ namespace prb17 {
             template<typename T>
             std::string graph<T>::to_adjacency_list() const {
                 std::stringstream stream;
-                for(int i=0; i < vertex_list.size(); i++) {
-                    stream << "Node: " << vertex_list[i]->get_id() << " | ";
-                    for(int j=0; j < vertex_list[i]->get_edges().size(); j++) {
-                        if (vertex_list[i]->get_edges()[j] != nullptr) {
-                            stream << vertex_list[i]->get_edges()[j]->get_id() << " "; 
+                for(int i=0; i < vertices.size(); i++) {
+                    stream << "Node: " << vertices[i]->get_id() << " | ";
+                    for(int j=0; j < vertices[i]->get_edges().size(); j++) {
+                        if (vertices[i]->get_edges()[j] != nullptr) {
+                            stream << vertices[i]->get_edges()[j]->get_id() << " "; 
                         }                                
                     }
                     stream << std::endl;

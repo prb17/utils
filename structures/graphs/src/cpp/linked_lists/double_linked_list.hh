@@ -30,7 +30,7 @@ namespace prb17 {
 
             template<typename T>
             bool double_linked_list<T>::add(vertex<T> *node) {
-                if (node->num_edges() == 2 && graph<T>::add_vertex(node)) {
+                if (node->num_edges() == 2 && graph<T>::add(node)) {
                     if (this->head == nullptr) {
                         this->head = node;
                     }

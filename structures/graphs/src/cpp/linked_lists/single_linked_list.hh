@@ -10,7 +10,7 @@ namespace prb17 {
             template<typename T>
             class single_linked_list : public graph<T> {
                 private:
-                    size_t get_num_vertices() const = delete;
+                    size_t get_count() const = delete;
 
                 protected:
                     vertex<T> *head;
@@ -41,7 +41,7 @@ namespace prb17 {
 
             template<typename T>
             bool single_linked_list<T>::add(vertex<T> *node) {
-                if (node->num_edges() == 1 && graph<T>::add_vertex(node)) {
+                if (node->num_edges() == 1 && graph<T>::add(node)) {
                     if (head == nullptr) {
                         head = node;
                     }
