@@ -106,6 +106,7 @@ namespace prb17 {
 			{LOG_LEVELS::WARN, YEL + "WARN" + NC},
 			{LOG_LEVELS::ERROR, RED + "ERROR" + NC}
 		};
+
 		static std::map<std::string, LOG_LEVELS> level_map_str = {
 			{"trace", LOG_LEVELS::TRACE},
 			{"debug", LOG_LEVELS::DEBUG},
