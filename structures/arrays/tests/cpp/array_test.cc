@@ -18,7 +18,7 @@ bool testArraySubscriptOperator(prb17::utils::parsers::json_parser jp) {
 
     int index1 = jp.as_int("index1");
     int index2 = jp.as_int("index2");
-    logger.debug("evaluationg arr1 at index: '{}', agains arr2 at index: '{}'", index1, index2);
+    logger.debug("evaluating arr1 at index: '{}', against arr2 at index: '{}'", index1, index2);
     
     bool expected = jp.as_bool("expected");
     bool result = arr1[index1] == arr2[index2];

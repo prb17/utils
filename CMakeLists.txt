@@ -37,7 +37,6 @@ if(BUILD_UTILS_TESTS)
     # Configure library runtime path when installed
     list(APPEND CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${PARSERS_LIBRARY_NAME}/lib")
 
-    # Configure array tests
     message(DEBUG "configuring the array tests")
     set(ARRAY_TEST_NAME arrays_test)
     set(CONTAINER_TEST_NAME container_test)
@@ -54,7 +53,6 @@ if(BUILD_UTILS_TESTS)
                                                             ${VALIDATOR_LIBRARY_NAME} 
                                                             ${PARSERS_LIBRARY_NAME})
 
-    # Configure stack tests
     message(DEBUG "configuring the stack tests")
     set(STACKS_TEST_NAME stacks_test)
     add_executable(${STACKS_TEST_NAME} structures/stacks/tests/cpp/stack_test.cc)
@@ -63,7 +61,6 @@ if(BUILD_UTILS_TESTS)
                                                         ${PARSERS_LIBRARY_NAME} 
                                                         ${LOGGER_LIBRARY_NAME})
 
-    # Configur queues tests
     message(DEBUG "configuring the queues tests")
     set(QUEUES_TEST_NAME queues_test)
     add_executable(${QUEUES_TEST_NAME} structures/queues/tests/cpp/queue_test.cc)
@@ -72,7 +69,6 @@ if(BUILD_UTILS_TESTS)
                                                         ${PARSERS_LIBRARY_NAME} 
                                                         ${LOGGER_LIBRARY_NAME})
 
-    # Configure graphs tests
     message(DEBUG "configuring the graphs tests")
     set(GRAPHS_TEST_NAME graphs_test)
     add_executable(${GRAPHS_TEST_NAME} structures/graphs/tests/cpp/graph_test.cc)
@@ -86,7 +82,6 @@ if(BUILD_UTILS_TESTS)
                                                         ${GRAPH_BUILDER_LIBRARY_NAME}
                                                         )
 
-    # Configure linked list tests
     message(DEBUG "configuring the linked list tests")
     set(LINKED_LIST_TEST_NAME linked_list_test)
     add_executable(${LINKED_LIST_TEST_NAME} structures/graphs/tests/cpp/linked_list_test.cc)
@@ -96,8 +91,17 @@ if(BUILD_UTILS_TESTS)
                                                             ${PARSERS_LIBRARY_NAME} 
                                                             ${LOGGER_LIBRARY_NAME}
                                                             ${BUILDER_PATTERN_LIBRARY_NAME})
+    
+    message(DEBUG "configuring the tree tests")
+    set(TREE_TEST_NAME tree_test)
+    add_executable(${TREE_TEST_NAME} structures/graphs/tests/cpp/tree_test.cc)
+    target_link_libraries(${TREE_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
+                                                            ${TREES_LIBRARY_NAME}
+                                                            ${VALIDATOR_LIBRARY_NAME} 
+                                                            ${PARSERS_LIBRARY_NAME} 
+                                                            ${LOGGER_LIBRARY_NAME}
+                                                            ${BUILDER_PATTERN_LIBRARY_NAME})
 
-    # Configure target installs
     message(DEBUG "configuring the tests install")
     install(TARGETS ${ARRAY_TEST_NAME} 
                     ${CONTAINER_TEST_NAME} 
@@ -105,6 +109,7 @@ if(BUILD_UTILS_TESTS)
                     ${QUEUES_TEST_NAME} 
                     ${GRAPHS_TEST_NAME}
                     ${LINKED_LIST_TEST_NAME}
+                    ${TREE_TEST_NAME}
                     DESTINATION
                     structures/bin
                     )

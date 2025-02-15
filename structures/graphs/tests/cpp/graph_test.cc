@@ -4,7 +4,6 @@
 
 #include "structures_director.hh"
 #include "graph_builder.hh"
-#include "weighted_graph_builder.hh"
 
 #include <iostream>
 #include <memory>
@@ -32,7 +31,7 @@ graph<T>* build_graph(prb17::utils::parsers::json_parser jp) {
 template<typename T>
 graph<T>* build_weighted_graph(prb17::utils::parsers::json_parser jp) {
     structures_director d{};
-    weighted_graph_builder<T> b{};
+    graph_builder<T> b{};
 
     // Assign all the edges for each node
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
