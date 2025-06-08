@@ -86,21 +86,25 @@ if(BUILD_UTILS_TESTS)
     set(LINKED_LIST_TEST_NAME linked_list_test)
     add_executable(${LINKED_LIST_TEST_NAME} structures/graphs/tests/cpp/linked_list_test.cc)
     target_link_libraries(${LINKED_LIST_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
-                                                            ${LINKED_LISTS_LIBRARY_NAME}
                                                             ${VALIDATOR_LIBRARY_NAME} 
                                                             ${PARSERS_LIBRARY_NAME} 
                                                             ${LOGGER_LIBRARY_NAME}
-                                                            ${BUILDER_PATTERN_LIBRARY_NAME})
+                                                            ${BUILDER_PATTERN_LIBRARY_NAME}
+                                                            ${STRUCTURES_BUILDER_LIBRARY_NAME}
+                                                            ${GRAPH_BUILDER_LIBRARY_NAME}
+                                                            )
     
     message(DEBUG "configuring the tree tests")
     set(TREE_TEST_NAME tree_test)
     add_executable(${TREE_TEST_NAME} structures/graphs/tests/cpp/tree_test.cc)
     target_link_libraries(${TREE_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
-                                                            ${TREES_LIBRARY_NAME}
                                                             ${VALIDATOR_LIBRARY_NAME} 
                                                             ${PARSERS_LIBRARY_NAME} 
                                                             ${LOGGER_LIBRARY_NAME}
-                                                            ${BUILDER_PATTERN_LIBRARY_NAME})
+                                                            ${BUILDER_PATTERN_LIBRARY_NAME}
+                                                            ${STRUCTURES_BUILDER_LIBRARY_NAME}
+                                                            ${GRAPH_BUILDER_LIBRARY_NAME}
+                                                            )
 
     message(DEBUG "configuring the tests install")
     install(TARGETS ${ARRAY_TEST_NAME} 

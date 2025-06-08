@@ -52,15 +52,6 @@ target_link_libraries(${STRUCTURES_BUILDER_LIBRARY_NAME} INTERFACE
                                             ${GRAPHS_LIBRARY_NAME}
                                             )
 
-#linked lists target definition
-set(LINKED_LISTS_LIBRARY_NAME lists)
-set(LINKED_LISTS_LIBRARY_NAME ${LINKED_LISTS_LIBRARY_NAME} PARENT_SCOPE)
-add_library(${LINKED_LISTS_LIBRARY_NAME} INTERFACE)
-target_include_directories(${LINKED_LISTS_LIBRARY_NAME} INTERFACE graphs/src/cpp/linked_lists)
-target_link_libraries(${LINKED_LISTS_LIBRARY_NAME} INTERFACE 
-                                            ${GRAPHS_LIBRARY_NAME}
-                                            )
-
 file(GLOB STRUCTURES_BUILDER_HEADERS buider/src/cpp/*.hh)
 file(GLOB ARRAY_HEADERS arrays/src/cpp/*.hh)
 file(GLOB STACKS_HEADERS stacks/src/cpp/*.hh)
@@ -76,8 +67,6 @@ install(FILES ${STRUCTURES_BUILDER_HEADERS}
                 ${QUEUES_HEADERS}
                 ${GRAPHS_HEADERS}
                 ${GRAPH_BUILDER_HEADERS}
-                ${LINKED_LISTS_HEADERS}
-                ${TREES_HEADERS}
                 DESTINATION
                 structures/include)
 

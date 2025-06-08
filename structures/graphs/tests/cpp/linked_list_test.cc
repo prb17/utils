@@ -1,7 +1,7 @@
-#include "single_linked_list.hh"
-#include "double_linked_list.hh"
 #include "validator.hh"
 #include "logger.hh"
+#include "structures_director.hh"
+#include "graph_builder.hh"
 
 #include <iostream>
 #include <memory>
@@ -11,51 +11,41 @@ using namespace prb17::utils::structures;
 static prb17::utils::logger logger{"linked_list_test"};
 
 template<typename T>
-void build_single_linked_list(prb17::utils::parsers::json_parser jp, single_linked_list<T> *sll) {
-    // Construct the nodes list
-    for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
-            vertex<T> *node = new vertex<T>(tmp.as_string("id"), tmp.as_value<T>("value"), 1);
-            node->add_edge(nullptr);
-            sll->add(node);
-    }
-}
+graph<T>* build_graph(prb17::utils::parsers::json_parser jp) {
+    structures_director d{};
+    graph_builder<T> b{};
 
-template<typename T>
-void build_double_linked_list(prb17::utils::parsers::json_parser jp, double_linked_list<T> *dll) {
     // Construct the nodes list
     for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
         prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
-            vertex<T> *node = new vertex<T>(tmp.as_string("id"), tmp.as_value<T>("value"), 2);
-            node->add_edge(nullptr);
-            node->add_edge(nullptr);
-            dll->add(node);
+        b.add(tmp.as_string("id"), tmp.as_value<T>("value"), tmp.as_string_array("edges"));
     }
+
+    d.construct(&b);
+    return b.graph_product();
 }
 
 template<typename T>
 bool single_linked_list_print(prb17::utils::parsers::json_parser jp) {
     logger.info("Building single linked list");
-    single_linked_list<T> sll{};
-    build_single_linked_list<T>(jp, &sll);
+    graph<T>* sll = build_graph<T>(jp);
     logger.info("Created single linked list");
     logger.info("Calling single linked list to_string: \n\n{}\n", sll);
-    logger.info("Calling single linked list adjacency_list \n\n{}", sll.to_adjacency_list());
-    sll.cleanup();
-
+    logger.info("Calling single linked list adjacency_list \n\n{}", sll->to_adjacency_list());
+    sll->cleanup();
+    delete sll;
     return true;
 }
 
 template<typename T>
 bool double_linked_list_print(prb17::utils::parsers::json_parser jp) {
     logger.info("Building double linked list");
-    double_linked_list<T> dll{};
-    build_double_linked_list(jp, &dll);
+    graph<T>* dll = build_graph<T>(jp);
     logger.info("Created double linked list");
-    logger.info("Calling double linked list to_string: \n\n{}\n", dll);
-    logger.info("Calling double linked list adjacency_list \n\n{}", dll.to_adjacency_list());
-    dll.cleanup();
-
+    logger.info("Calling double linked list to_string: \n\n{}\n", dll->to_string());
+    logger.info("Calling double linked list adjacency_list \n\n{}", dll->to_adjacency_list());
+    dll->cleanup();
+    delete dll;
     return true;
 }
 

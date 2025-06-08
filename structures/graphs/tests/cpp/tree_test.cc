@@ -1,10 +1,8 @@
-#include "tree.hh"
 #include "validator.hh"
 #include "logger.hh"
 
- #include "structures_director.hh"
- #include "graph_builder.hh"
-// #include "weighted_graph_builder.hh"
+#include "structures_director.hh"
+#include "graph_builder.hh"
 
 #include <iostream>
 #include <memory>
