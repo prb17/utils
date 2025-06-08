@@ -61,16 +61,6 @@ target_link_libraries(${LINKED_LISTS_LIBRARY_NAME} INTERFACE
                                             ${GRAPHS_LIBRARY_NAME}
                                             )
 
-#trees target definition
-set(TREES_LIBRARY_NAME trees)
-set(TREES_LIBRARY_NAME ${TREES_LIBRARY_NAME} PARENT_SCOPE)
-add_library(${TREES_LIBRARY_NAME} INTERFACE)
-target_include_directories(${TREES_LIBRARY_NAME} INTERFACE graphs/src/cpp/trees)
-target_link_libraries(${TREES_LIBRARY_NAME} INTERFACE 
-                                            ${GRAPHS_LIBRARY_NAME}
-                                            )
-
-
 file(GLOB STRUCTURES_BUILDER_HEADERS buider/src/cpp/*.hh)
 file(GLOB ARRAY_HEADERS arrays/src/cpp/*.hh)
 file(GLOB STACKS_HEADERS stacks/src/cpp/*.hh)

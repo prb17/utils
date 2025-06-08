@@ -25,15 +25,15 @@ namespace prb17 {
                 public:
                     graph();
                     ~graph();
-                    void cleanup();
+                    virtual void cleanup();
                     
                     size_t get_count() const;
-                    vertex<T>* get(std::string id) const;
+                    virtual vertex<T>* get(std::string id) const;
 
-                    bool add(vertex<T> *v);
+                    virtual bool add(vertex<T> *v);
                     
                     virtual std::string to_string() const;                    
-                    std::string to_adjacency_list() const;
+                    virtual std::string to_adjacency_list() const;
             };
 
             template<typename T>

@@ -2,8 +2,8 @@
 #include "validator.hh"
 #include "logger.hh"
 
-// #include "structures_director.hh"
-// #include "graph_builder.hh"
+ #include "structures_director.hh"
+ #include "graph_builder.hh"
 // #include "weighted_graph_builder.hh"
 
 #include <iostream>
@@ -12,10 +12,29 @@
 
 using namespace prb17::utils::structures;
 static prb17::utils::logger logger{"tree_test"};
-//Map that relates the json file test config file to each test function defined in this file
+
+template<typename T>
+graph<T>* build_graph(prb17::utils::parsers::json_parser jp) {
+    structures_director d{};
+    graph_builder<T> b{};
+
+    // Construct the nodes list
+    for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
+        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
+        b.add(tmp.as_string("id"), tmp.as_value<T>("value"), tmp.as_string_array("edges"));
+    }
+
+    d.construct(&b);
+    return b.graph_product();
+}
+
 template<typename T>
 bool basicTreePrint(prb17::utils::parsers::json_parser jp) {
-    tree<T> t = tree<T>{2};
+    graph<T> *tree = build_graph<T>(jp);
+    logger.info("calling tree's to_string: \n\n{}", tree);
+
+    tree->cleanup();
+    delete tree;
     return true;
 }
 
