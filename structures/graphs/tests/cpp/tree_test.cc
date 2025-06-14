@@ -1,8 +1,7 @@
 #include "validator.hh"
 #include "logger.hh"
-
-#include "structures_director.hh"
-#include "graph_builder.hh"
+#include "graph.hh"
+#include "graph_test_helper.hh"
 
 #include <iostream>
 #include <memory>
@@ -12,24 +11,10 @@ using namespace prb17::utils::structures;
 static prb17::utils::logger logger{"tree_test"};
 
 template<typename T>
-graph<T>* build_graph(prb17::utils::parsers::json_parser jp) {
-    structures_director d{};
-    graph_builder<T> b{};
-
-    // Construct the nodes list
-    for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["graph"]["nodes"].size(); i++) {
-        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["graph"]["nodes"][i]};
-        b.add(tmp.as_string("id"), tmp.as_value<T>("value"), tmp.as_string_array("edges"));
-    }
-
-    d.construct(&b);
-    return b.graph_product();
-}
-
-template<typename T>
 bool basicTreePrint(prb17::utils::parsers::json_parser jp) {
-    graph<T> *tree = build_graph<T>(jp);
+    graph<T> *tree = build_graph_from_config<T>(jp);
     logger.info("calling tree's to_string: \n\n{}", tree);
+    logger.info("calling tree's to_adjacency_list: \n\n{}", tree->to_adjacency_list());
 
     tree->cleanup();
     delete tree;

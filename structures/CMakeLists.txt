@@ -31,6 +31,15 @@ add_library(${QUEUES_LIBRARY_NAME} INTERFACE)
 target_include_directories(${QUEUES_LIBRARY_NAME} INTERFACE queues/src/cpp/)
 target_link_libraries(${QUEUES_LIBRARY_NAME} INTERFACE ${STACKS_LIBRARY_NAME})
 
+
+#maps target definition
+set(MAPS_LIBRARY_NAME maps)
+set(MAPS_LIBRARY_NAME ${MAPS_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${MAPS_LIBRARY_NAME} INTERFACE)
+target_include_directories(${MAPS_LIBRARY_NAME} INTERFACE maps/src/cpp/)
+target_link_libraries(${MAPS_LIBRARY_NAME} INTERFACE ${ARRAY_LIBRARY_NAME})
+
+
 #graph target definition
 set(GRAPHS_LIBRARY_NAME graphs)
 set(GRAPHS_LIBRARY_NAME ${GRAPHS_LIBRARY_NAME} PARENT_SCOPE)
@@ -56,6 +65,7 @@ file(GLOB STRUCTURES_BUILDER_HEADERS buider/src/cpp/*.hh)
 file(GLOB ARRAY_HEADERS arrays/src/cpp/*.hh)
 file(GLOB STACKS_HEADERS stacks/src/cpp/*.hh)
 file(GLOB QUEUES_HEADERS queues/src/cpp/*.hh)
+file(GLOB MAPS_HEADERS maps/src/cpp/*.hh)
 file(GLOB GRAPHS_HEADERS graphs/src/cpp/*.hh)
 file(GLOB GRAPH_BUILDER_HEADERS graphs/builder/cpp/*.hh)
 file(GLOB LINKED_LISTS_HEADERS graphs/src/cpp/linked_lists/*.hh)
@@ -65,6 +75,7 @@ install(FILES ${STRUCTURES_BUILDER_HEADERS}
                 ${ARRAY_HEADERS}
                 ${STACKS_HEADERS}
                 ${QUEUES_HEADERS}
+                ${MAPS_HEADERS}
                 ${GRAPHS_HEADERS}
                 ${GRAPH_BUILDER_HEADERS}
                 DESTINATION
@@ -81,6 +92,9 @@ install(FILES ${STACK_CONFIGS} DESTINATION structures/config/stacks)
 
 file(GLOB QUEUE_CONFIGS queues/tests/config/*.json)
 install(FILES ${QUEUE_CONFIGS} DESTINATION structures/config/queues)
+
+file(GLOB MAP_CONFIGS maps/tests/config/*.json)
+install(FILES ${MAP_CONFIGS} DESTINATION structures/config/maps)
 
 file(GLOB GRAPH_CONFIGS graphs/tests/config/*.json)
 install(FILES ${GRAPH_CONFIGS} DESTINATION structures/config/graphs)
