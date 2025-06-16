@@ -45,8 +45,8 @@ namespace prb17 {
                     virtual std::string to_string() const;
 
                     //overloaded operators
-                    array& operator=(array &);
-                    array operator=(array);
+                    array& operator=(array &&); //move assignment operator
+                    array& operator=(const array &); //copy assignment operator
                     bool operator==(const array&) const;
                     bool operator!=(const array&) const;
                     T operator[](size_t);
@@ -306,10 +306,30 @@ namespace prb17 {
             inline std::ostream& operator<<(std::ostream &stream, const array<T>& arr) {
                 return stream << arr.to_string();
             }
-            
-            //operator =
+
+            //operator = move assignment
             template<typename T>
-            array<T>& array<T>::operator=(array &a) {
+            array<T>& array<T>::operator=(array &&a) {
+                if (&a != this) {
+                    // 1. Clean up current resources
+                    delete[] data;
+
+                    // 2. "Steal" resources from 'other'
+                    data = a.data;
+                    sz = a.sz;
+                    cap = a.cap;
+
+                    // 3. Leave 'other' in a valid, empty state
+                    a.data = nullptr;
+                    a.sz = 0;
+                    a.cap = 0;
+                }
+                return *this;
+            }
+            
+            //operator = copy assignment
+            template<typename T>
+            array<T>& array<T>::operator=(const array &a) {
                 if (&a != this) {
                     if (data) {
                         for (int i=0; i < capacity(); i++) {
@@ -319,32 +339,12 @@ namespace prb17 {
                     }
                     cap = a.cap;
                     sz = a.sz;
-                    data = (container<T> **)malloc(sizeof(container<T>*) * cap);                    
+                    data = (container<T> *)malloc(sizeof(container<T>*) * cap);                    
                     memset(data, 0, sizeof(container<T>*) * cap);
                     
                     for(int i=0; i<size(); i++) {
                         data[i] = a.data[i];
                     }
-                }
-                return *this;
-            }
-
-            //operator =
-            template<typename T>
-            array<T> array<T>::operator=(array a) {
-                if (data) {
-                    for (int i=0; i < capacity(); i++) {
-                        data[i].~container<T>();
-                    }
-                    free(data);
-                }
-                cap = a.cap;
-                sz = a.sz;
-                data = (container<T> *)malloc(sizeof(container<T>*) * cap);                    
-                memset(data, 0, sizeof(container<T>*) * cap);
-                
-                for(int i=0; i<size(); i++) {
-                    data[i] = a.data[i];
                 }
                 return *this;
             }

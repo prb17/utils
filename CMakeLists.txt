@@ -74,6 +74,15 @@ if(BUILD_UTILS_TESTS)
                                                         ${LOGGER_LIBRARY_NAME}
                                                         )
 
+    message(DEBUG "configuring the sets tests")
+    set(SETS_TEST_NAME sets_test)
+    add_executable(${SETS_TEST_NAME} structures/sets/tests/cpp/sets_test.cc)
+    target_link_libraries(${SETS_TEST_NAME} PRIVATE ${SETS_LIBRARY_NAME} 
+                                                        ${VALIDATOR_LIBRARY_NAME} 
+                                                        ${PARSERS_LIBRARY_NAME} 
+                                                        ${LOGGER_LIBRARY_NAME}
+                                                        )
+
     message(DEBUG "configuring the maps tests")
     set(MAPS_TEST_NAME maps_test)
     add_executable(${MAPS_TEST_NAME} structures/maps/tests/cpp/maps_test.cc)
@@ -142,6 +151,7 @@ if(BUILD_UTILS_TESTS)
                     ${CONTAINER_TEST_NAME} 
                     ${STACKS_TEST_NAME} 
                     ${QUEUES_TEST_NAME} 
+                    ${SETS_TEST_NAME} 
                     ${MAPS_TEST_NAME} 
                     ${GRAPHS_TEST_NAME}
                     ${LINKED_LIST_TEST_NAME}

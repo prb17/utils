@@ -1,38 +1,22 @@
 {
     "MetaData": 
     { 
-        "test_name" : "Graph Functions Test",
+        "test_name" : "Map Functions Test",
         "test_type" : "unit"
     },
     "Tests" : 
     {
-        "basicGraphPrint": [
+        "basicMapPrint": [
             {
-                "graph": {
-                    "nodes": [
-                      {"id": "10", "value": 10, "edges": ["10-2", "1"] },
-                      {"id": "1", "value": 1, "edges": ["100"] },
-                      {"id": "100", "value": 100, "edges": ["1"] },
-                      {"id": "9", "value": 9, "edges": ["10", "10-2"] },
-                      {"id": "10-2", "value": 10, "edges": [] }
+                "map": {
+                    "pairs": [
+                      {"key": "10", "value": 10 },
+                      {"key": "1", "value": 1 },
+                      {"key": "100", "value": 100 },
+                      {"key": "9", "value": 9 },
+                      {"key": "10-2", "value": 10 }
                     ]
                 }
-            }
-        ],
-        "weightedGraphPrint": [
-            {
-                "graph": {
-                    "nodes": [
-                      {"id": "10", "value": 10, "edges": [
-                            {"id": "10-2", "weight": 3}, 
-                            {"id": "1", "weight": 1}
-                        ] },
-                      {"id": "1", "value": 1, "edges": [{"id": "100", "weight": 10}] },
-                      {"id": "100", "value": 100, "edges": [{"id": "1", "weight": 10}] },
-                      {"id": "9", "value": 9, "edges": [{"id": "10", "weight": 2}, {"id": "10-2", "weight": 4}] },
-                      {"id": "10-2", "value": 10, "edges": [] }
-                    ]
-                  }
             }
         ]
     }

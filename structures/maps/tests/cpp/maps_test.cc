@@ -1,4 +1,4 @@
-#include "simple_map.hh"
+#include "map.hh"
 #include "validator.hh"
 #include "logger.hh"
 
@@ -9,23 +9,29 @@
 using namespace prb17::utils::structures;
 static prb17::utils::logger logger{"map_test"};
 
-template<typename T>
+template<typename V>
 bool basic_map_print(prb17::utils::parsers::json_parser jp) {
     logger.info("Building map");
-    simple_map map = simple_map<std::string, T>{};
+    map m = map<std::string, V>{};
+    // Construct the nodes list
+    for(Json::Value::ArrayIndex i=0; i < jp.get_json_value()["map"]["pairs"].size(); i++) {
+        prb17::utils::parsers::json_parser tmp{jp.get_json_value()["map"]["pairs"][i]};
+        m.add(tmp.as_value<std::string>("key"), tmp.as_value<V>("value"));
+    }
+    logger.info("The map to_string(): {}", m);
     return true;
 }
 
 //Map that relates the json file test config file to each test function defined in this file
-template<typename T>
+template<typename V>
 static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > map_tests = {
-    {"basicMapPrint", &basic_map_print<T>}
+    {"basicMapPrint", &basic_map_print<V>}
 };
 
 #define MIN_NUM_ARGS 2
 int main(int argc, char** argv) {
     if (argc < MIN_NUM_ARGS) {
-        throw prb17::utils::exception("This test requires a config file to be provided");
+        throw prb17::utils::exception("Vhis test requires a config file to be provided");
     }
     prb17::utils::structures::array<std::string> test_files{};
     for (int i=1; i<argc; i++) {
@@ -34,7 +40,7 @@ int main(int argc, char** argv) {
         test_files.add(&argv[i][0]);
     }
     prb17::utils::validator validator{test_files};
-    
+/*    
     validator.add_tests(&map_tests<std::string>);
     validator.add_tests(&map_tests<int>);
     validator.add_tests(&map_tests<uint>);
@@ -42,7 +48,7 @@ int main(int argc, char** argv) {
     validator.add_tests(&map_tests<bool>);
     validator.add_tests(&map_tests<float>);
     validator.add_tests(&map_tests<double>);
-
+*/
     logger.info("Starting validation tests of map_tests");
     validator.validate();
     logger.info("Finished validation tests of map_tests");

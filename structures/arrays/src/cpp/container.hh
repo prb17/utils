@@ -70,9 +70,9 @@ namespace prb17 {
             }
 
             /**
-             * @brief return a string representation of the array
+             * @brief return a string representation of the value in the container 
              * 
-             * @return std::string - string representation of array
+             * @return std::string - string representation of the value in the container 
              */
             template<typename T>
             std::string container<T>::to_string() const {
