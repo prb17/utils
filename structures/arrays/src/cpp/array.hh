@@ -313,7 +313,10 @@ namespace prb17 {
                 if (&a != this) {
                     // 1. Clean up current resources
                     if (data) {
-                        delete[] data;
+                        for (int i=0; i < capacity(); i++) {
+                            data[i].~container<T>();
+                        }
+                        free(data);
                     }
 
                     // 2. "Steal" resources from 'other'
