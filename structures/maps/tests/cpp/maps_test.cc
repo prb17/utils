@@ -31,7 +31,7 @@ static std::map<std::string, std::function<bool(prb17::utils::parsers::json_pars
 #define MIN_NUM_ARGS 2
 int main(int argc, char** argv) {
     if (argc < MIN_NUM_ARGS) {
-        throw prb17::utils::exception("Vhis test requires a config file to be provided");
+        throw prb17::utils::exception("This test requires a config file to be provided");
     }
     prb17::utils::structures::array<std::string> test_files{};
     for (int i=1; i<argc; i++) {

@@ -312,7 +312,9 @@ namespace prb17 {
             array<T>& array<T>::operator=(array &&a) {
                 if (&a != this) {
                     // 1. Clean up current resources
-                    delete[] data;
+                    if (data) {
+                        delete[] data;
+                    }
 
                     // 2. "Steal" resources from 'other'
                     data = a.data;
