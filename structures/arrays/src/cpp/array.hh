@@ -38,7 +38,8 @@ namespace prb17 {
                     //accessors
                     bool empty() const;
                     virtual int find(T) const;
-                    virtual T get(size_t) const;
+                    virtual T& get(size_t);
+                    virtual const T& get(size_t) const;
                     virtual size_t size() const;
                     virtual size_t capacity() const;
                     virtual bool valid(size_t) const;
@@ -49,8 +50,8 @@ namespace prb17 {
                     array& operator=(const array &); //copy assignment operator
                     bool operator==(const array&) const;
                     bool operator!=(const array&) const;
-                    T operator[](size_t);
-                    const T operator[](size_t) const;
+                    T& operator[](size_t);
+                    const T& operator[](size_t) const;
             };
 
             //constructors
@@ -61,6 +62,7 @@ namespace prb17 {
             template<typename T>
             array<T>::array() : array<T>(0) {}
 
+            //TODO: I think the memset might screw things up when I have nested arrays, i.e. array< array<T> >
             /**
              * @brief Construct a new array object starting with certain size and elements
              * 
@@ -248,7 +250,7 @@ namespace prb17 {
                 }
                 return index == size() ? -1 : index;
             }
-            
+             
             /**
              * @brief Get the value at the provided index
              * @throw std::out_of_range exception
@@ -257,7 +259,24 @@ namespace prb17 {
              * @return T - the object at the index
              */
             template<typename T>
-            T array<T>::get(size_t idx) const {
+            T& array<T>::get(size_t idx) {
+                if (!valid(idx)) {
+                    throw utils::exception("Index out of range");
+                }
+
+                return data[idx].value();
+            }
+
+
+            /**
+             * @brief Get the value at the provided index
+             * @throw std::out_of_range exception
+             * 
+             * @param idx - index to get value at
+             * @return T - the object at the index
+             */
+            template<typename T>
+            const T& array<T>::get(size_t idx) const {
                 if (!valid(idx)) {
                     throw utils::exception("Index out of range");
                 }
@@ -346,7 +365,6 @@ namespace prb17 {
                     sz = a.sz;
                     data = (container<T> *)malloc(sizeof(container<T>*) * cap);                    
                     memset(data, 0, sizeof(container<T>*) * cap);
-                    
                     for(int i=0; i<size(); i++) {
                         data[i] = a.data[i];
                     }
@@ -356,11 +374,11 @@ namespace prb17 {
 
             //operator []
             template<typename T>
-            T array<T>::operator[] (size_t idx) {
+            T& array<T>::operator[] (size_t idx) {
                 return get(idx);
             }
             template<typename T>
-            const T array<T>::operator[] (size_t idx) const {
+            const T& array<T>::operator[] (size_t idx) const {
                 return get(idx); 
             }
 
