@@ -22,9 +22,15 @@ bool basicTreePrint(prb17::utils::parsers::json_parser jp) {
 }
 
 template<typename T>
-static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > graph_tests = {
-    {"basicTreePrint", &basicTreePrint<T>}
-};
+static prb17::utils::structures::array<prb17::utils::test> build_tests() {
+    prb17::utils::structures::array<prb17::utils::test> tests;
+
+    tests.add(prb17::utils::test{"basicTreePrint", &basicTreePrint<T>});
+
+    return tests;
+}
+template<typename T>
+static prb17::utils::structures::array<prb17::utils::test> graph_tests = build_tests<T>();
 
 #define MIN_NUM_ARGS 2
 int main(int argc, char** argv) {
@@ -39,13 +45,13 @@ int main(int argc, char** argv) {
     }
     prb17::utils::validator validator{test_files};
     
-    validator.add_tests(&graph_tests<std::string>);
-    validator.add_tests(&graph_tests<int>);
-    validator.add_tests(&graph_tests<uint>);
-    validator.add_tests(&graph_tests<char>);
-    validator.add_tests(&graph_tests<bool>);
-    validator.add_tests(&graph_tests<float>);
-    validator.add_tests(&graph_tests<double>);
+    validator.add_tests(graph_tests<std::string>);
+    validator.add_tests(graph_tests<int>);
+    validator.add_tests(graph_tests<uint>);
+    validator.add_tests(graph_tests<char>);
+    validator.add_tests(graph_tests<bool>);
+    validator.add_tests(graph_tests<float>);
+    validator.add_tests(graph_tests<double>);
 
     logger.info("Starting validation tests of tree_tests");
     validator.validate();

@@ -26,19 +26,19 @@ namespace prb17 {
                     container& operator=(const container &);
                     container& operator=(T);
                     
-                    bool operator==(const container<T>&);
-                    bool operator==(T);
-                    bool operator!=(const container<T>&);
-                    bool operator!=(T);
+                    bool operator==(const container<T>&) const;
+                    bool operator==(T) const;
+                    bool operator!=(const container<T>&) const;
+                    bool operator!=(T) const;
 
-                    bool operator<(const container<T>&);
-                    bool operator<(T);
-                    bool operator>(const container<T>&);
-                    bool operator>(T);
-                    bool operator<=(const container<T>&);
-                    bool operator<=(T);
-                    bool operator>=(const container<T>&);
-                    bool operator>=(T);
+                    bool operator<(const container<T>&) const;
+                    bool operator<(T) const;
+                    bool operator>(const container<T>&) const;
+                    bool operator>(T) const;
+                    bool operator<=(const container<T>&) const;
+                    bool operator<=(T) const;
+                    bool operator>=(const container<T>&) const;
+                    bool operator>=(T) const;
                     
             };
 
@@ -114,61 +114,61 @@ namespace prb17 {
 
             //operator ==
             template<typename T>
-            bool container<T>::operator==(const container<T> &c) {
+            bool container<T>::operator==(const container<T> &c) const {
                 return this->value() == const_cast<container<T>&>(c).value();
             }
             template<typename T>
-            bool container<T>::operator==(T v) {
+            bool container<T>::operator==(T v) const {
                 return this->value() == v;
             }
 
             //operator !=
             template<typename T>
-            bool container<T>::operator!=(const container<T> &c) {
+            bool container<T>::operator!=(const container<T> &c) const {
                 return !(*this == c);
             }
             template<typename T>
-            bool container<T>::operator!=(T v) {
+            bool container<T>::operator!=(T v) const {
                 return !(this->value() == v);
             }
 
             //operator <
             template<typename T>
-            bool container<T>::operator<(const container<T> &c) {
+            bool container<T>::operator<(const container<T> &c) const {
                 return this->value() < const_cast<container<T>&>(c).value();
             }
             template<typename T>
-            bool container<T>::operator<(T v) {
+            bool container<T>::operator<(T v) const {
                 return this->value() < v;
             }
 
             //operator >
             template<typename T>
-            bool container<T>::operator>(const container<T> &c) {
+            bool container<T>::operator>(const container<T> &c) const {
                 return const_cast<container<T>&>(c) < *this;
             }
             template<typename T>
-            bool container<T>::operator>(T v) {
+            bool container<T>::operator>(T v) const {
                 return v < this->value();
             }
             
             //operator <=
             template<typename T>
-            bool container<T>::operator<=(const container<T> &c) {
+            bool container<T>::operator<=(const container<T> &c) const {
                 return !(*this > c);
             }
             template<typename T>
-            bool container<T>::operator<=(T v) {
+            bool container<T>::operator<=(T v) const {
                 return !(this->value() > v);
             }      
             
             //operator >=
             template<typename T>
-            bool container<T>::operator>=(const container<T> &c) {
+            bool container<T>::operator>=(const container<T> &c) const {
                 return !(*this < c);
             }
             template<typename T>
-            bool container<T>::operator>=(T v) {
+            bool container<T>::operator>=(T v) const {
                 return !(this->value() < v);
             }
             

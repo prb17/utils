@@ -1,8 +1,10 @@
+#pragma once
 #include "array.hh"
 #include "pair.hh"
 
 #include <functional>
 #include <iostream>
+#include <initializer_list>
 
 namespace prb17 {
     namespace utils {
@@ -45,6 +47,14 @@ namespace prb17 {
                     } 
 
                 public:
+/*
+                    map(std::initializer_list<prb17::utils::structures::pair<K,V>> init_list) {
+                        for (const auto& p : init_list) {
+                            add(p.key(), p.value()); // Use your existing add method
+                        }
+                    }
+*/
+
                     explicit map(std::function<size_t(const K&)> hash_func = [](const K& key) {
                                 if constexpr (detail::is_streamable<K>::value) {
                                     std::stringstream ss;
@@ -62,10 +72,20 @@ namespace prb17 {
                         }
                     }
 
+                    map(const map<K,V> &m) {
+                        buckets = m.buckets;
+                        sz = m.sz;
+                        hash_function = m.hash_function;
+                    }
+
+                    map& operator=(map &&);
+                    map& operator=(const map &);
+
                     V& operator[](K&);
                     const V& operator[](K&) const;
 
                     void add(const K& key, const V& value);
+                    void add(const map<K,V> &m);
                     V& get(const K& key);
                     const V& get(const K& key) const;
                     void remove(const K& key);
@@ -77,7 +97,28 @@ namespace prb17 {
 
                     std::string to_string() const; 
             };
+
+            template<typename K, typename V>
+            map<K,V>& map<K,V>::operator=(map &&m) {
+                if (&m != this) {
+                    buckets = m.buckets;
+                    sz = m.sz;
+                    hash_function = m.hash_function;
+                }
+                return *this;
+            }
  
+            template<typename K, typename V>
+            map<K,V>& map<K,V>::operator=(const map &m) {
+                if (&m != this) {
+                    buckets = m.buckets;
+                    sz = m.sz;
+                    hash_function = m.hash_function;
+                }
+                return *this;
+            }
+ 
+
             template<typename K, typename V>
             V& map<K,V>::operator[](K& key) {
                 return get(key);
@@ -86,6 +127,16 @@ namespace prb17 {
             template<typename K, typename V>
             const V& map<K,V>::operator[](K& key) const {
                 return get(key);
+            }
+
+            template<typename K, typename V>
+            void map<K,V>::add(const map<K,V>& m) {
+                for(int i; i<m.capacity(); i++) {
+                    array<pair<K,V>> bucket = m.buckets[i];
+                    for(int j; j<bucket.size(); j++) {
+                        this->add(bucket[j].key(), bucket[j].value()); 
+                    } 
+                } 
             }
 
             template<typename K, typename V>
@@ -165,7 +216,7 @@ namespace prb17 {
 
             template<typename K, typename V>
             size_t map<K,V>::capacity() const {
-                return 0; //TODO: needed?
+                return buckets.capacity(); //TODO: needed?
             }
 
             template<typename K, typename V>

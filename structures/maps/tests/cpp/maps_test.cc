@@ -26,15 +26,16 @@ bool basic_map_print(prb17::utils::parsers::json_parser jp) {
     return true;
 }
 
-//Map that relates the json file test config file to each test function defined in this file
 template<typename V>
-static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > map_tests = {
-    {"basicMapPrint", &basic_map_print<V>}
-};
-//template<typename V>
-//static map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > map_tests = {
-//    {"basicMapPrint", &basic_map_print<V>}
-//};
+static prb17::utils::structures::array<prb17::utils::test> build_tests() {
+    prb17::utils::structures::array<prb17::utils::test> tests;
+
+    tests.add(prb17::utils::test{"basicMapPrint", &basic_map_print<V>});
+
+    return tests;
+}
+template<typename V>
+static prb17::utils::structures::array<prb17::utils::test> map_tests = build_tests<V>();
 
 #define MIN_NUM_ARGS 2
 int main(int argc, char** argv) {
@@ -49,13 +50,13 @@ int main(int argc, char** argv) {
     }
     prb17::utils::validator validator{test_files};
     
-    validator.add_tests(&map_tests<std::string>);
-    validator.add_tests(&map_tests<int>);
-    validator.add_tests(&map_tests<uint>);
-    validator.add_tests(&map_tests<char>);
-    validator.add_tests(&map_tests<bool>);
-    validator.add_tests(&map_tests<float>);
-    validator.add_tests(&map_tests<double>);
+    validator.add_tests(map_tests<std::string>);
+    validator.add_tests(map_tests<int>);
+    validator.add_tests(map_tests<uint>);
+    validator.add_tests(map_tests<char>);
+    validator.add_tests(map_tests<bool>);
+    validator.add_tests(map_tests<float>);
+    validator.add_tests(map_tests<double>);
 
     logger.info("Starting validation tests of map_tests");
     validator.validate();

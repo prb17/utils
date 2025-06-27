@@ -57,34 +57,39 @@ bool basic_graph_print(prb17::utils::parsers::json_parser jp) {
     logger.info("Building graph");
     
     graph<T> *g = build_graph<T>(jp);
-
+/*
     logger.info("calling basic graph's to_string: \n\n{}", g);
     logger.info("calling graph's to_adjacency_list: \n\n{}", g->to_adjacency_list());
-
+*/
     g->cleanup();
     delete g;
-    return true;
+    return false;
 }
 
 template<typename T>
 bool weighted_graph_print(prb17::utils::parsers::json_parser jp) {
     logger.info("Building weighted graph");
     graph<T> *wg = build_weighted_graph<T>(jp);
-
+/*
     logger.info("calling weighted graph's to_string: \n\n{}", wg);
     logger.info("calling weighted graph's to_adjacency_list: \n\n{}", wg->to_adjacency_list());
-
+*/
     wg->cleanup();
     delete wg;
-    return true;
+    return false;
 }
 
-//Map that relates the json file test config file to each test function defined in this file
 template<typename T>
-static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > graph_tests = {
-    {"basicGraphPrint", &basic_graph_print<T>},
-    {"weightedGraphPrint", &weighted_graph_print<T>}
-};
+static prb17::utils::structures::array<prb17::utils::test> build_tests() {
+    prb17::utils::structures::array<prb17::utils::test> tests;
+
+    tests.add(prb17::utils::test{"basicGraphPrint", &basic_graph_print<T>});
+    tests.add(prb17::utils::test{"weightedGraphPrint", &weighted_graph_print<T>});
+
+    return tests;
+}
+template<typename T>
+static prb17::utils::structures::array<prb17::utils::test> graph_tests = build_tests<T>();
 
 #define MIN_NUM_ARGS 2
 int main(int argc, char** argv) {
@@ -99,13 +104,13 @@ int main(int argc, char** argv) {
     }
     prb17::utils::validator validator{test_files};
     
-    validator.add_tests(&graph_tests<std::string>);
-    validator.add_tests(&graph_tests<int>);
-    validator.add_tests(&graph_tests<uint>);
-    validator.add_tests(&graph_tests<char>);
-    validator.add_tests(&graph_tests<bool>);
-    validator.add_tests(&graph_tests<float>);
-    validator.add_tests(&graph_tests<double>);
+    validator.add_tests(graph_tests<std::string>);
+    validator.add_tests(graph_tests<int>);
+    validator.add_tests(graph_tests<uint>);
+    validator.add_tests(graph_tests<char>);
+    validator.add_tests(graph_tests<bool>);
+    validator.add_tests(graph_tests<float>);
+    validator.add_tests(graph_tests<double>);
 
     logger.info("Starting validation tests of graph_tests");
     validator.validate();

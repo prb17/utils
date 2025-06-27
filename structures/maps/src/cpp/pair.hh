@@ -101,7 +101,7 @@ namespace prb17 {
             //operator ==
             template<typename K, typename V>
             bool pair<K,V>::operator==(const pair<K,V> &p) const {
-                return this->key() == const_cast<pair<K,V>&>(p).key() && this->value() == const_cast<pair<K,V>&>(p).value();
+                return this->key() == p.key() && this->value() == p.value();
             }
 
             //operator !=

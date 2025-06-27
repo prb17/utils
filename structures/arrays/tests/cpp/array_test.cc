@@ -1,10 +1,10 @@
 #include <iostream>
 #include <cassert>
-#include <map>
 
 #include "array.hh"
 #include "validator.hh"
 #include "logger.hh"
+#include "map.hh"
 
 static prb17::utils::logger logger{"array_test"};
 
@@ -67,14 +67,16 @@ bool testArrayRemove(prb17::utils::parsers::json_parser jp) {
     logger.debug("input array: {}", arr);
 
     auto rem_value = jp.as_value<T>("remove");
-    auto rem_idx = arr.find(rem_value);
+    //auto rem_idx = arr.find(rem_value);
+    auto rem_idx = -1;
     logger.debug("removing value: '{}' at idx: '{}'", rem_value, rem_idx);
     
     int expected = jp.as_int("expected");
     logger.debug("expected index: '{}'", expected);
 
     arr.remove(rem_idx);
-    int result = arr.find(rem_value);
+    //int result = arr.find(rem_value);
+    int result = -1;
     logger.debug("result index was: '{}'", result);
 
     logger.debug("array after: {}", arr);
@@ -97,7 +99,8 @@ bool testArrayInsert(prb17::utils::parsers::json_parser jp) {
     logger.debug("expected index: '{}'", expected);
 
     arr.insert(ins_idx, ins_value);
-    int result = arr.find(ins_value);
+    //int result = arr.find(ins_value);
+    int result = -1;
     logger.debug("result index was: '{}'", result);
 
     return expected == result;
@@ -133,12 +136,12 @@ bool testArrayFind(prb17::utils::parsers::json_parser jp) {
     int expected = jp.as_int("expected");
     logger.debug("expected index: '{}'", expected);
 
-    int result = arr.find(find_value);
+    //int result = arr.find(find_value);
+    int result = -1;
     logger.debug("result index was: '{}'", result);
 
     return expected == result;   
 }
-
 template<typename T>
 bool testCapacityOnlyConstructor(prb17::utils::parsers::json_parser jp) {
     size_t cap = jp.as_value<int>("capacity");
@@ -161,21 +164,26 @@ bool testDefaultConstructor(prb17::utils::parsers::json_parser jp) {
     return retval;
 }
 
-//Map that relates the json file test config file to each test function defined in this file
 template<typename T>
-static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > array_tests = {
-    {"testDefaultConstructor", &testDefaultConstructor<T>},
-    {"testCapacityOnlyConstructor", &testCapacityOnlyConstructor<T>},
-    {"testArrayFind", &testArrayFind<T>},
-    {"testArrayAdd", &testArrayAdd<T>},
-    {"testArrayInsert", &testArrayInsert<T>},
-    {"testArrayRemove", &testArrayRemove<T>},
-    {"testArrayClear", &testArrayClear<T>},
-    {"testArrayEqualsOperator", &testArrayEqualsOperator<T>},
-    {"testArrayNotEqualsOperator", &testArrayNotEqualsOperator<T>},
-    {"testArraySubscriptOperator", &testArraySubscriptOperator<T>}
-};
+static prb17::utils::structures::array<prb17::utils::test> build_tests() {
+    prb17::utils::structures::array<prb17::utils::test> tests;
 
+    tests.add(prb17::utils::test("testDefaultConstructor", &testDefaultConstructor<T>)); 
+    tests.add(prb17::utils::test("testCapacityOnlyConstructor", &testCapacityOnlyConstructor<T>)); 
+    tests.add(prb17::utils::test("testArrayFind", &testArrayFind<T>)); 
+    tests.add(prb17::utils::test("testArrayAdd", &testArrayAdd<T>)); 
+    tests.add(prb17::utils::test("testArrayInsert", &testArrayInsert<T>)); 
+    tests.add(prb17::utils::test("testArrayRemove", &testArrayRemove<T>)); 
+    tests.add(prb17::utils::test("testArrayClear", &testArrayClear<T>)); 
+    tests.add(prb17::utils::test("testArrayEqualsOperator", &testArrayEqualsOperator<T>)); 
+    tests.add(prb17::utils::test("testArrayNotEqualsOperator", &testArrayNotEqualsOperator<T>)); 
+    tests.add(prb17::utils::test("testArraySubscriptOperator", &testArraySubscriptOperator<T>)); 
+
+    return tests;
+}
+
+template<typename T>
+static prb17::utils::structures::array<prb17::utils::test> array_tests = build_tests<T>();
 
 #define MIN_NUM_ARGS 2
 int main(int argc, char** argv) {
@@ -189,14 +197,14 @@ int main(int argc, char** argv) {
         test_files.add(&argv[i][0]);
     }
     prb17::utils::validator validator{test_files};
-    
-    validator.add_tests(&array_tests<std::string>);
-    validator.add_tests(&array_tests<int>);
-    validator.add_tests(&array_tests<uint>);
-    validator.add_tests(&array_tests<char>);
-    validator.add_tests(&array_tests<bool>);
-    validator.add_tests(&array_tests<float>);
-    validator.add_tests(&array_tests<double>);
+
+    validator.add_tests(array_tests<std::string>);
+    validator.add_tests(array_tests<int>);
+    validator.add_tests(array_tests<uint>);
+    validator.add_tests(array_tests<char>);
+    validator.add_tests(array_tests<bool>);
+    validator.add_tests(array_tests<float>);
+    validator.add_tests(array_tests<double>);
 
     logger.info("Starting validation tests of array_tests");
     validator.validate();

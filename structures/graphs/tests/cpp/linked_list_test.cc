@@ -49,12 +49,18 @@ bool double_linked_list_print(prb17::utils::parsers::json_parser jp) {
     return true;
 }
 
-//Map that relates the json file test config file to each test function defined in this file
 template<typename T>
-static std::map<std::string, std::function<bool(prb17::utils::parsers::json_parser)> > linked_list_tests = {
-    {"singleLinkedListPrint", &single_linked_list_print<T>},
-    {"doubleLinkedListPrint", &double_linked_list_print<T>}
-};
+static prb17::utils::structures::array<prb17::utils::test> build_tests() {
+    prb17::utils::structures::array<prb17::utils::test> tests;
+
+    tests.add(prb17::utils::test{"singleLinkedListPrint", &single_linked_list_print<T>});
+    tests.add(prb17::utils::test{"doubleLinkedListPrint", &double_linked_list_print<T>});
+
+    return tests;
+}
+template<typename T>
+static prb17::utils::structures::array<prb17::utils::test> linked_list_tests = build_tests<T>();
+
 
 #define MIN_NUM_ARGS 2
 int main(int argc, char** argv) {
@@ -69,13 +75,13 @@ int main(int argc, char** argv) {
     }
     prb17::utils::validator validator{test_files};
     
-    validator.add_tests(&linked_list_tests<std::string>);
-    validator.add_tests(&linked_list_tests<int>);
-    validator.add_tests(&linked_list_tests<uint>);
-    validator.add_tests(&linked_list_tests<char>);
-    validator.add_tests(&linked_list_tests<bool>);
-    validator.add_tests(&linked_list_tests<float>);
-    validator.add_tests(&linked_list_tests<double>);
+    validator.add_tests(linked_list_tests<std::string>);
+    validator.add_tests(linked_list_tests<int>);
+    validator.add_tests(linked_list_tests<uint>);
+    validator.add_tests(linked_list_tests<char>);
+    validator.add_tests(linked_list_tests<bool>);
+    validator.add_tests(linked_list_tests<float>);
+    validator.add_tests(linked_list_tests<double>);
 
     logger.info("Starting validation tests of linked_list_tests");
     validator.validate();

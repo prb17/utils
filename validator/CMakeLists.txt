@@ -12,6 +12,7 @@ target_link_libraries(${VALIDATOR_LIBRARY_NAME}
                         ${UTILS_EXCEPTION_LIBRARY_NAME} 
                         ${PARSERS_LIBRARY_NAME} 
                         ${JsonCpp_LIBRARIES}
+                        ${MAPS_LIBRARY_NAME}
                         ${ARRAY_LIBRARY_NAME}
                         ${LOGGER_LIBRARY_NAME}
                         )

@@ -37,7 +37,6 @@ namespace prb17 {
                     
                     //accessors
                     bool empty() const;
-                    virtual int find(T) const;
                     virtual T& get(size_t);
                     virtual const T& get(size_t) const;
                     virtual size_t size() const;
@@ -62,7 +61,7 @@ namespace prb17 {
             template<typename T>
             array<T>::array() : array<T>(0) {}
 
-            //TODO: I think the memset might screw things up when I have nested arrays, i.e. array< array<T> >
+            //TODO: I think the memset might screw things up when I have nested arrays, i.e. array< array<T> > or any non primitive datatype for that matter
             /**
              * @brief Construct a new array object starting with certain size and elements
              * 
@@ -147,21 +146,24 @@ namespace prb17 {
              * 
              * @param index - where value will be inserted
              * @param value - the value to insert
+             *
+             * @return - if the element was able to be added to the array
              */
             template<typename T>
             bool array<T>::insert(size_t index, T value) {
+                if ( index > sz ) {
+                    return false;
+                }
                 if (size() == capacity()) {
                     resize();
                 }
 
-                while(index <= size()) {
-                    T tmp = valid(index) ? get(index) : T{};
-                    data[index++] = value;
-                    value = tmp;
+                for (size_t i = sz; i > index; --i) {
+                    data[i] = data[i - 1];
                 }
+                data[index] = value;
                 sz++;
 
-                //todo: could there be a reason this wouldn't be true??
                 return true;
             }
 
@@ -236,21 +238,6 @@ namespace prb17 {
                 return size() == 0;
             }            
 
-            /**
-             * @brief finds the povide value in the array
-             * 
-             * @param value - value to find
-             * @return int - index the value was found, -1 if not found
-             */
-            template<typename T>
-            int array<T>::find(T value) const {
-                int index = 0;
-                while (index < size() && data[index] != value) {
-                    index++;
-                }
-                return index == size() ? -1 : index;
-            }
-             
             /**
              * @brief Get the value at the provided index
              * @throw std::out_of_range exception
