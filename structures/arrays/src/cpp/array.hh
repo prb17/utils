@@ -51,6 +51,96 @@ namespace prb17 {
                     bool operator!=(const array&) const;
                     T& operator[](size_t);
                     const T& operator[](size_t) const;
+
+                    // --- ITERATOR IMPLEMENTATION ---
+                    class iterator {
+                    public:
+                        using iterator_category = std::random_access_iterator_tag;
+                        using value_type = T;
+                        using difference_type = std::ptrdiff_t;
+                        using pointer = T*;
+                        using reference = T&;
+
+                    private:
+                        container<T>* current_container_ptr;
+
+                    public:
+                        iterator(container<T>* p = nullptr) : current_container_ptr(p) {}
+
+                        reference operator*() const {
+                            return current_container_ptr->value();
+                        }
+                        pointer operator->() const {
+                            return &(current_container_ptr->value());
+                        }
+
+                        iterator& operator++() { ++current_container_ptr; return *this; }
+                        iterator operator++(int) { iterator temp = *this; ++(*this); return temp; }
+                        iterator& operator--() { --current_container_ptr; return *this; }
+                        iterator operator--(int) { iterator temp = *this; --(*this); return temp; }
+                        iterator& operator+=(difference_type n) { current_container_ptr += n; return *this; }
+                        iterator operator+(difference_type n) const { iterator temp = *this; temp += n; return temp; }
+                        iterator& operator-=(difference_type n) { current_container_ptr -= n; return *this; }
+                        iterator operator-(difference_type n) const { iterator temp = *this; temp -= n; return temp; }
+                        difference_type operator-(const iterator& other) const { return current_container_ptr - other.current_container_ptr; }
+
+                        bool operator==(const iterator& other) const { return current_container_ptr == other.current_container_ptr; }
+                        bool operator!=(const iterator& other) const { return current_container_ptr != other.current_container_ptr; }
+                        bool operator<(const iterator& other) const { return current_container_ptr < other.current_container_ptr; }
+                        bool operator<=(const iterator& other) const { return current_container_ptr <= other.current_container_ptr; }
+                        bool operator>(const iterator& other) const { return current_container_ptr > other.current_container_ptr; }
+                        bool operator>=(const iterator& other) const { return current_container_ptr >= other.current_container_ptr; }
+                    };
+
+                    class const_iterator {
+                    public:
+                        using iterator_category = std::random_access_iterator_tag;
+                        using value_type = T;
+                        using difference_type = std::ptrdiff_t;
+                        using pointer = const T*;
+                        using reference = const T&;
+
+                    private:
+                        const container<T>* current_container_ptr;
+
+                    public:
+                        const_iterator(const container<T>* p = nullptr) : current_container_ptr(p) {}
+                        const_iterator(const iterator& it) : current_container_ptr(it.current_container_ptr) {}
+
+                        reference operator*() const {
+                            return current_container_ptr->value();
+                        }
+                        pointer operator->() const {
+                            return &(current_container_ptr->value());
+                        }
+
+                        const_iterator& operator++() { ++current_container_ptr; return *this; }
+                        const_iterator operator++(int) { const_iterator temp = *this; ++(*this); return temp; }
+                        const_iterator& operator--() { --current_container_ptr; return *this; }
+                        const_iterator operator--(int) { const_iterator temp = *this; --(*this); return temp; }
+                        const_iterator& operator+=(difference_type n) { current_container_ptr += n; return *this; }
+                        const_iterator operator+(difference_type n) const { const_iterator temp = *this; temp += n; return temp; }
+                        const_iterator& operator-=(difference_type n) { current_container_ptr -= n; return *this; }
+                        const_iterator operator-(difference_type n) const { const_iterator temp = *this; temp -= n; return temp; }
+                        difference_type operator-(const const_iterator& other) const { return current_container_ptr - other.current_container_ptr; }
+                        bool operator==(const const_iterator& other) const { return current_container_ptr == other.current_container_ptr; }
+                        bool operator!=(const const_iterator& other) const { return current_container_ptr != other.current_container_ptr; }
+                        bool operator<(const const_iterator& other) const { return current_container_ptr < other.current_container_ptr; }
+                        bool operator<=(const const_iterator& other) const { return current_container_ptr <= other.current_container_ptr; }
+                        bool operator>(const const_iterator& other) const { return current_container_ptr > other.current_container_ptr; }
+                        bool operator>=(const const_iterator& other) const { return current_container_ptr >= other.current_container_ptr; }
+                    };
+
+                    // begin() and end() methods for the array class
+                    iterator begin() { return iterator(this->data); }
+                    iterator end() { return iterator(this->data + sz); }
+
+                    const_iterator begin() const { return const_iterator(this->data); }
+                    const_iterator end() const { return const_iterator(this->data + sz); }
+
+                    // Optional: cbegin() and cend() for explicit const iterators
+                    const_iterator cbegin() const { return const_iterator(this->data); }
+                    const_iterator cend() const { return const_iterator(this->data + sz); }
             };
 
             //constructors

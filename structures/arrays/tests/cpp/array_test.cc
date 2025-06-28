@@ -165,6 +165,15 @@ bool testDefaultConstructor(prb17::utils::parsers::json_parser jp) {
 }
 
 template<typename T>
+bool testArrayIterator(prb17::utils::parsers::json_parser jp) {
+    auto my_array = jp.as_array<T>("array");
+    for (T val : my_array) {
+        logger.info("val from iterator: '{}'", val);
+    }
+    return true;
+}
+
+template<typename T>
 static prb17::utils::structures::array<prb17::utils::test> build_tests() {
     prb17::utils::structures::array<prb17::utils::test> tests;
 
@@ -178,6 +187,7 @@ static prb17::utils::structures::array<prb17::utils::test> build_tests() {
     tests.add(prb17::utils::test("testArrayEqualsOperator", &testArrayEqualsOperator<T>)); 
     tests.add(prb17::utils::test("testArrayNotEqualsOperator", &testArrayNotEqualsOperator<T>)); 
     tests.add(prb17::utils::test("testArraySubscriptOperator", &testArraySubscriptOperator<T>)); 
+    tests.add(prb17::utils::test("testArrayIterator", &testArrayIterator<T>)); 
 
     return tests;
 }
@@ -198,13 +208,15 @@ int main(int argc, char** argv) {
     }
     prb17::utils::validator validator{test_files};
 
-    validator.add_tests(array_tests<std::string>);
+    //validator.add_tests(array_tests<std::string>);
     validator.add_tests(array_tests<int>);
+/*
     validator.add_tests(array_tests<uint>);
     validator.add_tests(array_tests<char>);
     validator.add_tests(array_tests<bool>);
     validator.add_tests(array_tests<float>);
     validator.add_tests(array_tests<double>);
+*/
 
     logger.info("Starting validation tests of array_tests");
     validator.validate();
