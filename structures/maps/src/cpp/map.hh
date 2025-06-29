@@ -96,6 +96,208 @@ namespace prb17 {
                     bool at_capacity() const;
 
                     std::string to_string() const; 
+                    // --- HASH MAP ITERATOR IMPLEMENTATION ---
+
+                    // The type the iterator yields (pair with const Key)
+                    using value_type_pair = std::pair<const K, V>;
+
+                    class iterator {
+                        public:
+                            using iterator_category = std::forward_iterator_tag; // Or bidirectional if you implement --
+                            using value_type = value_type_pair;
+                            using difference_type = std::ptrdiff_t;
+                            using pointer = value_type_pair*;
+                            using reference = value_type_pair&;
+
+                        private:
+                            // Pointers to the hash_map's internal data
+                            prb17::utils::structures::array<prb17::utils::structures::array<std::pair<K,V>>>* outer_array_ptr; // Pointer to the whole 'buckets' array
+                            size_t current_bucket_idx; // Index of the current bucket being examined
+                            typename prb17::utils::structures::array<std::pair<K,V>>::iterator current_inner_array_it; // Iterator into the current inner array
+
+                        public:
+                            // Constructor for the iterator
+                            iterator(
+                                prb17::utils::structures::array<prb17::utils::structures::array<std::pair<K,V>>>* outer_ptr,
+                                size_t bucket_idx,
+                                typename prb17::utils::structures::array<std::pair<K,V>>::iterator inner_it
+                            ) : outer_array_ptr(outer_ptr),
+                                current_bucket_idx(bucket_idx),
+                                current_inner_array_it(inner_it)
+                            {}
+
+                            reference operator*() const {
+                                return *current_inner_array_it; // This returns pair<K,V>&, which is implicitly convertible to pair<const K,V>&
+                            }
+
+                            pointer operator->() const {
+                                return &(operator*());
+                            }
+
+                            iterator& operator++() {
+                                ++current_inner_array_it;
+
+                                if (current_inner_array_it == outer_array_ptr->get(current_bucket_idx).end()) {
+                                    current_bucket_idx++; // Move to the next bucket
+
+                                    while (current_bucket_idx < outer_array_ptr->size() &&
+                                           outer_array_ptr->get(current_bucket_idx).empty()) {
+                                        current_bucket_idx++;
+                                    }
+
+                                    if (current_bucket_idx < outer_array_ptr->size()) {
+                                        current_inner_array_it = outer_array_ptr->get(current_bucket_idx).begin();
+                                    } else {
+                                        // Reached the end of all buckets
+                                        // Set to a special "end" state (e.g., current_inner_array_it = default constructed)
+                                        // You might need a more robust way to represent "end" for outer array iterators
+                                        // For now, let's say the current_bucket_idx reaching outer_array_ptr->size() signals end.
+                                        // This makes the comparison operator correctly handle the end state.
+                                    }
+                                }
+                                return *this;
+                            }
+
+                            iterator operator++(int) {
+                                iterator temp = *this;
+                                ++(*this);
+                                return temp;
+                            }
+
+                            // Comparison operators
+                            bool operator==(const iterator& other) const {
+                                // Need to handle the end() case carefully.
+                                // If both are at the end, they are equal.
+                                // Otherwise, compare bucket index and inner iterator.
+                                bool this_is_end = current_bucket_idx >= outer_array_ptr->size();
+                                bool other_is_end = other.current_bucket_idx >= other.outer_array_ptr->size();
+
+                                if (this_is_end && other_is_end) {
+                                    return true;
+                                }
+                                if (this_is_end != other_is_end) {
+                                    return false;
+                                }
+                                // If neither is end, compare their actual positions
+                                return current_bucket_idx == other.current_bucket_idx &&
+                                       current_inner_array_it == other.current_inner_array_it;
+                            }
+
+                            bool operator!=(const iterator& other) const { return !(*this == other); }
+                    };
+
+                    // Const iterator (similar, but for const access)
+                    class const_iterator {
+                        public:
+                            using iterator_category = std::forward_iterator_tag; // Or bidirectional
+                            using value_type = value_type_pair;
+                            using difference_type = std::ptrdiff_t;
+                            using pointer = const value_type_pair*;
+                            using reference = const value_type_pair&;
+
+                        private:
+                            const prb17::utils::structures::array<prb17::utils::structures::array<std::pair<K,V>>>* outer_array_ptr;
+                            size_t current_bucket_idx;
+                            typename prb17::utils::structures::array<std::pair<K,V>>::const_iterator current_inner_array_it; // Use const_iterator for inner
+
+                        public:
+                            const_iterator(
+                                const prb17::utils::structures::array<prb17::utils::structures::array<std::pair<K,V>>>* outer_ptr,
+                                size_t bucket_idx,
+                                typename prb17::utils::structures::array<std::pair<K,V>>::const_iterator inner_it
+                            ) : outer_array_ptr(outer_ptr),
+                                current_bucket_idx(bucket_idx),
+                                current_inner_array_it(inner_it)
+                            {}
+
+                            // Conversion from non-const iterator
+                            const_iterator(const iterator& other)
+                                : outer_array_ptr(other.outer_array_ptr),
+                                  current_bucket_idx(other.current_bucket_idx),
+                                  current_inner_array_it(other.current_inner_array_it) // Requires conversion constructor in inner const_iterator
+                            {}
+
+                            reference operator*() const {
+                                return *current_inner_array_it;
+                            }
+
+                            pointer operator->() const {
+                                return &(operator*());
+                            }
+
+                            const_iterator& operator++() {
+                                ++current_inner_array_it;
+                                if (current_inner_array_it == outer_array_ptr->get(current_bucket_idx).end()) {
+                                    current_bucket_idx++;
+                                    while (current_bucket_idx < outer_array_ptr->size() &&
+                                           outer_array_ptr->get(current_bucket_idx).empty()) {
+                                        current_bucket_idx++;
+                                    }
+                                    if (current_bucket_idx < outer_array_ptr->size()) {
+                                        current_inner_array_it = outer_array_ptr->get(current_bucket_idx).begin();
+                                    } // Else, we are at the end state
+                                }
+                                return *this;
+                            }
+                            const_iterator operator++(int) { const_iterator temp = *this; ++(*this); return temp; }
+
+                            bool operator==(const const_iterator& other) const {
+                                bool this_is_end = current_bucket_idx >= outer_array_ptr->size();
+                                bool other_is_end = other.current_bucket_idx >= other.outer_array_ptr->size();
+
+                                if (this_is_end && other_is_end) {
+                                    return true;
+                                }
+                                if (this_is_end != other_is_end) {
+                                    return false;
+                                }
+                                return current_bucket_idx == other.current_bucket_idx &&
+                                       current_inner_array_it == other.current_inner_array_it;
+                            }
+                            bool operator!=(const const_iterator& other) const { return !(*this == other); }
+                    };
+
+                    // begin() and end() methods for hash_map
+                    iterator begin() {
+                        size_t first_bucket_idx = 0;
+                        // Find the first non-empty bucket
+                        while (first_bucket_idx < buckets.size() && buckets.get(first_bucket_idx).empty()) {
+                            first_bucket_idx++;
+                        }
+
+                        // If found, get its begin iterator
+                        if (first_bucket_idx < buckets.size()) {
+                            return iterator(&buckets, first_bucket_idx, buckets.get(first_bucket_idx).begin());
+                        } else {
+                            // Map is empty, return end iterator
+                            return end();
+                        }
+                    }
+
+                    iterator end() {
+                        // The end iterator points past the last bucket.
+                        // The inner_it can be default-constructed or point to end() of a dummy/empty array.
+                        // The key is that current_bucket_idx == buckets.size()
+                        return iterator(&buckets, buckets.size(), typename prb17::utils::structures::array<std::pair<K,V>>::iterator{});
+                    }
+
+                    const_iterator begin() const {
+                        size_t first_bucket_idx = 0;
+                        while (first_bucket_idx < buckets.size() && buckets.get(first_bucket_idx).empty()) {
+                            first_bucket_idx++;
+                        }
+                        if (first_bucket_idx < buckets.size()) {
+                            return const_iterator(&buckets, first_bucket_idx, buckets.get(first_bucket_idx).cbegin());
+                        } else {
+                            return cend();
+                        }
+                    }
+                    const_iterator end() const {
+                        return const_iterator(&buckets, buckets.size(), typename prb17::utils::structures::array<std::pair<K,V>>::const_iterator{});
+                    }
+                    const_iterator cbegin() const { return begin(); }
+                    const_iterator cend() const { return end(); }
+                };
             };
 
             template<typename K, typename V>

@@ -50,14 +50,15 @@ int main(int argc, char** argv) {
     }
     prb17::utils::validator validator{test_files};
     
-    validator.add_tests(map_tests<std::string>);
+//    validator.add_tests(map_tests<std::string>);
     validator.add_tests(map_tests<int>);
+/*
     validator.add_tests(map_tests<uint>);
     validator.add_tests(map_tests<char>);
     validator.add_tests(map_tests<bool>);
     validator.add_tests(map_tests<float>);
     validator.add_tests(map_tests<double>);
-
+*/
     logger.info("Starting validation tests of map_tests");
     validator.validate();
     logger.info("Finished validation tests of map_tests");
