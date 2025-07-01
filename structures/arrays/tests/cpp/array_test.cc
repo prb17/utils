@@ -4,7 +4,6 @@
 #include "array.hh"
 #include "validator.hh"
 #include "logger.hh"
-#include "map.hh"
 
 static prb17::utils::logger logger{"array_test"};
 

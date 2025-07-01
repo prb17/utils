@@ -5,6 +5,8 @@
 #include <functional>
 #include <iostream>
 #include <initializer_list>
+#include <sstream>
+#include <iterator>
 
 namespace prb17 {
     namespace utils {
@@ -47,13 +49,27 @@ namespace prb17 {
                     } 
 
                 public:
-/*
-                    map(std::initializer_list<prb17::utils::structures::pair<K,V>> init_list) {
+                    map(std::initializer_list<prb17::utils::structures::pair<K,V>> init_list) : buckets{}, sz{0}, 
+                            hash_function{[](const K& key) {
+                                if constexpr (detail::is_streamable<K>::value) {
+                                    std::stringstream ss;
+                                    ss << key;
+                                    return detail::hash_string_val(ss.str());
+                                } else {
+                                    throw prb17::utils::exception("Key type is not streamable (does not have operator<< for std::ostream) "
+                                                             "and therefore cannot use prb17::utils::structures::map's default hash function. "
+                                                             "Please implement operator<< for your Key type or provide a custom hash function.");
+                                }
+                            }
+                        } 
+                    {
+                        for (int i=0; i<10; i++) { // Initialize buckets as in the default constructor
+                            buckets.add(array<pair<K,V>>());
+                        }
                         for (const auto& p : init_list) {
                             add(p.key(), p.value()); // Use your existing add method
                         }
                     }
-*/
 
                     explicit map(std::function<size_t(const K&)> hash_func = [](const K& key) {
                                 if constexpr (detail::is_streamable<K>::value) {
@@ -99,7 +115,7 @@ namespace prb17 {
                     // --- HASH MAP ITERATOR IMPLEMENTATION ---
 
                     // The type the iterator yields (pair with const Key)
-                    using value_type_pair = std::pair<const K, V>;
+                    using value_type_pair = prb17::utils::structures::pair<K, V>;
 
                     class iterator {
                         public:
@@ -111,16 +127,16 @@ namespace prb17 {
 
                         private:
                             // Pointers to the hash_map's internal data
-                            prb17::utils::structures::array<prb17::utils::structures::array<std::pair<K,V>>>* outer_array_ptr; // Pointer to the whole 'buckets' array
+                            prb17::utils::structures::array<prb17::utils::structures::array<value_type_pair>>* outer_array_ptr; // Pointer to the whole 'buckets' array
                             size_t current_bucket_idx; // Index of the current bucket being examined
-                            typename prb17::utils::structures::array<std::pair<K,V>>::iterator current_inner_array_it; // Iterator into the current inner array
+                            typename prb17::utils::structures::array<value_type_pair>::iterator current_inner_array_it; // Iterator into the current inner array
 
                         public:
                             // Constructor for the iterator
                             iterator(
-                                prb17::utils::structures::array<prb17::utils::structures::array<std::pair<K,V>>>* outer_ptr,
+                                prb17::utils::structures::array<prb17::utils::structures::array<value_type_pair>>* outer_ptr,
                                 size_t bucket_idx,
-                                typename prb17::utils::structures::array<std::pair<K,V>>::iterator inner_it
+                                typename prb17::utils::structures::array<value_type_pair>::iterator inner_it
                             ) : outer_array_ptr(outer_ptr),
                                 current_bucket_idx(bucket_idx),
                                 current_inner_array_it(inner_it)
@@ -196,15 +212,15 @@ namespace prb17 {
                             using reference = const value_type_pair&;
 
                         private:
-                            const prb17::utils::structures::array<prb17::utils::structures::array<std::pair<K,V>>>* outer_array_ptr;
+                            const prb17::utils::structures::array<prb17::utils::structures::array<value_type_pair>>* outer_array_ptr;
                             size_t current_bucket_idx;
-                            typename prb17::utils::structures::array<std::pair<K,V>>::const_iterator current_inner_array_it; // Use const_iterator for inner
+                            typename prb17::utils::structures::array<value_type_pair>::const_iterator current_inner_array_it; // Use const_iterator for inner
 
                         public:
                             const_iterator(
-                                const prb17::utils::structures::array<prb17::utils::structures::array<std::pair<K,V>>>* outer_ptr,
+                                const prb17::utils::structures::array<prb17::utils::structures::array<value_type_pair>>* outer_ptr,
                                 size_t bucket_idx,
-                                typename prb17::utils::structures::array<std::pair<K,V>>::const_iterator inner_it
+                                typename prb17::utils::structures::array<value_type_pair>::const_iterator inner_it
                             ) : outer_array_ptr(outer_ptr),
                                 current_bucket_idx(bucket_idx),
                                 current_inner_array_it(inner_it)
@@ -278,7 +294,7 @@ namespace prb17 {
                         // The end iterator points past the last bucket.
                         // The inner_it can be default-constructed or point to end() of a dummy/empty array.
                         // The key is that current_bucket_idx == buckets.size()
-                        return iterator(&buckets, buckets.size(), typename prb17::utils::structures::array<std::pair<K,V>>::iterator{});
+                        return iterator(&buckets, buckets.size(), typename prb17::utils::structures::array<value_type_pair>::iterator{});
                     }
 
                     const_iterator begin() const {
@@ -293,19 +309,19 @@ namespace prb17 {
                         }
                     }
                     const_iterator end() const {
-                        return const_iterator(&buckets, buckets.size(), typename prb17::utils::structures::array<std::pair<K,V>>::const_iterator{});
+                        return const_iterator(&buckets, buckets.size(), typename prb17::utils::structures::array<value_type_pair>::const_iterator{});
                     }
                     const_iterator cbegin() const { return begin(); }
                     const_iterator cend() const { return end(); }
-                };
             };
 
             template<typename K, typename V>
             map<K,V>& map<K,V>::operator=(map &&m) {
                 if (&m != this) {
-                    buckets = m.buckets;
+                    buckets = std::move(m.buckets);
                     sz = m.sz;
                     hash_function = m.hash_function;
+                    m.sz = 0;
                 }
                 return *this;
             }
@@ -333,9 +349,9 @@ namespace prb17 {
 
             template<typename K, typename V>
             void map<K,V>::add(const map<K,V>& m) {
-                for(int i; i<m.capacity(); i++) {
+                for(size_t i=0; i < m.buckets.size(); i++) {
                     array<pair<K,V>> bucket = m.buckets[i];
-                    for(int j; j<bucket.size(); j++) {
+                    for(size_t j=0; j<bucket.size(); j++) {
                         this->add(bucket[j].key(), bucket[j].value()); 
                     } 
                 } 
@@ -433,13 +449,11 @@ namespace prb17 {
 
             template<typename K, typename V>
             std::string map<K,V>::to_string() const {
-                return buckets.to_string();
-/*
                 std::stringstream ss;
-                ss << "{";
+                ss << "{\n";
                 bool first_element = true;
 
-                for (size_t i = 0; i < buckets.capacity(); ++i) {
+                for (size_t i = 0; i < buckets.size(); ++i) {
                     const array<pair<K,V>> &bucket = buckets[i];
                     for (size_t j = 0; j < bucket.size(); ++j) {
                         if (!first_element) {
@@ -449,9 +463,8 @@ namespace prb17 {
                         first_element = false;
                     }
                 }
-                ss << "}";
+                ss << "\n}";
                 return ss.str();
-*/
             }
 
             template<typename K, typename V>
