@@ -71,7 +71,7 @@ namespace prb17 {
             template<typename K, typename V>
             std::string pair<K,V>::to_string() const {
                 std::stringstream stream;
-                stream << '{' << const_cast<pair<K,V>*>(this)->key() << ',' << const_cast<pair<K,V>*>(this)->value() << '}';
+                stream << '{' << this->k << ',' << this->v << '}';
                 return stream.str();
             }            
 

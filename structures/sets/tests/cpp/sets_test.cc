@@ -46,6 +46,13 @@ int main(int argc, char** argv) {
     validator.add_tests(set_tests<float>);
     validator.add_tests(set_tests<double>);
 
+    set s = set<int>{};
+    s.add(1);
+    s.add(2);
+    s.add(3);
+    s.add(1);
+    logger.debug("simple set print output: '{}'", s);
+
     logger.info("Starting validation tests of set_test");
     validator.validate();
     logger.info("Finished validation tests of set_test");

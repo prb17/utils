@@ -83,7 +83,7 @@ namespace prb17 {
             template<typename T>
             std::string container<T>::to_string() const {
                 std::stringstream stream;
-                stream << const_cast<container<T>*>(this)->value();
+                stream << this->value();
                 return stream.str();
             }            
 

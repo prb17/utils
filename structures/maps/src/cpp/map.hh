@@ -104,6 +104,7 @@ namespace prb17 {
                     void add(const map<K,V> &m);
                     V& get(const K& key);
                     const V& get(const K& key) const;
+                    bool contains(const K& key) const;
                     void remove(const K& key);
 
                     size_t size() const;
@@ -291,9 +292,6 @@ namespace prb17 {
                     }
 
                     iterator end() {
-                        // The end iterator points past the last bucket.
-                        // The inner_it can be default-constructed or point to end() of a dummy/empty array.
-                        // The key is that current_bucket_idx == buckets.size()
                         return iterator(&buckets, buckets.size(), typename prb17::utils::structures::array<value_type_pair>::iterator{});
                     }
 
@@ -406,6 +404,19 @@ namespace prb17 {
 
                 // Key not found
                 throw prb17::utils::exception("Key not found in map.");
+            }
+
+            template<typename K, typename V>
+            bool map<K,V>::contains(const K& key) const {
+                size_t bucket_idx = get_bucket_index(key);
+                array<pair<K,V>> const bucket = buckets[bucket_idx];
+                
+                for (auto &p : bucket) {
+                    if (p.key() == key) {
+                        return true;
+                    }
+                }
+                return false;
             }
 
             template<typename K, typename V>

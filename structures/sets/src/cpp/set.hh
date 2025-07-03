@@ -1,14 +1,18 @@
-#include "map.hh" // Your custom map class
-#include <string>   // For example usage with std::string if needed
+#include "map.hh"
+#include <string>
 
 namespace prb17 {
     namespace utils {
         namespace structures {
 
+            struct dummy {};
+            inline std::ostream& operator<<(std::ostream& stream, const dummy& d) {
+                return stream;
+            }
+
             template <typename T>
             class set {
             private:
-                struct dummy {};
                 map<T, dummy> internal_map;
 
             public:
@@ -42,6 +46,10 @@ namespace prb17 {
                     internal_map.clear();
                 }
 
+                std::string to_string() const {
+                    return internal_map.to_string();
+                }
+
                 class const_iterator {
                 public:
                     using map_iterator = typename map<T, dummy>::const_iterator;
@@ -72,6 +80,20 @@ namespace prb17 {
                 // auto end() { return internal_map.end(); }
             };
 
+            template<typename T>
+            inline std::ostream& operator<<(std::ostream &stream, const set<T>& s) {
+                return stream << s.to_string();
+            }
+            
+            template<typename T>
+            inline std::ostream& operator<<(std::ostream &stream, const set<T>* s) {
+                return stream << s->to_string();
+            }
+
+            template <typename T>
+            inline std::ostream& operator<<(std::ostream& stream, const pair<T, typename set<T>::dummy>& p) {
+                return stream << p.key;
+            }
         } // namespace structures
     } // namespace utils
 } // namespace prb17
