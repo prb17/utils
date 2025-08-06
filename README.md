@@ -38,5 +38,28 @@ flowchart LR
 ### JSON
 
 ## Sockets (TBD)
+- Client Server Model
+- Network Protocol
+- Storage
+- Latency and Throuput
+- Availability
+- Caching
+- Proxies
+- Load Balancers
+- Hashing
+- Relational Database
+- Key-Value Stores
+- Specialized Storage Paradigms
+- Replication and Sharding
+- Leader Election
+- Peer-to-Peer Networks
+- Polling and Streaming
+- Configuration
+- Rate Limiting
+- Logging and Monitoring
+- Publish/Subscribe Pattern
+- MapReduce
+- Security and HTTPS
+- API Design
 
 ## Validator

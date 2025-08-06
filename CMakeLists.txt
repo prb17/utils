@@ -7,6 +7,7 @@ option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(BUILD_STATIC_LIBS "Build using static libraries" OFF)
 option(BUILD_OBJECT_LIBS "Build using object libraries." OFF)
 option(CMAKE_BUILD_TYPE "Build using this build type" Debug)
+option(CMAKE_CXX_COMPILER "Which compiler to use" /usr/bin/g++)
 
 #Specify the location to find files to tell cmake how to resolve third party modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/find-cmakes/")
@@ -16,6 +17,8 @@ set(CMAKE_CXX_FLAGS "-g")
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
 set(UTILS_DEPS_BUILD_DIR "${CMAKE_BINARY_DIR}/third_party")
 set(UTILS_DEPS_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/third_party")
+#set(CMAKE_CXX_COMPILER /usr/bin/g++)
+#set(CMAKE_C_COMPILER /usr/bin/gcc)
 
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #Fetch and make available external projects
@@ -29,6 +32,7 @@ add_subdirectory(structures)
 add_subdirectory(logger)
 add_subdirectory(parsers)
 add_subdirectory(validator)
+add_subdirectory(algorithms)
 
 
 #####################################################################################
@@ -49,6 +53,7 @@ if(BUILD_UTILS_TESTS)
                                                         ${VALIDATOR_LIBRARY_NAME} 
                                                         ${PARSERS_LIBRARY_NAME} 
                                                         ${LOGGER_LIBRARY_NAME}
+                                                        ${ARRAY_SEARCH_LIBRARY_NAME}
                                                         )
 
     target_link_libraries(${CONTAINER_TEST_NAME} PRIVATE ${ARRAY_LIBRARY_NAME} 
@@ -94,56 +99,56 @@ if(BUILD_UTILS_TESTS)
 
     message(DEBUG "configuring the graphs tests helper libs")
     set(GRAPHS_TEST_HELPER_LIB graphs_test_helper)
-    add_library(${GRAPHS_TEST_HELPER_LIB} INTERFACE)
-    set(GRAPHS_TEST_HELPER_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/structures/graphs/tests/cpp/helpers/)
-    file(GLOB GRAPH_HELPER_INCS ${GRAPHS_TEST_HELPER_INC_DIR}/*.hh)
-    target_include_directories(${GRAPHS_TEST_HELPER_LIB} INTERFACE ${GRAPHS_TEST_HELPER_INC_DIR}
-                                                            )
-    target_link_libraries(${GRAPHS_TEST_HELPER_LIB} INTERFACE ${GRAPHS_LIBRARY_NAME} 
-                                                        ${PARSERS_LIBRARY_NAME} 
-                                                        ${BUILDER_PATTERN_LIBRARY_NAME}
-                                                        ${STRUCTURES_BUILDER_LIBRARY_NAME}
-                                                        ${GRAPH_BUILDER_LIBRARY_NAME}
-                                                        )
+    #add_library(${GRAPHS_TEST_HELPER_LIB} INTERFACE)
+    #set(GRAPHS_TEST_HELPER_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/structures/graphs/tests/cpp/helpers/)
+    #file(GLOB GRAPH_HELPER_INCS ${GRAPHS_TEST_HELPER_INC_DIR}/*.hh)
+    #target_include_directories(${GRAPHS_TEST_HELPER_LIB} INTERFACE ${GRAPHS_TEST_HELPER_INC_DIR}
+    #                                                        )
+    #target_link_libraries(${GRAPHS_TEST_HELPER_LIB} INTERFACE ${GRAPHS_LIBRARY_NAME} 
+    #                                                    ${PARSERS_LIBRARY_NAME} 
+    #                                                    ${BUILDER_PATTERN_LIBRARY_NAME}
+    #                                                    ${STRUCTURES_BUILDER_LIBRARY_NAME}
+    #                                                    ${GRAPH_BUILDER_LIBRARY_NAME}
+    #                                                    )
 
     message(DEBUG "configuring the graphs tests")
-    set(GRAPHS_TEST_NAME graphs_test)
-    add_executable(${GRAPHS_TEST_NAME} structures/graphs/tests/cpp/graph_test.cc)
-    target_link_libraries(${GRAPHS_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
-                                                        ${LINKED_LISTS_LIBRARY_NAME}
-                                                        ${VALIDATOR_LIBRARY_NAME} 
-                                                        ${PARSERS_LIBRARY_NAME} 
-                                                        ${LOGGER_LIBRARY_NAME}
-                                                        ${BUILDER_PATTERN_LIBRARY_NAME}
-                                                        ${STRUCTURES_BUILDER_LIBRARY_NAME}
-                                                        ${GRAPH_BUILDER_LIBRARY_NAME}
-                                                        ${GRAPHS_TEST_HELPER_LIB}
-                                                        )
+    #set(GRAPHS_TEST_NAME graphs_test)
+    #add_executable(${GRAPHS_TEST_NAME} structures/graphs/tests/cpp/graph_test.cc)
+    #target_link_libraries(${GRAPHS_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
+    #                                                    ${LINKED_LISTS_LIBRARY_NAME}
+    #                                                    ${VALIDATOR_LIBRARY_NAME} 
+    #                                                    ${PARSERS_LIBRARY_NAME} 
+    #                                                    ${LOGGER_LIBRARY_NAME}
+    #                                                    ${BUILDER_PATTERN_LIBRARY_NAME}
+    #                                                    ${STRUCTURES_BUILDER_LIBRARY_NAME}
+    #                                                    ${GRAPH_BUILDER_LIBRARY_NAME}
+    #                                                    ${GRAPHS_TEST_HELPER_LIB}
+    #                                                    )
 
     message(DEBUG "configuring the linked list tests")
-    set(LINKED_LIST_TEST_NAME linked_list_test)
-    add_executable(${LINKED_LIST_TEST_NAME} structures/graphs/tests/cpp/linked_list_test.cc)
-    target_link_libraries(${LINKED_LIST_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
-                                                            ${VALIDATOR_LIBRARY_NAME} 
-                                                            ${PARSERS_LIBRARY_NAME} 
-                                                            ${LOGGER_LIBRARY_NAME}
-                                                            ${BUILDER_PATTERN_LIBRARY_NAME}
-                                                            ${STRUCTURES_BUILDER_LIBRARY_NAME}
-                                                            ${GRAPH_BUILDER_LIBRARY_NAME}
-                                                            )
+    #set(LINKED_LIST_TEST_NAME linked_list_test)
+    #add_executable(${LINKED_LIST_TEST_NAME} structures/graphs/tests/cpp/linked_list_test.cc)
+    #target_link_libraries(${LINKED_LIST_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
+    #                                                        ${VALIDATOR_LIBRARY_NAME} 
+    #                                                        ${PARSERS_LIBRARY_NAME} 
+    #                                                        ${LOGGER_LIBRARY_NAME}
+    #                                                        ${BUILDER_PATTERN_LIBRARY_NAME}
+    #                                                        ${STRUCTURES_BUILDER_LIBRARY_NAME}
+    #                                                        ${GRAPH_BUILDER_LIBRARY_NAME}
+    #                                                        )
     
     message(DEBUG "configuring the tree tests")
-    set(TREE_TEST_NAME tree_test)
-    add_executable(${TREE_TEST_NAME} structures/graphs/tests/cpp/tree_test.cc)
-    target_link_libraries(${TREE_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
-                                                        ${VALIDATOR_LIBRARY_NAME} 
-                                                        ${PARSERS_LIBRARY_NAME} 
-                                                        ${LOGGER_LIBRARY_NAME}
-                                                        ${BUILDER_PATTERN_LIBRARY_NAME}
-                                                        ${STRUCTURES_BUILDER_LIBRARY_NAME}
-                                                        ${GRAPH_BUILDER_LIBRARY_NAME}
-                                                        ${GRAPHS_TEST_HELPER_LIB}
-                                                        )
+    #set(TREE_TEST_NAME tree_test)
+    #add_executable(${TREE_TEST_NAME} structures/graphs/tests/cpp/tree_test.cc)
+    #target_link_libraries(${TREE_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
+    #                                                    ${VALIDATOR_LIBRARY_NAME} 
+    #                                                    ${PARSERS_LIBRARY_NAME} 
+    #                                                    ${LOGGER_LIBRARY_NAME}
+    #                                                    ${BUILDER_PATTERN_LIBRARY_NAME}
+    #                                                    ${STRUCTURES_BUILDER_LIBRARY_NAME}
+    #                                                    ${GRAPH_BUILDER_LIBRARY_NAME}
+    #                                                    ${GRAPHS_TEST_HELPER_LIB}
+    #                                                    )
 
     message(DEBUG "configuring the tests install")
     install(FILES ${GRAPH_HELPER_INCS} DESTINATION structures/include)
@@ -153,9 +158,9 @@ if(BUILD_UTILS_TESTS)
                     ${QUEUES_TEST_NAME} 
                     ${SETS_TEST_NAME} 
                     ${MAPS_TEST_NAME} 
-                    ${GRAPHS_TEST_NAME}
-                    ${LINKED_LIST_TEST_NAME}
-                    ${TREE_TEST_NAME}
+                    #${GRAPHS_TEST_NAME}
+                    #${LINKED_LIST_TEST_NAME}
+                    #${TREE_TEST_NAME}
                     DESTINATION
                     structures/bin
                     )

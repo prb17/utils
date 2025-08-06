@@ -8,7 +8,7 @@ namespace prb17 {
     namespace utils {
         namespace time {
             static long now() {
-                return std::chrono::high_resolution_clock::now().time_since_epoch().count();
+                return std::chrono::system_clock::now().time_since_epoch().count();
             }
 
             static void timestamp_fillin(std::string& mon, std::string& day, std::string& year, std::string& time, std::string& mil, std::string& mic, std::string &nan) {
@@ -32,8 +32,9 @@ namespace prb17 {
                 mil = mss.str();
                 mss.clear();
 
-                std::chrono::time_point<std::chrono::high_resolution_clock> tp((std::chrono::nanoseconds)ts);
-                std::time_t t_c = std::chrono::high_resolution_clock::to_time_t(tp);
+                auto system_duration = std::chrono::duration_cast<std::chrono::system_clock::duration>((std::chrono::nanoseconds)ts);
+                std::chrono::time_point<std::chrono::system_clock> tp(system_duration);
+                std::time_t t_c = std::chrono::system_clock::to_time_t(tp);
                 
                 std::stringstream tss;
                 tss << std::put_time(std::localtime(&t_c), "%T");
@@ -57,8 +58,9 @@ namespace prb17 {
             }
 
             static std::string timestamp_toString(long ts) {
-                std::chrono::time_point<std::chrono::high_resolution_clock> tp((std::chrono::nanoseconds)ts);
-                std::time_t t_c = std::chrono::high_resolution_clock::to_time_t(tp);        
+                auto system_duration = std::chrono::duration_cast<std::chrono::system_clock::duration>((std::chrono::nanoseconds)ts);
+                std::chrono::time_point<std::chrono::system_clock> tp(system_duration);
+                std::time_t t_c = std::chrono::system_clock::to_time_t(tp);        
                 std::stringstream ss;
                 int ns = ts % 1000;
                 int us = ((ts % 1000000) - ns)/1000;
@@ -73,15 +75,15 @@ namespace prb17 {
             }
 
             namespace stopwatch {
-                static std::chrono::time_point<std::chrono::high_resolution_clock> strt;
-                static std::chrono::time_point<std::chrono::high_resolution_clock> stp;
+                static std::chrono::time_point<std::chrono::system_clock> strt;
+                static std::chrono::time_point<std::chrono::system_clock> stp;
 
                 static void start() {
-                    strt = std::chrono::high_resolution_clock::now();
+                    strt = std::chrono::system_clock::now();
                 }
 
                 static void stop() {
-                    stp = std::chrono::high_resolution_clock::now();
+                    stp = std::chrono::system_clock::now();
                 }
 
                 static long diff() {

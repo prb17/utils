@@ -57,10 +57,9 @@ bool basic_graph_print(prb17::utils::parsers::json_parser jp) {
     logger.info("Building graph");
     
     graph<T> *g = build_graph<T>(jp);
-/*
     logger.info("calling basic graph's to_string: \n\n{}", g);
     logger.info("calling graph's to_adjacency_list: \n\n{}", g->to_adjacency_list());
-*/
+
     g->cleanup();
     delete g;
     return false;

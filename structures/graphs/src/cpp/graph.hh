@@ -83,7 +83,6 @@ namespace prb17 {
 
             template<typename T>
             void graph<T>::to_string(std::stringstream& prefix, vertex<T>* node, queue<vertex<T>*>& visited) const {
-/*
                 if (visited.find(node) == -1) {
                     visited.enqueue(node);
 
@@ -105,13 +104,11 @@ namespace prb17 {
                         }
                     }
                 }
-*/
             }
 
             template<typename T>
             std::string graph<T>::to_adjacency_list() const {
                 std::stringstream stream;
-/*
                 for(int i=0; i < vertices.size(); i++) {
                     stream << "Node: " << vertices[i]->get_id() << " | ";
                     for(int j=0; j < vertices[i]->get_edges().size(); j++) {
@@ -121,7 +118,6 @@ namespace prb17 {
                     }
                     stream << std::endl;
                 }                
-*/
                 return stream.str();
             }
 

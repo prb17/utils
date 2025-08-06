@@ -5,6 +5,8 @@
 #include "validator.hh"
 #include "logger.hh"
 
+#include "search.hh"
+
 static prb17::utils::logger logger{"array_test"};
 
 template<typename T>
@@ -129,14 +131,13 @@ bool testArrayFind(prb17::utils::parsers::json_parser jp) {
 
     logger.debug("input array: {}", arr);
 
-    auto find_value = jp.as_value<T>("find");
+    T find_value = jp.as_value<T>("find");
     logger.debug("finding value: '{}'", find_value);
-    
-    int expected = jp.as_int("expected");
-    logger.debug("expected index: '{}'", expected);
 
-    //int result = arr.find(find_value);
-    int result = -1;
+    int expected  = jp.as_int("expected");
+    logger.debug("expected index is: '{}'", expected);
+    
+    int result = prb17::utils::algorithms::search::find(arr, find_value);
     logger.debug("result index was: '{}'", result);
 
     return expected == result;   
@@ -207,15 +208,13 @@ int main(int argc, char** argv) {
     }
     prb17::utils::validator validator{test_files};
 
-    //validator.add_tests(array_tests<std::string>);
+    validator.add_tests(array_tests<std::string>);
     validator.add_tests(array_tests<int>);
-/*
     validator.add_tests(array_tests<uint>);
     validator.add_tests(array_tests<char>);
     validator.add_tests(array_tests<bool>);
     validator.add_tests(array_tests<float>);
     validator.add_tests(array_tests<double>);
-*/
 
     logger.info("Starting validation tests of array_tests");
     validator.validate();
