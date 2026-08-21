@@ -1,13 +1,16 @@
 {
-    "MetaData": 
-    { 
+    "MetaData":
+    {
         "test_name" : "Linked List Functions Test",
         "test_type" : "unit"
     },
-    "Tests" : 
+    "Tests" :
     {
-        "singleLinkedListPrint": [
+        "testSingleListOrder": [
             {
+                "head_id": "10",
+                "expected_count": 5,
+                "expected_order": ["10", "1", "100", "9", "10-2"],
                 "graph": {
                     "nodes": [
                       {"id": "10", "value": 10, "edges": ["1"]},
@@ -19,8 +22,10 @@
                 }
             }
         ],
-        "doubleLinkedListPrint": [
+        "testDoubleListTerminates": [
             {
+                "start_id": "10",
+                "expected_visited": 5,
                 "graph": {
                     "nodes": [
                       {"id": "10", "value": 10, "edges": ["1"]},
@@ -28,6 +33,35 @@
                       {"id": "100", "value": 100, "edges": ["9", "1"]},
                       {"id": "9", "value": 9, "edges": ["10-2", "100"]},
                       {"id": "10-2", "value": 10, "edges": ["9"]}
+                    ]
+                }
+            }
+        ],
+        "testDoubleListReverseOrder": [
+            {
+                "tail_id": "10-2",
+                "expected_order": ["10-2", "9", "100", "1", "10"],
+                "graph": {
+                    "nodes": [
+                      {"id": "10", "value": 10, "edges": ["1"]},
+                      {"id": "1", "value": 1, "edges": ["100", "10"]},
+                      {"id": "100", "value": 100, "edges": ["9", "1"]},
+                      {"id": "9", "value": 9, "edges": ["10-2", "100"]},
+                      {"id": "10-2", "value": 10, "edges": ["9"]}
+                    ]
+                }
+            }
+        ],
+        "testLinkedListAdjacency": [
+            {
+                "expected_ids": ["10", "1", "100", "9", "10-2"],
+                "graph": {
+                    "nodes": [
+                      {"id": "10", "value": 10, "edges": ["1"]},
+                      {"id": "1", "value": 1, "edges": ["100"]},
+                      {"id": "100", "value": 100, "edges": ["9"]},
+                      {"id": "9", "value": 9, "edges": ["10-2"]},
+                      {"id": "10-2", "value": 10, "edges": []}
                     ]
                 }
             }
