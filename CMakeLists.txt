@@ -127,16 +127,19 @@ if(BUILD_UTILS_TESTS)
                                                         )
 
     message(DEBUG "configuring the linked list tests")
-    #set(LINKED_LIST_TEST_NAME linked_list_test)
-    #add_executable(${LINKED_LIST_TEST_NAME} structures/graphs/tests/cpp/linked_list_test.cc)
-    #target_link_libraries(${LINKED_LIST_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
-    #                                                        ${VALIDATOR_LIBRARY_NAME} 
-    #                                                        ${PARSERS_LIBRARY_NAME} 
-    #                                                        ${LOGGER_LIBRARY_NAME}
-    #                                                        ${BUILDER_PATTERN_LIBRARY_NAME}
-    #                                                        ${STRUCTURES_BUILDER_LIBRARY_NAME}
-    #                                                        ${GRAPH_BUILDER_LIBRARY_NAME}
-    #                                                        )
+    set(LINKED_LIST_TEST_NAME linked_list_test)
+    add_executable(${LINKED_LIST_TEST_NAME} structures/graphs/tests/cpp/linked_list_test.cc)
+    target_link_libraries(${LINKED_LIST_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME}
+                                                            ${GRAPH_ALGORITHMS_LIBRARY_NAME}
+                                                            ${ARRAY_SEARCH_LIBRARY_NAME}
+                                                            ${VALIDATOR_LIBRARY_NAME}
+                                                            ${PARSERS_LIBRARY_NAME}
+                                                            ${LOGGER_LIBRARY_NAME}
+                                                            ${BUILDER_PATTERN_LIBRARY_NAME}
+                                                            ${STRUCTURES_BUILDER_LIBRARY_NAME}
+                                                            ${GRAPH_BUILDER_LIBRARY_NAME}
+                                                            ${GRAPHS_TEST_HELPER_LIB}
+                                                            )
     
     message(DEBUG "configuring the tree tests")
     #set(TREE_TEST_NAME tree_test)
@@ -160,7 +163,7 @@ if(BUILD_UTILS_TESTS)
                     ${SETS_TEST_NAME}
                     ${MAPS_TEST_NAME}
                     ${GRAPHS_TEST_NAME}
-                    #${LINKED_LIST_TEST_NAME}
+                    ${LINKED_LIST_TEST_NAME}
                     #${TREE_TEST_NAME}
                     DESTINATION
                     structures/bin
