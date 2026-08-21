@@ -12,8 +12,8 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - name: Checkout my code
-      uses: actions/checkout@v3
-      with: 
+      uses: actions/checkout@v4
+      with:
         submodules: 'true'
     
     - name: build utils
@@ -24,7 +24,7 @@ jobs:
         make -j4 install
 
     - name: Upload utils install
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: utils_install
         path: ./install
