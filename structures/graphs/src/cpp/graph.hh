@@ -1,7 +1,6 @@
 #pragma once
 
 #include "vertex.hh"
-#include "queue.hh"
 #include "array.hh"
 
 #include "structures_builder.hh"
@@ -19,21 +18,18 @@ namespace prb17 {
                     size_t count;
                     array<vertex<T>*> vertices;
 
-                    void to_string(std::stringstream&, vertex<T>*, queue<vertex<T>*>&) const;     
                 protected:
 
                 public:
                     graph();
                     ~graph();
-                     void cleanup();
-                    
-                    size_t get_count() const;
-                     vertex<T>* get(std::string id) const;
+                    void cleanup();
 
-                     bool add(vertex<T> *v);
-                    
-                     std::string to_string() const;                    
-                     std::string to_adjacency_list() const;
+                    size_t get_count() const;
+                    vertex<T>* get(std::string id) const;
+                    vertex<T>* at(size_t idx) const;
+
+                    bool add(vertex<T> *v);
             };
 
             template<typename T>
@@ -57,8 +53,9 @@ namespace prb17 {
             template<typename T>
             bool graph<T>::add(vertex<T> *vertex) {
                 if (vertex == nullptr) { return false; }
-                //todo: find if id is already present in vertices
-                
+                // Reject duplicate ids - storage must not hold two vertices with the same id
+                if (get(vertex->get_id()) != nullptr) { return false; }
+
                 vertices.add(vertex);
                 count++;
                 return true;
@@ -74,61 +71,8 @@ namespace prb17 {
             }
 
             template<typename T>
-            std::string graph<T>::to_string() const {
-                std::stringstream stream;
-                queue<vertex<T>*> visited_nodes{};
-                to_string(stream, vertices[0], visited_nodes);
-                return stream.str();
-            }
-
-            template<typename T>
-            void graph<T>::to_string(std::stringstream& prefix, vertex<T>* node, queue<vertex<T>*>& visited) const {
-                if (visited.find(node) == -1) {
-                    visited.enqueue(node);
-
-                    // Print the current node
-                    prefix << "Node: " << node << " | Neighbors: ";
-
-                    // Print the neighbors of the current node
-                    for (int j=0; j<node->num_edges(); j++) {
-                        vertex<T>* neighbor = node->get_connected_vertex(j);
-                        prefix <<  neighbor << " ";                         
-                    }
-                    prefix << std::endl;
-
-                    // Recursively traverse the unvisited neighbors
-                    for (int j=0; j<node->num_edges(); j++) {
-                        vertex<T>* neighbor = node->get_connected_vertex(j);
-                        if (visited.find(neighbor) == -1) {
-                            to_string(prefix, neighbor, visited);
-                        }
-                    }
-                }
-            }
-
-            template<typename T>
-            std::string graph<T>::to_adjacency_list() const {
-                std::stringstream stream;
-                for(int i=0; i < vertices.size(); i++) {
-                    stream << "Node: " << vertices[i]->get_id() << " | ";
-                    for(int j=0; j < vertices[i]->get_edges().size(); j++) {
-                        if (vertices[i]->get_edges()[j] != nullptr) {
-                            stream << vertices[i]->get_edges()[j]->get_id() << " "; 
-                        }                                
-                    }
-                    stream << std::endl;
-                }                
-                return stream.str();
-            }
-
-            template<typename T>
-            inline std::ostream& operator<<(std::ostream &stream, const graph<T>& graph) {
-                return stream << graph.to_string();
-            }
-
-            template<typename T>
-            inline std::ostream& operator<<(std::ostream &stream, const graph<T>* graph) {
-                return stream << graph->to_string();
+            vertex<T>* graph<T>::at(size_t idx) const {
+                return ( idx < vertices.size() ) ? vertices[idx] : nullptr;
             }
         }
     }
