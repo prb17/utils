@@ -60,12 +60,21 @@ target_link_libraries(${GRAPHS_LIBRARY_NAME} INTERFACE
                                             ${STRUCTURES_BUILDER_LIBRARY_NAME}
                                             )
 
-# graph builder target definition                                        
+# graph builder target definition
 set(GRAPH_BUILDER_LIBRARY_NAME graph_builder)
 set(GRAPH_BUILDER_LIBRARY_NAME ${GRAPH_BUILDER_LIBRARY_NAME} PARENT_SCOPE)
 add_library(${GRAPH_BUILDER_LIBRARY_NAME} INTERFACE)
 target_include_directories(${GRAPH_BUILDER_LIBRARY_NAME} INTERFACE graphs/src/cpp/builder/)
-target_link_libraries(${STRUCTURES_BUILDER_LIBRARY_NAME} INTERFACE 
+target_link_libraries(${STRUCTURES_BUILDER_LIBRARY_NAME} INTERFACE
+                                            ${GRAPHS_LIBRARY_NAME}
+                                            )
+
+#trees target definition (a tree is a specialization of a graph)
+set(TREES_LIBRARY_NAME trees)
+set(TREES_LIBRARY_NAME ${TREES_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${TREES_LIBRARY_NAME} INTERFACE)
+target_include_directories(${TREES_LIBRARY_NAME} INTERFACE graphs/src/cpp/trees/)
+target_link_libraries(${TREES_LIBRARY_NAME} INTERFACE
                                             ${GRAPHS_LIBRARY_NAME}
                                             )
 

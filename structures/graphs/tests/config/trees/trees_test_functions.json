@@ -1,23 +1,124 @@
 {
-    "MetaData": 
-    { 
-        "test_name" : "Graph Tree Functions Test",
+    "MetaData":
+    {
+        "test_name" : "Tree Functions Test",
         "test_type" : "unit"
     },
-    "Tests" : 
+    "Tests" :
     {
-        "basicTreePrint": [            
+        "testTreeNodeCount": [
             {
-                "graph": {
-                    "nodes": [
-                        {"id": "10", "value": 10, "edges": ["10-2", "1"] },
-                        {"id": "1", "value": 1, "edges": ["100"] },
-                        {"id": "100", "value": 100, "edges": ["1"] },
-                        {"id": "9", "value": 9, "edges": ["10", "10-2"] },
-                        {"id": "10-2", "value": 10, "edges": [] }
-                    ]
-                }
-            }                
+                "max_children": 2,
+                "expected_count": 6,
+                "root": {"id": "A", "value": 1},
+                "nodes": [
+                    {"id": "B", "value": 2, "parent": "A"},
+                    {"id": "C", "value": 3, "parent": "A"},
+                    {"id": "D", "value": 4, "parent": "B"},
+                    {"id": "E", "value": 5, "parent": "B"},
+                    {"id": "F", "value": 6, "parent": "C"}
+                ]
+            }
+        ],
+        "testRootAccessor": [
+            {
+                "max_children": 2,
+                "expected_root": "A",
+                "root": {"id": "A", "value": 1},
+                "nodes": [
+                    {"id": "B", "value": 2, "parent": "A"},
+                    {"id": "C", "value": 3, "parent": "A"}
+                ]
+            }
+        ],
+        "testGetChildren": [
+            {
+                "max_children": 2,
+                "children_of": "B",
+                "expected_children": ["D", "E"],
+                "root": {"id": "A", "value": 1},
+                "nodes": [
+                    {"id": "B", "value": 2, "parent": "A"},
+                    {"id": "C", "value": 3, "parent": "A"},
+                    {"id": "D", "value": 4, "parent": "B"},
+                    {"id": "E", "value": 5, "parent": "B"},
+                    {"id": "F", "value": 6, "parent": "C"}
+                ]
+            }
+        ],
+        "testMaxChildrenEnforced": [
+            {
+                "max_children": 2,
+                "full_parent": "A",
+                "overflow_value": 99,
+                "root": {"id": "A", "value": 1},
+                "nodes": [
+                    {"id": "B", "value": 2, "parent": "A"},
+                    {"id": "C", "value": 3, "parent": "A"}
+                ]
+            }
+        ],
+        "testPreorder": [
+            {
+                "max_children": 2,
+                "expected_preorder": ["A", "B", "D", "E", "C", "F"],
+                "root": {"id": "A", "value": 1},
+                "nodes": [
+                    {"id": "B", "value": 2, "parent": "A"},
+                    {"id": "C", "value": 3, "parent": "A"},
+                    {"id": "D", "value": 4, "parent": "B"},
+                    {"id": "E", "value": 5, "parent": "B"},
+                    {"id": "F", "value": 6, "parent": "C"}
+                ]
+            }
+        ],
+        "testPostorder": [
+            {
+                "max_children": 2,
+                "expected_postorder": ["D", "E", "B", "F", "C", "A"],
+                "root": {"id": "A", "value": 1},
+                "nodes": [
+                    {"id": "B", "value": 2, "parent": "A"},
+                    {"id": "C", "value": 3, "parent": "A"},
+                    {"id": "D", "value": 4, "parent": "B"},
+                    {"id": "E", "value": 5, "parent": "B"},
+                    {"id": "F", "value": 6, "parent": "C"}
+                ]
+            }
+        ],
+        "testLevelOrder": [
+            {
+                "max_children": 2,
+                "expected_levelorder": ["A", "B", "C", "D", "E", "F"],
+                "root": {"id": "A", "value": 1},
+                "nodes": [
+                    {"id": "B", "value": 2, "parent": "A"},
+                    {"id": "C", "value": 3, "parent": "A"},
+                    {"id": "D", "value": 4, "parent": "B"},
+                    {"id": "E", "value": 5, "parent": "B"},
+                    {"id": "F", "value": 6, "parent": "C"}
+                ]
+            }
+        ],
+        "testHeight": [
+            {
+                "max_children": 2,
+                "expected_height": 2,
+                "root": {"id": "A", "value": 1},
+                "nodes": [
+                    {"id": "B", "value": 2, "parent": "A"},
+                    {"id": "C", "value": 3, "parent": "A"},
+                    {"id": "D", "value": 4, "parent": "B"},
+                    {"id": "E", "value": 5, "parent": "B"},
+                    {"id": "F", "value": 6, "parent": "C"}
+                ]
+            }
+        ],
+        "testBinaryTreeClass": [
+            {}
+        ],
+        "testUnboundedDefault": [
+            {}
         ]
     }
 }

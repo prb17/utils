@@ -77,3 +77,12 @@ jobs:
         valgrind --leak-check=full --error-exitcode=1 ./linked_list_test ../config/graphs/linked_lists/linked_lists_test_*.json
         chmod -x linked_list_test
         cd -
+
+    - name: Tree Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x tree_test
+        valgrind --leak-check=full --error-exitcode=1 ./tree_test ../config/graphs/trees/trees_test_*.json
+        chmod -x tree_test
+        cd -

@@ -70,6 +70,22 @@ For example, graph traversal (`dfs`, `bfs`), `to_string`, and
 checks there go through `prb17::utils::algorithms::search::find` so the search
 algorithm stays swappable rather than being baked into a container.
 
+## Graph specializations
+
+Several structures are just constrained graphs and are built on top of `graph`:
+
+- A **linked list** is a chain of vertices (single = `next` edges only, double =
+  `next` + `prev` edges). It has no dedicated class; it is exercised directly as
+  a graph in `structures/graphs/tests/cpp/linked_list_test.cc`.
+- A **tree** (`structures/graphs/src/cpp/trees/tree.hh`) is a rooted, acyclic
+  graph where each node has at most `max_children` children (`0` = unbounded).
+  It owns storage/access only (`add_root`, `add_child`, `get_children`,
+  `is_full`, `as_graph()`); traversals (`preorder`, `postorder`, `level_order`,
+  `height`) live in `algorithms/graphs/tree_traverse.hh` and reuse the graph
+  `dfs`/`bfs` where possible.
+- A **binary tree** (`trees/binary_tree.hh`) is simply a `tree` with
+  `max_children` fixed to 2.
+
 ## Style
 
 - 4-space indentation.

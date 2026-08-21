@@ -142,17 +142,19 @@ if(BUILD_UTILS_TESTS)
                                                             )
     
     message(DEBUG "configuring the tree tests")
-    #set(TREE_TEST_NAME tree_test)
-    #add_executable(${TREE_TEST_NAME} structures/graphs/tests/cpp/tree_test.cc)
-    #target_link_libraries(${TREE_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME} 
-    #                                                    ${VALIDATOR_LIBRARY_NAME} 
-    #                                                    ${PARSERS_LIBRARY_NAME} 
-    #                                                    ${LOGGER_LIBRARY_NAME}
-    #                                                    ${BUILDER_PATTERN_LIBRARY_NAME}
-    #                                                    ${STRUCTURES_BUILDER_LIBRARY_NAME}
-    #                                                    ${GRAPH_BUILDER_LIBRARY_NAME}
-    #                                                    ${GRAPHS_TEST_HELPER_LIB}
-    #                                                    )
+    set(TREE_TEST_NAME tree_test)
+    add_executable(${TREE_TEST_NAME} structures/graphs/tests/cpp/tree_test.cc)
+    target_link_libraries(${TREE_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME}
+                                                        ${TREES_LIBRARY_NAME}
+                                                        ${GRAPH_ALGORITHMS_LIBRARY_NAME}
+                                                        ${ARRAY_SEARCH_LIBRARY_NAME}
+                                                        ${VALIDATOR_LIBRARY_NAME}
+                                                        ${PARSERS_LIBRARY_NAME}
+                                                        ${LOGGER_LIBRARY_NAME}
+                                                        ${BUILDER_PATTERN_LIBRARY_NAME}
+                                                        ${STRUCTURES_BUILDER_LIBRARY_NAME}
+                                                        ${GRAPH_BUILDER_LIBRARY_NAME}
+                                                        )
 
     message(DEBUG "configuring the tests install")
     install(FILES ${GRAPH_HELPER_INCS} DESTINATION structures/include)
@@ -164,7 +166,7 @@ if(BUILD_UTILS_TESTS)
                     ${MAPS_TEST_NAME}
                     ${GRAPHS_TEST_NAME}
                     ${LINKED_LIST_TEST_NAME}
-                    #${TREE_TEST_NAME}
+                    ${TREE_TEST_NAME}
                     DESTINATION
                     structures/bin
                     )

@@ -21,6 +21,7 @@ set(GRAPH_ALGORITHMS_INCLUDE_DIRS ${GRAPH_ALGORITHMS_INCLUDE_DIRS} PARENT_SCOPE)
 target_include_directories(${GRAPH_ALGORITHMS_LIBRARY_NAME} INTERFACE ${GRAPH_ALGORITHMS_INCLUDE_DIRS})
 target_link_libraries(${GRAPH_ALGORITHMS_LIBRARY_NAME} INTERFACE
                                             ${GRAPHS_LIBRARY_NAME}
+                                            ${TREES_LIBRARY_NAME}
                                             ${QUEUES_LIBRARY_NAME}
                                             ${ARRAY_SEARCH_LIBRARY_NAME}
                                             ${BUILDER_PATTERN_LIBRARY_NAME}
