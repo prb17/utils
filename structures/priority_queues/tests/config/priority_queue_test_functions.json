@@ -1,0 +1,22 @@
+{
+    "MetaData":
+    {
+        "test_name" : "Priority Queue Functions Test",
+        "test_type" : "unit"
+    },
+    "Tests" :
+    {
+        "testPQMinOrder": [
+            { "input": [5, 3, 8, 1, 9, 2, 7], "expected": [1, 2, 3, 5, 7, 8, 9] }
+        ],
+        "testPQMaxOrder": [
+            { "input": [5, 3, 8, 1, 9, 2, 7], "expected_desc": [9, 8, 7, 5, 3, 2, 1] }
+        ],
+        "testPQPeekSize": [
+            { "input": [5, 3, 8, 1, 9], "expected_peek": 1, "expected_size": 5 }
+        ],
+        "testPQEmpty": [
+            {}
+        ]
+    }
+}

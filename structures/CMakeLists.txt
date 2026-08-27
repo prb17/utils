@@ -78,6 +78,41 @@ target_link_libraries(${TREES_LIBRARY_NAME} INTERFACE
                                             ${GRAPHS_LIBRARY_NAME}
                                             )
 
+#heap target definition (complete binary tree encoded in an array)
+set(HEAPS_LIBRARY_NAME heaps)
+set(HEAPS_LIBRARY_NAME ${HEAPS_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${HEAPS_LIBRARY_NAME} INTERFACE)
+target_include_directories(${HEAPS_LIBRARY_NAME} INTERFACE heaps/src/cpp/)
+target_link_libraries(${HEAPS_LIBRARY_NAME} INTERFACE ${ARRAY_LIBRARY_NAME})
+
+#priority queue target definition (adaptor over heap)
+set(PRIORITY_QUEUES_LIBRARY_NAME priority_queues)
+set(PRIORITY_QUEUES_LIBRARY_NAME ${PRIORITY_QUEUES_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${PRIORITY_QUEUES_LIBRARY_NAME} INTERFACE)
+target_include_directories(${PRIORITY_QUEUES_LIBRARY_NAME} INTERFACE priority_queues/src/cpp/)
+target_link_libraries(${PRIORITY_QUEUES_LIBRARY_NAME} INTERFACE ${HEAPS_LIBRARY_NAME})
+
+#sorted sequence target definition (array with a maintained sort order)
+set(SORTED_SEQUENCES_LIBRARY_NAME sorted_sequences)
+set(SORTED_SEQUENCES_LIBRARY_NAME ${SORTED_SEQUENCES_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${SORTED_SEQUENCES_LIBRARY_NAME} INTERFACE)
+target_include_directories(${SORTED_SEQUENCES_LIBRARY_NAME} INTERFACE sorted_sequences/src/cpp/)
+target_link_libraries(${SORTED_SEQUENCES_LIBRARY_NAME} INTERFACE ${ARRAY_LIBRARY_NAME})
+
+#balanced bst target definition (self-balancing AVL tree)
+set(BST_LIBRARY_NAME bst)
+set(BST_LIBRARY_NAME ${BST_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${BST_LIBRARY_NAME} INTERFACE)
+target_include_directories(${BST_LIBRARY_NAME} INTERFACE bst/src/cpp/)
+target_link_libraries(${BST_LIBRARY_NAME} INTERFACE ${ARRAY_LIBRARY_NAME})
+
+#ring buffer target definition (fixed-capacity circular buffer)
+set(RING_BUFFERS_LIBRARY_NAME ring_buffers)
+set(RING_BUFFERS_LIBRARY_NAME ${RING_BUFFERS_LIBRARY_NAME} PARENT_SCOPE)
+add_library(${RING_BUFFERS_LIBRARY_NAME} INTERFACE)
+target_include_directories(${RING_BUFFERS_LIBRARY_NAME} INTERFACE ring_buffers/src/cpp/)
+target_link_libraries(${RING_BUFFERS_LIBRARY_NAME} INTERFACE ${ARRAY_LIBRARY_NAME})
+
 file(GLOB STRUCTURES_BUILDER_HEADERS buider/src/cpp/*.hh)
 file(GLOB ARRAY_HEADERS arrays/src/cpp/*.hh)
 file(GLOB STACKS_HEADERS stacks/src/cpp/*.hh)
@@ -88,6 +123,11 @@ file(GLOB GRAPHS_HEADERS graphs/src/cpp/*.hh)
 file(GLOB GRAPH_BUILDER_HEADERS graphs/builder/cpp/*.hh)
 file(GLOB LINKED_LISTS_HEADERS graphs/src/cpp/linked_lists/*.hh)
 file(GLOB TREES_HEADERS graphs/src/cpp/trees/*.hh)
+file(GLOB HEAPS_HEADERS heaps/src/cpp/*.hh)
+file(GLOB PRIORITY_QUEUES_HEADERS priority_queues/src/cpp/*.hh)
+file(GLOB SORTED_SEQUENCES_HEADERS sorted_sequences/src/cpp/*.hh)
+file(GLOB BST_HEADERS bst/src/cpp/*.hh)
+file(GLOB RING_BUFFERS_HEADERS ring_buffers/src/cpp/*.hh)
 
 install(FILES ${STRUCTURES_BUILDER_HEADERS}
                 ${ARRAY_HEADERS}
@@ -97,6 +137,12 @@ install(FILES ${STRUCTURES_BUILDER_HEADERS}
                 ${MAPS_HEADERS}
                 ${GRAPHS_HEADERS}
                 ${GRAPH_BUILDER_HEADERS}
+                ${TREES_HEADERS}
+                ${HEAPS_HEADERS}
+                ${PRIORITY_QUEUES_HEADERS}
+                ${SORTED_SEQUENCES_HEADERS}
+                ${BST_HEADERS}
+                ${RING_BUFFERS_HEADERS}
                 DESTINATION
                 structures/include)
 
@@ -126,3 +172,18 @@ install(FILES ${LINKED_LISTS_CONFIGS} DESTINATION structures/config/graphs/linke
 
 file(GLOB TREES_CONFIGS graphs/tests/config/trees/*.json)
 install(FILES ${TREES_CONFIGS} DESTINATION structures/config/graphs/trees)
+
+file(GLOB HEAP_CONFIGS heaps/tests/config/*.json)
+install(FILES ${HEAP_CONFIGS} DESTINATION structures/config/heaps)
+
+file(GLOB PRIORITY_QUEUE_CONFIGS priority_queues/tests/config/*.json)
+install(FILES ${PRIORITY_QUEUE_CONFIGS} DESTINATION structures/config/priority_queues)
+
+file(GLOB SORTED_SEQUENCE_CONFIGS sorted_sequences/tests/config/*.json)
+install(FILES ${SORTED_SEQUENCE_CONFIGS} DESTINATION structures/config/sorted_sequences)
+
+file(GLOB BST_CONFIGS bst/tests/config/*.json)
+install(FILES ${BST_CONFIGS} DESTINATION structures/config/bst)
+
+file(GLOB RING_BUFFER_CONFIGS ring_buffers/tests/config/*.json)
+install(FILES ${RING_BUFFER_CONFIGS} DESTINATION structures/config/ring_buffers)

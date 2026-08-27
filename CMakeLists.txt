@@ -97,6 +97,51 @@ if(BUILD_UTILS_TESTS)
                                                         ${LOGGER_LIBRARY_NAME}
                                                         )
 
+    message(DEBUG "configuring the heaps tests")
+    set(HEAPS_TEST_NAME heaps_test)
+    add_executable(${HEAPS_TEST_NAME} structures/heaps/tests/cpp/heap_test.cc)
+    target_link_libraries(${HEAPS_TEST_NAME} PRIVATE ${HEAPS_LIBRARY_NAME}
+                                                        ${VALIDATOR_LIBRARY_NAME}
+                                                        ${PARSERS_LIBRARY_NAME}
+                                                        ${LOGGER_LIBRARY_NAME}
+                                                        )
+
+    message(DEBUG "configuring the priority queues tests")
+    set(PRIORITY_QUEUES_TEST_NAME priority_queues_test)
+    add_executable(${PRIORITY_QUEUES_TEST_NAME} structures/priority_queues/tests/cpp/priority_queue_test.cc)
+    target_link_libraries(${PRIORITY_QUEUES_TEST_NAME} PRIVATE ${PRIORITY_QUEUES_LIBRARY_NAME}
+                                                        ${VALIDATOR_LIBRARY_NAME}
+                                                        ${PARSERS_LIBRARY_NAME}
+                                                        ${LOGGER_LIBRARY_NAME}
+                                                        )
+
+    message(DEBUG "configuring the sorted sequences tests")
+    set(SORTED_SEQUENCES_TEST_NAME sorted_sequences_test)
+    add_executable(${SORTED_SEQUENCES_TEST_NAME} structures/sorted_sequences/tests/cpp/sorted_sequence_test.cc)
+    target_link_libraries(${SORTED_SEQUENCES_TEST_NAME} PRIVATE ${SORTED_SEQUENCES_LIBRARY_NAME}
+                                                        ${VALIDATOR_LIBRARY_NAME}
+                                                        ${PARSERS_LIBRARY_NAME}
+                                                        ${LOGGER_LIBRARY_NAME}
+                                                        )
+
+    message(DEBUG "configuring the bst tests")
+    set(BST_TEST_NAME bst_test)
+    add_executable(${BST_TEST_NAME} structures/bst/tests/cpp/avl_tree_test.cc)
+    target_link_libraries(${BST_TEST_NAME} PRIVATE ${BST_LIBRARY_NAME}
+                                                        ${VALIDATOR_LIBRARY_NAME}
+                                                        ${PARSERS_LIBRARY_NAME}
+                                                        ${LOGGER_LIBRARY_NAME}
+                                                        )
+
+    message(DEBUG "configuring the ring buffers tests")
+    set(RING_BUFFERS_TEST_NAME ring_buffers_test)
+    add_executable(${RING_BUFFERS_TEST_NAME} structures/ring_buffers/tests/cpp/ring_buffer_test.cc)
+    target_link_libraries(${RING_BUFFERS_TEST_NAME} PRIVATE ${RING_BUFFERS_LIBRARY_NAME}
+                                                        ${VALIDATOR_LIBRARY_NAME}
+                                                        ${PARSERS_LIBRARY_NAME}
+                                                        ${LOGGER_LIBRARY_NAME}
+                                                        )
+
     message(DEBUG "configuring the graphs tests helper libs")
     set(GRAPHS_TEST_HELPER_LIB graphs_test_helper)
     add_library(${GRAPHS_TEST_HELPER_LIB} INTERFACE)
@@ -167,6 +212,11 @@ if(BUILD_UTILS_TESTS)
                     ${GRAPHS_TEST_NAME}
                     ${LINKED_LIST_TEST_NAME}
                     ${TREE_TEST_NAME}
+                    ${HEAPS_TEST_NAME}
+                    ${PRIORITY_QUEUES_TEST_NAME}
+                    ${SORTED_SEQUENCES_TEST_NAME}
+                    ${BST_TEST_NAME}
+                    ${RING_BUFFERS_TEST_NAME}
                     DESTINATION
                     structures/bin
                     )

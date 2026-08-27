@@ -1,0 +1,27 @@
+{
+    "MetaData":
+    {
+        "test_name" : "Sorted Sequence Functions Test",
+        "test_type" : "unit"
+    },
+    "Tests" :
+    {
+        "testSortedOrder": [
+            { "input": [5, 3, 8, 1, 9, 2, 7], "expected": [1, 2, 3, 5, 7, 8, 9] },
+            { "input": [3, 1, 2], "expected": [1, 2, 3] }
+        ],
+        "testSortedContains": [
+            { "input": [5, 3, 8, 1, 9], "present": 8, "absent": 6 }
+        ],
+        "testSortedFind": [
+            { "input": [5, 3, 8, 1, 9, 2, 7], "value": 7, "expected_index": 4 },
+            { "input": [5, 3, 8, 1, 9, 2, 7], "value": 6, "expected_index": -1 }
+        ],
+        "testSortedRemove": [
+            { "input": [5, 3, 8, 1, 9, 2, 7], "remove": 3, "absent": 100, "expected": [1, 2, 5, 7, 8, 9] }
+        ],
+        "testSortedMinMax": [
+            { "input": [5, 3, 8, 1, 9, 2, 7], "expected_min": 1, "expected_max": 9 }
+        ]
+    }
+}
