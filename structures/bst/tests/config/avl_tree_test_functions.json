@@ -1,0 +1,28 @@
+{
+    "MetaData":
+    {
+        "test_name" : "AVL Tree Functions Test",
+        "test_type" : "unit"
+    },
+    "Tests" :
+    {
+        "testAvlInorderSorted": [
+            { "input": [5, 3, 8, 1, 9, 2, 7], "expected": [1, 2, 3, 5, 7, 8, 9] }
+        ],
+        "testAvlContains": [
+            { "input": [5, 3, 8, 1, 9], "present": 8, "absent": 6 }
+        ],
+        "testAvlBalancedHeight": [
+            { "input": [1, 2, 3, 4, 5, 6, 7], "expected_height": 2 }
+        ],
+        "testAvlRemove": [
+            { "input": [5, 3, 8, 1, 9, 2, 7], "remove": [3, 8], "absent": 100, "expected": [1, 2, 5, 7, 9], "expected_size": 5 }
+        ],
+        "testAvlMinMax": [
+            { "input": [5, 3, 8, 1, 9, 2, 7], "expected_min": 1, "expected_max": 9 }
+        ],
+        "testAvlDuplicateRejected": [
+            {}
+        ]
+    }
+}

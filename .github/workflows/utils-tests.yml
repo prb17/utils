@@ -86,3 +86,48 @@ jobs:
         valgrind --leak-check=full --error-exitcode=1 ./tree_test ../config/graphs/trees/trees_test_*.json
         chmod -x tree_test
         cd -
+
+    - name: Heap Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x heaps_test
+        valgrind --leak-check=full --error-exitcode=1 ./heaps_test ../config/heaps/heap_test_*.json
+        chmod -x heaps_test
+        cd -
+
+    - name: Priority Queue Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x priority_queues_test
+        valgrind --leak-check=full --error-exitcode=1 ./priority_queues_test ../config/priority_queues/priority_queue_test_*.json
+        chmod -x priority_queues_test
+        cd -
+
+    - name: Sorted Sequence Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x sorted_sequences_test
+        valgrind --leak-check=full --error-exitcode=1 ./sorted_sequences_test ../config/sorted_sequences/sorted_sequence_test_*.json
+        chmod -x sorted_sequences_test
+        cd -
+
+    - name: BST Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x bst_test
+        valgrind --leak-check=full --error-exitcode=1 ./bst_test ../config/bst/avl_tree_test_*.json
+        chmod -x bst_test
+        cd -
+
+    - name: Ring Buffer Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x ring_buffers_test
+        valgrind --leak-check=full --error-exitcode=1 ./ring_buffers_test ../config/ring_buffers/ring_buffer_test_*.json
+        chmod -x ring_buffers_test
+        cd -

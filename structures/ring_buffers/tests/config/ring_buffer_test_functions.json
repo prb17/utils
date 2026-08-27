@@ -1,0 +1,26 @@
+{
+    "MetaData":
+    {
+        "test_name" : "Ring Buffer Functions Test",
+        "test_type" : "unit"
+    },
+    "Tests" :
+    {
+        "testRingFifo": [
+            { "capacity": 5, "input": [1, 2, 3] },
+            { "capacity": 3, "input": [7, 8, 9] }
+        ],
+        "testRingFull": [
+            { "capacity": 4 }
+        ],
+        "testRingWraparound": [
+            { "capacity": 3, "first": [1, 2, 3], "pops": 2, "second": [4, 5], "expected": [3, 4, 5] }
+        ],
+        "testRingForcePush": [
+            { "capacity": 3, "input": [1, 2, 3, 4, 5], "expected": [3, 4, 5] }
+        ],
+        "testRingEmpty": [
+            { "capacity": 4 }
+        ]
+    }
+}

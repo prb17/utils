@@ -5,8 +5,9 @@ Guidance for working in this repository.
 ## What this is
 
 `prb17/utils` is a from-scratch C++17 utility library: containers (array, stack,
-queue, set, map, graph), algorithms, a JSON parser, a logger, timing helpers,
-GoF patterns, and a small JSON-driven test validator. Everything lives under the
+queue, set, map, graph, heap, priority queue, sorted sequence, balanced BST,
+ring buffer), algorithms, a JSON parser, a logger, timing helpers, GoF patterns,
+and a small JSON-driven test validator. Everything lives under the
 `prb17::utils` namespace and is header-only (templates defined in `.hh` headers).
 
 ## Cloning
@@ -85,6 +86,28 @@ Several structures are just constrained graphs and are built on top of `graph`:
   `dfs`/`bfs` where possible.
 - A **binary tree** (`trees/binary_tree.hh`) is simply a `tree` with
   `max_children` fixed to 2.
+
+## Container adaptors and specialized containers
+
+Some containers maintain an ordering invariant themselves (the way `stack` and
+`queue` own their LIFO/FIFO discipline) rather than delegating it to an
+algorithm:
+
+- A **heap** (`structures/heaps/src/cpp/heap.hh`) is a complete binary tree
+  stored implicitly in an `array` — parent/child links are index arithmetic
+  (`2i+1`, `2i+2`, `(i-1)/2`), not stored edges. Sift-up/sift-down keep the
+  heap-order invariant on push/pop. Default `Compare` is a min-heap.
+- A **priority queue** (`structures/priority_queues/`) is a thin adaptor over
+  `heap`.
+- A **sorted sequence** (`structures/sorted_sequences/`) is an `array` kept in
+  sorted order on insert, with binary-search `find`/`contains`.
+- A **balanced BST** (`structures/bst/src/cpp/avl_tree.hh`) is an AVL tree. It
+  is the one container whose invariant cannot be an external algorithm: the
+  balance is coupled to every mutation via rotations, so it owns its own node
+  type rather than reusing the graph-based `tree`.
+- A **ring buffer** (`structures/ring_buffers/`) is a fixed-capacity circular
+  buffer — a distinct storage layout (wraparound indices over a pre-sized
+  backing store), not a policy over `array`.
 
 ## Style
 
