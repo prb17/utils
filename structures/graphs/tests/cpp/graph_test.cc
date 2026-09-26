@@ -7,6 +7,7 @@
 #include "logger.hh"
 
 #include "traverse.hh"
+#include "depths.hh"
 #include "graph_test_helper.hh"
 
 using namespace prb17::utils::structures;
@@ -254,6 +255,33 @@ bool testOutOfRangeEdgeAccess(prb17::utils::parsers::json_parser jp) {
     return result;
 }
 
+// sum of the depths of all nodes reachable from a reference node
+template<typename T>
+bool testSumOfDepths(prb17::utils::parsers::json_parser jp) {
+    graph<T>* g = build_weighted_graph_from_config<T>(jp);
+    std::string reference = jp.as_string("reference");
+    int expected = jp.as_int("expected");
+    int got = algo::sum_of_depths(*g, reference);
+    logger.debug("sum_of_depths from '{}': {}, expected {}", reference, got, expected);
+    g->cleanup();
+    delete g;
+    return got == expected;
+}
+
+// depth (edge distance) of a node relative to a reference; -1 if unreachable/missing
+template<typename T>
+bool testNodeDepth(prb17::utils::parsers::json_parser jp) {
+    graph<T>* g = build_weighted_graph_from_config<T>(jp);
+    std::string reference = jp.as_string("reference");
+    std::string node = jp.as_string("node");
+    int expected = jp.as_int("expected");
+    int got = algo::depth(*g, reference, node);
+    logger.debug("depth of '{}' from '{}': {}, expected {}", node, reference, got, expected);
+    g->cleanup();
+    delete g;
+    return got == expected;
+}
+
 template<typename T>
 static prb17::utils::structures::array<prb17::utils::test> build_tests() {
     prb17::utils::structures::array<prb17::utils::test> tests;
@@ -271,6 +299,9 @@ static prb17::utils::structures::array<prb17::utils::test> build_tests() {
     tests.add(prb17::utils::test{"testWeightReadback", &testWeightReadback<T>});
     tests.add(prb17::utils::test{"testRemoveEdgeKeepsWeightsAligned", &testRemoveEdgeKeepsWeightsAligned<T>});
     tests.add(prb17::utils::test{"testOutOfRangeEdgeAccess", &testOutOfRangeEdgeAccess<T>});
+
+    tests.add(prb17::utils::test{"testSumOfDepths", &testSumOfDepths<T>});
+    tests.add(prb17::utils::test{"testNodeDepth", &testNodeDepth<T>});
 
     return tests;
 }
