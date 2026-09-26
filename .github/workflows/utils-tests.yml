@@ -140,3 +140,12 @@ jobs:
         valgrind --leak-check=full --error-exitcode=1 ./ring_buffers_test ../config/ring_buffers/ring_buffer_test_*.json
         chmod -x ring_buffers_test
         cd -
+
+    - name: Socket Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x sockets_test
+        valgrind --leak-check=full --error-exitcode=1 ./sockets_test ../config/sockets/socket_test_*.json
+        chmod -x sockets_test
+        cd -

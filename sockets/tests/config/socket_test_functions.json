@@ -1,0 +1,29 @@
+{
+    "MetaData":
+    {
+        "test_name" : "Socket Functions Test",
+        "test_type" : "unit"
+    },
+    "Tests" :
+    {
+        "testEndpointRoundTrip": [
+            { "address": "127.0.0.1", "port": 8080, "expected": "127.0.0.1:8080" },
+            { "address": "localhost", "port": 0, "expected": "localhost:0" }
+        ],
+        "testEndpointFromString": [
+            { "input": "192.168.1.5:9000", "expected_address": "192.168.1.5", "expected_port": 9000 },
+            { "input": "no-colon", "expected_address": "", "expected_port": 0 }
+        ],
+        "testMessageRoundTrip": [
+            { "src_address": "127.0.0.1", "src_port": 1, "dst_address": "127.0.0.1", "dst_port": 2, "type": "TEXT", "body": "hello world" },
+            { "src_address": "10.0.0.1", "src_port": 5000, "dst_address": "10.0.0.2", "dst_port": 6000, "type": "CMD", "body": "body with | pipe" }
+        ],
+        "testLoopbackEcho": [
+            { "body": "round-trip over loopback" },
+            { "body": "another line" }
+        ],
+        "testLoopbackMessage": [
+            { "type": "TEXT", "body": "framed message over the wire" }
+        ]
+    }
+}

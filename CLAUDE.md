@@ -6,9 +6,11 @@ Guidance for working in this repository.
 
 `prb17/utils` is a from-scratch C++17 utility library: containers (array, stack,
 queue, set, map, graph, heap, priority queue, sorted sequence, balanced BST,
-ring buffer), algorithms, a JSON parser, a logger, timing helpers, GoF patterns,
-and a small JSON-driven test validator. Everything lives under the
-`prb17::utils` namespace and is header-only (templates defined in `.hh` headers).
+ring buffer), algorithms, a JSON parser, a logger, timing helpers, POSIX TCP
+sockets, GoF patterns, and a small JSON-driven test validator. Everything lives
+under the `prb17::utils` namespace and is header-only (templates defined in
+`.hh` headers), except a few modules with syscall/library glue compiled from a
+`.cc` (the JSON parser, and the `sockets` module).
 
 ## Cloning
 

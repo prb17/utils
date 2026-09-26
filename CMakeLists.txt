@@ -33,6 +33,7 @@ add_subdirectory(logger)
 add_subdirectory(parsers)
 add_subdirectory(validator)
 add_subdirectory(algorithms)
+add_subdirectory(sockets)
 
 
 #####################################################################################
