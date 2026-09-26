@@ -53,6 +53,20 @@ cases. For the graph tests:
 
 The validator prints a per-test passed/failed tally and a final total.
 
+## Test conventions
+
+When writing validator tests for anything generic over a value type, exercise
+**every value type**, not just `int` — each raw type (`int`, `unsigned int`,
+`char`, `float`, `double`, and `bool` where it makes sense) and `std::string` —
+so edge cases that only show up for one type surface (e.g. float-vs-int
+comparison behavior, or a class type like `std::string`).
+
+Note a validator quirk: for a given test name it runs **only the last-registered
+function**. So registering one templated test name for many types (as
+`array_test` does) actually exercises only the last type. To genuinely cover
+multiple types, give each type its **own distinct test name** (see the
+`testType*` tests in `structures/graphs/tests/cpp/bst_test.cc`).
+
 ## Architecture: structures vs. algorithms
 
 Keep this layering strict:

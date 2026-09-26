@@ -45,6 +45,12 @@
         ],
         "testRemoveMissing": [
             { "values": [10, 5, 15, 2, 13, 22, 1], "absent": 99, "expected": [1, 2, 5, 10, 13, 15, 22] }
-        ]
+        ],
+        "testTypeInt": [ {} ],
+        "testTypeUint": [ {} ],
+        "testTypeChar": [ {} ],
+        "testTypeFloat": [ {} ],
+        "testTypeDouble": [ {} ],
+        "testTypeString": [ {} ]
     }
 }
