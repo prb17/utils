@@ -81,9 +81,11 @@ Keep this layering strict:
 
 For example, graph traversal (`dfs`, `bfs`), `to_string`, and
 `to_adjacency_list` live in `algorithms/graphs/traverse.hh` under
-`prb17::utils::algorithms::graphs`, not on the `graph` class. Visited-membership
-checks there go through `prb17::utils::algorithms::search::find` so the search
-algorithm stays swappable rather than being baked into a container.
+`prb17::utils::algorithms::graphs`, not on the `graph` class. Node depths
+(`depth`, `sum_of_depths`) relative to a reference vertex live alongside them in
+`algorithms/graphs/depths.hh`. Visited-membership checks there go through
+`prb17::utils::algorithms::search::find` so the search algorithm stays swappable
+rather than being baked into a container.
 
 ## Graph specializations
 

@@ -162,6 +162,79 @@
                     {"id": "X", "value": 2, "edges": []}
                 ]}
             }
+        ],
+        "testSumOfDepths": [
+            {
+                "reference": "1",
+                "expected": 16,
+                "graph": { "nodes": [
+                    {"id": "1", "value": 1, "edges": [{"id": "2", "weight": 1}, {"id": "3", "weight": 1}]},
+                    {"id": "2", "value": 2, "edges": [{"id": "4", "weight": 1}, {"id": "5", "weight": 1}]},
+                    {"id": "3", "value": 3, "edges": [{"id": "6", "weight": 1}, {"id": "7", "weight": 1}]},
+                    {"id": "4", "value": 4, "edges": [{"id": "8", "weight": 1}, {"id": "9", "weight": 1}]},
+                    {"id": "5", "value": 5, "edges": []},
+                    {"id": "6", "value": 6, "edges": []},
+                    {"id": "7", "value": 7, "edges": []},
+                    {"id": "8", "value": 8, "edges": []},
+                    {"id": "9", "value": 9, "edges": []}
+                ]}
+            },
+            {
+                "reference": "2",
+                "expected": 6,
+                "graph": { "nodes": [
+                    {"id": "1", "value": 1, "edges": [{"id": "2", "weight": 1}, {"id": "3", "weight": 1}]},
+                    {"id": "2", "value": 2, "edges": [{"id": "4", "weight": 1}, {"id": "5", "weight": 1}]},
+                    {"id": "3", "value": 3, "edges": [{"id": "6", "weight": 1}, {"id": "7", "weight": 1}]},
+                    {"id": "4", "value": 4, "edges": [{"id": "8", "weight": 1}, {"id": "9", "weight": 1}]},
+                    {"id": "5", "value": 5, "edges": []},
+                    {"id": "6", "value": 6, "edges": []},
+                    {"id": "7", "value": 7, "edges": []},
+                    {"id": "8", "value": 8, "edges": []},
+                    {"id": "9", "value": 9, "edges": []}
+                ]}
+            }
+        ],
+        "testNodeDepth": [
+            { "reference": "1", "node": "8", "expected": 3,
+              "graph": { "nodes": [
+                {"id": "1", "value": 1, "edges": [{"id": "2", "weight": 1}, {"id": "3", "weight": 1}]},
+                {"id": "2", "value": 2, "edges": [{"id": "4", "weight": 1}, {"id": "5", "weight": 1}]},
+                {"id": "3", "value": 3, "edges": [{"id": "6", "weight": 1}, {"id": "7", "weight": 1}]},
+                {"id": "4", "value": 4, "edges": [{"id": "8", "weight": 1}, {"id": "9", "weight": 1}]},
+                {"id": "5", "value": 5, "edges": []}, {"id": "6", "value": 6, "edges": []},
+                {"id": "7", "value": 7, "edges": []}, {"id": "8", "value": 8, "edges": []},
+                {"id": "9", "value": 9, "edges": []}
+              ]}
+            },
+            { "reference": "1", "node": "1", "expected": 0,
+              "graph": { "nodes": [
+                {"id": "1", "value": 1, "edges": [{"id": "2", "weight": 1}]},
+                {"id": "2", "value": 2, "edges": []}
+              ]}
+            },
+            { "reference": "1", "node": "5", "expected": 2,
+              "graph": { "nodes": [
+                {"id": "1", "value": 1, "edges": [{"id": "2", "weight": 1}, {"id": "3", "weight": 1}]},
+                {"id": "2", "value": 2, "edges": [{"id": "4", "weight": 1}, {"id": "5", "weight": 1}]},
+                {"id": "3", "value": 3, "edges": []}, {"id": "4", "value": 4, "edges": []},
+                {"id": "5", "value": 5, "edges": []}
+              ]}
+            },
+            { "reference": "3", "node": "4", "expected": -1,
+              "graph": { "nodes": [
+                {"id": "1", "value": 1, "edges": [{"id": "2", "weight": 1}, {"id": "3", "weight": 1}]},
+                {"id": "2", "value": 2, "edges": [{"id": "4", "weight": 1}]},
+                {"id": "3", "value": 3, "edges": [{"id": "6", "weight": 1}]},
+                {"id": "4", "value": 4, "edges": []}, {"id": "6", "value": 6, "edges": []}
+              ]}
+            },
+            { "reference": "1", "node": "999", "expected": -1,
+              "graph": { "nodes": [
+                {"id": "1", "value": 1, "edges": [{"id": "2", "weight": 1}]},
+                {"id": "2", "value": 2, "edges": []}
+              ]}
+            }
         ]
     }
 }
