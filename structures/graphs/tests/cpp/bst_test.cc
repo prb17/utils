@@ -1,4 +1,5 @@
 #include <string>
+#include <initializer_list>
 
 #include "graph.hh"
 #include "vertex.hh"
@@ -172,6 +173,58 @@ bool testRemoveMissing(prb17::utils::parsers::json_parser jp) {
     return (removed == false) && got == expected;
 }
 
+// The BST algorithms are generic over the value type (a vertex holds any T whose
+// container provides the comparison operators). These per-type tests exercise the
+// core operations for each raw type and for std::string, proving that. They use
+// distinct test names -- one per type -- because the validator runs only the
+// last-registered function for a given name, so registering one templated name
+// for many types (as array_test does) would only ever run one of them.
+template<typename T>
+static bool type_coverage(std::initializer_list<T> values, T present, T absent) {
+    graph<T> g;
+    for (const T& v : values) {
+        bst::insert(g, v);
+    }
+
+    // in-order is non-decreasing on a valid BST, for any comparable T
+    array<T> ordered = bst::in_order(g);
+    bool sorted = true;
+    for (size_t i=1; i<ordered.size(); i++) {
+        if (ordered[i] < ordered[i-1]) { sorted = false; }
+    }
+
+    bool result = sorted
+               && bst::validate(g)
+               && bst::contains(g, present)
+               && !bst::contains(g, absent);
+
+    // removing a present value keeps the tree valid and drops the value
+    bst::remove(g, present);
+    result &= bst::validate(g) && !bst::contains(g, present);
+
+    g.cleanup();
+    return result;
+}
+
+bool testTypeInt(prb17::utils::parsers::json_parser) {
+    return type_coverage<int>({10, 5, 15, 2, 13}, 13, 7);
+}
+bool testTypeUint(prb17::utils::parsers::json_parser) {
+    return type_coverage<unsigned int>({10u, 5u, 15u, 2u, 13u}, 13u, 7u);
+}
+bool testTypeChar(prb17::utils::parsers::json_parser) {
+    return type_coverage<char>({'m', 'c', 'x', 'a', 'q'}, 'x', 'z');
+}
+bool testTypeFloat(prb17::utils::parsers::json_parser) {
+    return type_coverage<float>({3.5f, 1.1f, 9.9f, 2.2f, 7.7f}, 9.9f, 4.4f);
+}
+bool testTypeDouble(prb17::utils::parsers::json_parser) {
+    return type_coverage<double>({3.5, 1.1, 9.9, 2.2, 7.7}, 9.9, 4.4);
+}
+bool testTypeString(prb17::utils::parsers::json_parser) {
+    return type_coverage<std::string>({"mango", "apple", "pear", "fig", "kiwi"}, "pear", "zzz");
+}
+
 #define MIN_NUM_ARGS 2
 int main(int argc, char** argv) {
     if (argc < MIN_NUM_ARGS) {
@@ -194,6 +247,13 @@ int main(int argc, char** argv) {
     validator.add_test("testValidateFalseLeftSubtree", &testValidateFalseLeftSubtree, "");
     validator.add_test("testRemove", &testRemove, "");
     validator.add_test("testRemoveMissing", &testRemoveMissing, "");
+
+    validator.add_test("testTypeInt", &testTypeInt, "");
+    validator.add_test("testTypeUint", &testTypeUint, "");
+    validator.add_test("testTypeChar", &testTypeChar, "");
+    validator.add_test("testTypeFloat", &testTypeFloat, "");
+    validator.add_test("testTypeDouble", &testTypeDouble, "");
+    validator.add_test("testTypeString", &testTypeString, "");
 
     logger.info("Starting validation tests of bst (graph algorithm) tests");
     validator.validate();
