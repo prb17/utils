@@ -42,6 +42,28 @@ bool testInorderSorted(prb17::utils::parsers::json_parser jp) {
     return got == expected;
 }
 
+// pre-order visits each node before its subtrees (node, left, right)
+bool testPreOrder(prb17::utils::parsers::json_parser jp) {
+    graph<int> g;
+    build(g, jp);
+    array<int> got = bst::pre_order(g);
+    auto expected = jp.as_array<int>("expected");
+    logger.debug("pre-order: {}, expected: {}", got, expected);
+    g.cleanup();
+    return got == expected;
+}
+
+// post-order visits each node after its subtrees (left, right, node)
+bool testPostOrder(prb17::utils::parsers::json_parser jp) {
+    graph<int> g;
+    build(g, jp);
+    array<int> got = bst::post_order(g);
+    auto expected = jp.as_array<int>("expected");
+    logger.debug("post-order: {}, expected: {}", got, expected);
+    g.cleanup();
+    return got == expected;
+}
+
 // find returns the vertex holding the value (or nullptr when absent)
 bool testFind(prb17::utils::parsers::json_parser jp) {
     graph<int> g;
@@ -163,6 +185,8 @@ int main(int argc, char** argv) {
 
     validator.add_test("testInsertContains", &testInsertContains, "");
     validator.add_test("testInorderSorted", &testInorderSorted, "");
+    validator.add_test("testPreOrder", &testPreOrder, "");
+    validator.add_test("testPostOrder", &testPostOrder, "");
     validator.add_test("testFind", &testFind, "");
     validator.add_test("testValidateTrue", &testValidateTrue, "");
     validator.add_test("testValidateFalse", &testValidateFalse, "");
