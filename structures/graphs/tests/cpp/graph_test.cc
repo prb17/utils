@@ -8,6 +8,8 @@
 
 #include "traverse.hh"
 #include "depths.hh"
+#include "sorts.hh"
+#include "searches.hh"
 #include "graph_test_helper.hh"
 
 using namespace prb17::utils::structures;
@@ -282,6 +284,69 @@ bool testNodeDepth(prb17::utils::parsers::json_parser jp) {
     return got == expected;
 }
 
+// bubble/insertion/selection sort the graph's values into ascending order
+template<typename T>
+bool testBubbleSort(prb17::utils::parsers::json_parser jp) {
+    graph<T>* g = build_weighted_graph_from_config<T>(jp);
+    array<T> got = algo::bubble_sort(*g);
+    auto expected = jp.as_array<T>("expected");
+    logger.debug("bubble_sort: {}, expected: {}", got, expected);
+    g->cleanup();
+    delete g;
+    return got == expected;
+}
+
+template<typename T>
+bool testInsertionSort(prb17::utils::parsers::json_parser jp) {
+    graph<T>* g = build_weighted_graph_from_config<T>(jp);
+    array<T> got = algo::insertion_sort(*g);
+    auto expected = jp.as_array<T>("expected");
+    logger.debug("insertion_sort: {}, expected: {}", got, expected);
+    g->cleanup();
+    delete g;
+    return got == expected;
+}
+
+template<typename T>
+bool testSelectionSort(prb17::utils::parsers::json_parser jp) {
+    graph<T>* g = build_weighted_graph_from_config<T>(jp);
+    array<T> got = algo::selection_sort(*g);
+    auto expected = jp.as_array<T>("expected");
+    logger.debug("selection_sort: {}, expected: {}", got, expected);
+    g->cleanup();
+    delete g;
+    return got == expected;
+}
+
+// depth-first search finds a value reachable from the start, and rejects an absent one
+template<typename T>
+bool testDfsSearch(prb17::utils::parsers::json_parser jp) {
+    graph<T>* g = build_weighted_graph_from_config<T>(jp);
+    std::string start = jp.as_string("start");
+    T present = jp.as_value<T>("present");
+    T absent = jp.as_value<T>("absent");
+
+    vertex<T>* found = algo::dfs_search(*g, start, present);
+    bool result = (found != nullptr) && (found->get() == present)
+               && (algo::dfs_search(*g, start, absent) == nullptr);
+    g->cleanup();
+    delete g;
+    return result;
+}
+
+// binary search of a graph's values returns the index of target in sorted order (-1 if absent)
+template<typename T>
+bool testBinarySearch(prb17::utils::parsers::json_parser jp) {
+    graph<T>* g = build_weighted_graph_from_config<T>(jp);
+    T target = jp.as_value<T>("target");
+    int expected = jp.as_int("expected_index");
+    int got = algo::binary_search(*g, target);
+    logger.debug("binary_search for {}: {}, expected {}", target, got, expected);
+    g->cleanup();
+    delete g;
+    return got == expected;
+}
+
 template<typename T>
 static prb17::utils::structures::array<prb17::utils::test> build_tests() {
     prb17::utils::structures::array<prb17::utils::test> tests;
@@ -302,6 +367,12 @@ static prb17::utils::structures::array<prb17::utils::test> build_tests() {
 
     tests.add(prb17::utils::test{"testSumOfDepths", &testSumOfDepths<T>});
     tests.add(prb17::utils::test{"testNodeDepth", &testNodeDepth<T>});
+
+    tests.add(prb17::utils::test{"testBubbleSort", &testBubbleSort<T>});
+    tests.add(prb17::utils::test{"testInsertionSort", &testInsertionSort<T>});
+    tests.add(prb17::utils::test{"testSelectionSort", &testSelectionSort<T>});
+    tests.add(prb17::utils::test{"testDfsSearch", &testDfsSearch<T>});
+    tests.add(prb17::utils::test{"testBinarySearch", &testBinarySearch<T>});
 
     return tests;
 }

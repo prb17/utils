@@ -83,7 +83,12 @@ For example, graph traversal (`dfs`, `bfs`), `to_string`, and
 `to_adjacency_list` live in `algorithms/graphs/traverse.hh` under
 `prb17::utils::algorithms::graphs`, not on the `graph` class. Node depths
 (`depth`, `sum_of_depths`) relative to a reference vertex live alongside them in
-`algorithms/graphs/depths.hh`. Visited-membership checks there go through
+`algorithms/graphs/depths.hh`. General-case sorts of a graph's values
+(`bubble_sort`, `insertion_sort`, `selection_sort` in
+`algorithms/graphs/sorts.hh`) and searches (`dfs_search`, `binary_search` in
+`algorithms/graphs/searches.hh`) live in the same namespace -- deliberately not
+tied to the `bst` sub-namespace, so the general graph case stands on its own
+next to the BST-specific ones. Visited-membership checks there go through
 `prb17::utils::algorithms::search::find` so the search algorithm stays swappable
 rather than being baked into a container.
 
