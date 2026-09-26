@@ -163,6 +163,44 @@ namespace prb17 {
                     }
 
                     template<typename T, typename Compare>
+                    void pre_order_helper(vertex<T>* node, const Compare& comp, array<T>& out) {
+                        if (node == nullptr) { return; }
+                        out.add(node->get());
+                        pre_order_helper(left_child(node, comp), comp, out);
+                        pre_order_helper(right_child(node, comp), comp, out);
+                    }
+
+                    /**
+                     * @brief the values in pre-order: each node before its subtrees
+                     *      (node, then left subtree, then right subtree).
+                     */
+                    template<typename T, typename Compare = std::less<T>>
+                    array<T> pre_order(const graph<T>& g, Compare comp = Compare{}) {
+                        array<T> out{};
+                        pre_order_helper(root(g), comp, out);
+                        return out;
+                    }
+
+                    template<typename T, typename Compare>
+                    void post_order_helper(vertex<T>* node, const Compare& comp, array<T>& out) {
+                        if (node == nullptr) { return; }
+                        post_order_helper(left_child(node, comp), comp, out);
+                        post_order_helper(right_child(node, comp), comp, out);
+                        out.add(node->get());
+                    }
+
+                    /**
+                     * @brief the values in post-order: each node after its subtrees
+                     *      (left subtree, then right subtree, then node).
+                     */
+                    template<typename T, typename Compare = std::less<T>>
+                    array<T> post_order(const graph<T>& g, Compare comp = Compare{}) {
+                        array<T> out{};
+                        post_order_helper(root(g), comp, out);
+                        return out;
+                    }
+
+                    template<typename T, typename Compare>
                     bool validate_helper(vertex<T>* node, const T* lo, const T* hi,
                                          const Compare& comp, array<vertex<T>*>& visited) {
                         if (node == nullptr) { return true; }
