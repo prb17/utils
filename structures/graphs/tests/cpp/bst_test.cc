@@ -81,6 +81,44 @@ bool testValidateFalse(prb17::utils::parsers::json_parser) {
     return result;
 }
 
+// the canonical "Validate BST" invalid case: a value in the RIGHT subtree that is
+// smaller than an ancestor. Every node is locally on a consistent side (15 right
+// of 10, 6 left of 15), so only the inherited bound catches it -- 6 sits in 10's
+// right subtree yet 6 < 10.
+bool testValidateFalseRightSubtree(prb17::utils::parsers::json_parser) {
+    graph<int> g;
+    vertex<int>* root = new vertex<int>{"a", 10};
+    vertex<int>* right = new vertex<int>{"b", 15}; // 15 >= 10 -> root's right child
+    vertex<int>* bad = new vertex<int>{"c", 6};    // 6 < 15 -> 15's left child, but 6 < 10
+    g.add(root);
+    g.add(right);
+    g.add(bad);
+    root->add_edge(right);
+    right->add_edge(bad);
+
+    bool result = (bst::validate(g) == false);
+    g.cleanup();
+    return result;
+}
+
+// mirror image: a value in the LEFT subtree that is >= an ancestor. 12 is a valid
+// right child of 5 locally, but it sits in 10's left subtree while 12 >= 10.
+bool testValidateFalseLeftSubtree(prb17::utils::parsers::json_parser) {
+    graph<int> g;
+    vertex<int>* root = new vertex<int>{"a", 10};
+    vertex<int>* left = new vertex<int>{"b", 5};   // 5 < 10 -> root's left child
+    vertex<int>* bad = new vertex<int>{"c", 12};   // 12 >= 5 -> 5's right child, but 12 >= 10
+    g.add(root);
+    g.add(left);
+    g.add(bad);
+    root->add_edge(left);
+    left->add_edge(bad);
+
+    bool result = (bst::validate(g) == false);
+    g.cleanup();
+    return result;
+}
+
 // remove covers leaf / one-child / two-child / root / absent (per config); the
 // tree stays a valid BST and the value's presence matches expectation
 bool testRemove(prb17::utils::parsers::json_parser jp) {
@@ -128,6 +166,8 @@ int main(int argc, char** argv) {
     validator.add_test("testFind", &testFind, "");
     validator.add_test("testValidateTrue", &testValidateTrue, "");
     validator.add_test("testValidateFalse", &testValidateFalse, "");
+    validator.add_test("testValidateFalseRightSubtree", &testValidateFalseRightSubtree, "");
+    validator.add_test("testValidateFalseLeftSubtree", &testValidateFalseLeftSubtree, "");
     validator.add_test("testRemove", &testRemove, "");
     validator.add_test("testRemoveMissing", &testRemoveMissing, "");
 
