@@ -30,6 +30,7 @@ namespace prb17 {
                     vertex<T>* at(size_t idx) const;
 
                     bool add(vertex<T> *v);
+                    bool remove(vertex<T> *v);
             };
 
             template<typename T>
@@ -73,6 +74,26 @@ namespace prb17 {
             template<typename T>
             vertex<T>* graph<T>::at(size_t idx) const {
                 return ( idx < vertices.size() ) ? vertices[idx] : nullptr;
+            }
+
+            /**
+             * @brief removes a vertex from the graph's storage and deletes it.
+             *      Only the vertex itself is freed; unlinking any edges that point
+             *      to it is the caller's responsibility (an algorithm's concern).
+             *
+             * @return true if the vertex was present and removed.
+             */
+            template<typename T>
+            bool graph<T>::remove(vertex<T> *v) {
+                for (size_t i=0; i<vertices.size(); i++) {
+                    if (vertices[i] == v) {
+                        vertices.remove(i);
+                        count--;
+                        delete v;
+                        return true;
+                    }
+                }
+                return false;
             }
         }
     }

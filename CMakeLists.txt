@@ -133,13 +133,18 @@ if(BUILD_UTILS_TESTS)
                                                         ${LOGGER_LIBRARY_NAME}
                                                         )
 
-    message(DEBUG "configuring the bst construction tests")
-    set(BST_CONSTRUCTION_TEST_NAME bst_construction_test)
-    add_executable(${BST_CONSTRUCTION_TEST_NAME} structures/bst/tests/cpp/bst_construction_test.cc)
-    target_link_libraries(${BST_CONSTRUCTION_TEST_NAME} PRIVATE ${BST_LIBRARY_NAME}
+    message(DEBUG "configuring the bst (graph algorithm) tests")
+    set(BST_ALGORITHMS_TEST_NAME bst_algorithms_test)
+    add_executable(${BST_ALGORITHMS_TEST_NAME} structures/graphs/tests/cpp/bst_test.cc)
+    target_link_libraries(${BST_ALGORITHMS_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME}
+                                                        ${GRAPH_ALGORITHMS_LIBRARY_NAME}
+                                                        ${ARRAY_SEARCH_LIBRARY_NAME}
                                                         ${VALIDATOR_LIBRARY_NAME}
                                                         ${PARSERS_LIBRARY_NAME}
                                                         ${LOGGER_LIBRARY_NAME}
+                                                        ${BUILDER_PATTERN_LIBRARY_NAME}
+                                                        ${STRUCTURES_BUILDER_LIBRARY_NAME}
+                                                        ${GRAPH_BUILDER_LIBRARY_NAME}
                                                         )
 
     message(DEBUG "configuring the ring buffers tests")
@@ -225,7 +230,7 @@ if(BUILD_UTILS_TESTS)
                     ${PRIORITY_QUEUES_TEST_NAME}
                     ${SORTED_SEQUENCES_TEST_NAME}
                     ${BST_TEST_NAME}
-                    ${BST_CONSTRUCTION_TEST_NAME}
+                    ${BST_ALGORITHMS_TEST_NAME}
                     ${RING_BUFFERS_TEST_NAME}
                     DESTINATION
                     structures/bin
