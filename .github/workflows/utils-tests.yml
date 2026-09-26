@@ -123,6 +123,15 @@ jobs:
         chmod -x bst_test
         cd -
 
+    - name: BST Construction Tests
+      run: |
+        export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib
+        cd structures/bin
+        chmod +x bst_construction_test
+        valgrind --leak-check=full --error-exitcode=1 ./bst_construction_test ../config/bst/bst_construction_test_*.json
+        chmod -x bst_construction_test
+        cd -
+
     - name: Ring Buffer Tests
       run: |
         export LD_LIBRARY_PATH=`pwd`/parsers/lib:`pwd`/third_party/jsoncpp/lib

@@ -105,6 +105,10 @@ algorithm:
   is the one container whose invariant cannot be an external algorithm: the
   balance is coupled to every mutation via rotations, so it owns its own node
   type rather than reusing the graph-based `tree`.
+- A **plain BST** (`structures/bst/src/cpp/bst.hh`) is the unbalanced "BST
+  Construction" node: a self-contained recursive node with `insert`/`contains`/
+  `remove`. Same family as `avl_tree` (ordering invariant coupled to mutation)
+  but with no balancing, so its shape depends on insertion order.
 - A **ring buffer** (`structures/ring_buffers/`) is a fixed-capacity circular
   buffer — a distinct storage layout (wraparound indices over a pre-sized
   backing store), not a policy over `array`.

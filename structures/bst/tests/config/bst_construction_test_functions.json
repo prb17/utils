@@ -1,0 +1,28 @@
+{
+    "MetaData":
+    {
+        "test_name" : "BST Construction Test",
+        "test_type" : "unit"
+    },
+    "Tests" :
+    {
+        "testContains": [
+            { "values": [10, 5, 15, 2, 5, 13, 22], "present": 13, "absent": 99 },
+            { "values": [10, 5, 15, 2, 5, 13, 22], "present": 5, "absent": 8 }
+        ],
+        "testInorderSorted": [
+            { "values": [10, 5, 15, 2, 5, 13, 22], "expected": [2, 5, 5, 10, 13, 15, 22] },
+            { "values": [1, 2, 3, 4, 5], "expected": [1, 2, 3, 4, 5] }
+        ],
+        "testRemove": [
+            { "values": [10, 5, 15, 2, 13, 22, 1], "remove": 1,  "expected": [2, 5, 10, 13, 15, 22], "expected_contains": false },
+            { "values": [10, 5, 15, 2, 13, 22, 1], "remove": 2,  "expected": [1, 5, 10, 13, 15, 22], "expected_contains": false },
+            { "values": [10, 5, 15, 2, 13, 22, 1], "remove": 15, "expected": [1, 2, 5, 10, 13, 22], "expected_contains": false },
+            { "values": [10, 5, 15, 2, 13, 22, 1], "remove": 10, "expected": [1, 2, 5, 13, 15, 22], "expected_contains": false },
+            { "values": [10, 5, 15, 2, 13, 22, 1], "remove": 99, "expected": [1, 2, 5, 10, 13, 15, 22], "expected_contains": false }
+        ],
+        "testDuplicatesGoRight": [
+            { "values": [10, 5, 10, 5, 15, 10], "expected": [5, 5, 10, 10, 10, 15] }
+        ]
+    }
+}
