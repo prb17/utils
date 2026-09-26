@@ -23,6 +23,12 @@
         "testValidateFalse": [
             {}
         ],
+        "testValidateFalseRightSubtree": [
+            {}
+        ],
+        "testValidateFalseLeftSubtree": [
+            {}
+        ],
         "testRemove": [
             { "values": [10, 5, 15, 2, 13, 22, 1], "remove": 1,  "expected": [2, 5, 10, 13, 15, 22], "expected_contains": false },
             { "values": [10, 5, 15, 2, 13, 22, 1], "remove": 2,  "expected": [1, 5, 10, 13, 15, 22], "expected_contains": false },
