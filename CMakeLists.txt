@@ -133,6 +133,20 @@ if(BUILD_UTILS_TESTS)
                                                         ${LOGGER_LIBRARY_NAME}
                                                         )
 
+    message(DEBUG "configuring the bst (graph algorithm) tests")
+    set(BST_ALGORITHMS_TEST_NAME bst_algorithms_test)
+    add_executable(${BST_ALGORITHMS_TEST_NAME} structures/graphs/tests/cpp/bst_test.cc)
+    target_link_libraries(${BST_ALGORITHMS_TEST_NAME} PRIVATE ${GRAPHS_LIBRARY_NAME}
+                                                        ${GRAPH_ALGORITHMS_LIBRARY_NAME}
+                                                        ${ARRAY_SEARCH_LIBRARY_NAME}
+                                                        ${VALIDATOR_LIBRARY_NAME}
+                                                        ${PARSERS_LIBRARY_NAME}
+                                                        ${LOGGER_LIBRARY_NAME}
+                                                        ${BUILDER_PATTERN_LIBRARY_NAME}
+                                                        ${STRUCTURES_BUILDER_LIBRARY_NAME}
+                                                        ${GRAPH_BUILDER_LIBRARY_NAME}
+                                                        )
+
     message(DEBUG "configuring the ring buffers tests")
     set(RING_BUFFERS_TEST_NAME ring_buffers_test)
     add_executable(${RING_BUFFERS_TEST_NAME} structures/ring_buffers/tests/cpp/ring_buffer_test.cc)
@@ -216,6 +230,7 @@ if(BUILD_UTILS_TESTS)
                     ${PRIORITY_QUEUES_TEST_NAME}
                     ${SORTED_SEQUENCES_TEST_NAME}
                     ${BST_TEST_NAME}
+                    ${BST_ALGORITHMS_TEST_NAME}
                     ${RING_BUFFERS_TEST_NAME}
                     DESTINATION
                     structures/bin

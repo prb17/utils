@@ -105,6 +105,14 @@ algorithm:
   is the one container whose invariant cannot be an external algorithm: the
   balance is coupled to every mutation via rotations, so it owns its own node
   type rather than reusing the graph-based `tree`.
+- A **plain (unbalanced) BST** is not a container at all: it is a plain
+  `graph<T>` acted on by the BST algorithms in `algorithms/graphs/bst.hh`
+  (`prb17::utils::algorithms::graphs::bst`) -- `insert`, `contains`, `find`,
+  `in_order`, `validate`, `remove`. A node's left/right side is recovered from
+  the BST property (a child less than its parent is the left child), so the
+  graph needs no ordering knowledge. This is the "containers are containers,
+  algorithms act on them" layering applied to a BST; `avl_tree` stays a
+  self-contained structure only because its balancing is coupled to mutation.
 - A **ring buffer** (`structures/ring_buffers/`) is a fixed-capacity circular
   buffer — a distinct storage layout (wraparound indices over a pre-sized
   backing store), not a policy over `array`.
